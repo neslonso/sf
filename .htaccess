@@ -1,0 +1,34 @@
+<IfModule mod_rewrite.c>
+	<IfModule mod_negotiation.c>
+		Options -MultiViews
+	</IfModule>
+
+	RewriteEngine on
+	RewriteBase /proys/00.skel/
+
+	#Compatibilidad
+	################################################################################
+		RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)
+			RewriteRule ^(actions|api|auto|css|images|js|render)\.php$ %1?MODULE=$1 [QSA,L]
+	################################################################################
+
+	# Pages URL rewriting ##########################################################
+	# Barra (/) al final
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !-f
+			RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
+			#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
+	#Reescritura: URLs de paginas (con [page]/[keys]/[id] (keys e id optativas, id necesita keys) (OJO! Necesita la regla anterior de poner / al final)
+		#http://.../[page]/[tantos/directorios/como/queramos/para/keywords/pero/al/menos/uno/si/usamos/id]/[idNumerica]/[el/resto/se/transporta/a/"./"/]
+			RewriteRule ^([^/]*)/((.*)/([0-9]+))?$ ?page=$1&id=$3 [QSA,L]
+	#Para que los enlaces basados en "./" sigan funcionando
+		RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*) $4
+
+	<IfModule mod_headers.c>
+		## Set the response header if the "nocache" environment variable is set in the RewriteRule above.
+		Header always set Cache-Control "no-store, no-cache, must-revalidate" env=nocache
+		## Set Expires too ...
+		Header always set Expires "Thu, 01 Jan 1970 00:00:00 GMT" env=nocache
+	</IfModule>
+	################################################################################
+</IfModule>
