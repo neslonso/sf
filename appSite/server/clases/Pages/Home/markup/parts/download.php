@@ -13,6 +13,12 @@
 					<p>
 
 					</p>
+					<p>
+						<a href="#" onclick="
+							Post('MODULE','actions','acClase','Home','acMetodo','acPackCode','acTipo','plainAssoc');
+							return false;
+						">code</a>
+					</p>
 					<date>Creado: 13 de septiembre, 2014</date>
 				</div>
 			</div>

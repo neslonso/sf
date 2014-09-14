@@ -101,7 +101,7 @@ try {
 				$fileContent=preg_replace($patron,'$1'.$baseURI.'$2', $fileContent);
 				$cssLibs.="/* <Lib: ".$href."> */\n";
 				$cssLibs.=$fileContent;
-				$cssLibs.="/* <> */\n";
+				$cssLibs.="/* </lib> */\n";
 				//$cssLibs.="@import url('".$href."');"."\n";
 			} catch (Exception $e) {
 				error_log ("css.php:: Imposible cargar '".$href."'");

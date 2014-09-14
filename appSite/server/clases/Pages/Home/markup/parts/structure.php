@@ -11,6 +11,12 @@
 				<div class="meta"><span>Qué</span>, donde y como</div>
 				<div class="body">
 					<p>
+
+					</p>
+					<div class="bs-callout bs-callout-info">
+						<h4>Estrcutura de ficheros</h4>
+						<p>
+<pre>
 <?
 	$excludingRexEx=array (
 		"/",
@@ -28,7 +34,9 @@
 	$arr=self::path2array("./",implode('',$excludingRexEx));
 	echo self::array2list($arr);
 ?>
-					</p>
+</pre>
+						</p>
+					</div>
 					<date>Creado: 13 de septiembre, 2014</date>
 				</div>
 			</div>

@@ -11,6 +11,7 @@ class Home extends Error implements IPage {
 	}
 	public function accionValida($metodo) {
 		switch ($metodo) {
+			case "acPackCode": $result=true;break;
 			default: $result=false;
 		}
 		return $result;
@@ -144,6 +145,7 @@ class Home extends Error implements IPage {
 			} else {
 				$isDir=is_dir($path.$filename);
 			}
+			$fileFullPath=$path.$filename;
 			if ($isDir) {
 				$newPath=$path.$filename;
 				$newDepth=$maxDepth-1;
@@ -151,23 +153,23 @@ class Home extends Error implements IPage {
 					$children=self::path2array($newPath,$excludingRegEx,$newDepth);
 					if ($nodesAsSplFileInfo) {
 						$objSplFileInfo->children=$children;
-						$arrDirs[$filename."/"]=$objSplFileInfo;
+						$arrDirs[$fileFullPath."/"]=$objSplFileInfo;
 					} else {
-						$arrDirs[$filename."/"]=$children;
+						$arrDirs[$fileFullPath."/"]=$children;
 					}
 					unset ($children);
 				} else {
 					if ($nodesAsSplFileInfo) {
-						$arrDirs[$filename."/"]=$objSplFileInfo;
+						$arrDirs[$fileFullPath."/"]=$objSplFileInfo;
 					} else {
-						$arrDirs[$filename."/"]=$filename."/";
+						$arrDirs[$fileFullPath."/"]=$filename."/";
 					}
 				}
 			} else {
 				if ($nodesAsSplFileInfo) {
-					$arrFiles[$filename]=$objSplFileInfo;
+					$arrFiles[$fileFullPath]=$objSplFileInfo;
 				} else {
-					$arrFiles[$filename]=$filename;
+					$arrFiles[$fileFullPath]=$filename;
 				}
 			}
 		}
@@ -180,9 +182,10 @@ class Home extends Error implements IPage {
 		if ($recursiveCall) {$ulStyle.='display:none;';}
 		$result='<ul style="'.$ulStyle.'">';
 		foreach ($array as $key => $value) {
+			$nameForList=basename($key);
 			if (is_array($value)) {
 				$liStyle="cursor:pointer;";
-				$liContent='<i class="fa fa-folder-o"></i> '.$key.self::array2list($value,true);
+				$liContent='<i class="fa fa-folder-o"></i> '.$nameForList.self::array2list($value,true);
 				$liClick='
 					$(this).children(\'ul\').toggle();
 					$(this).children(\'i\').toggleClass(\'fa-folder-o\');
@@ -191,13 +194,66 @@ class Home extends Error implements IPage {
 				';
 			} else {
 				$liStyle="cursor:default;";
-				$liContent='<i class="fa fa-file-code-o"></i> '.$key;
+				$liContent='<i class="fa fa-file-code-o"></i> '.$nameForList;
 				$liClick='';
 			}
 			$result.='<li style="'.$liStyle.'" onclick="'.$liClick.'">'. $liContent.'</li>';
 		}
 		$result.="</ul>";
 		return $result;
+	}
+
+	public static function array2zip($array,$destino,$zip=NULL) {
+		if (is_null($zip)) {
+			if (!extension_loaded('zip')) {
+				return false;
+			}
+			$zip=new ZipArchive();
+			if (!$zip->open($destino,ZIPARCHIVE::OVERWRITE)) {
+				return false;
+			}
+		}
+		$scriptDir=dirname($_SERVER['SCRIPT_FILENAME']).'/';
+		foreach ($array as $key => $value) {
+			$fileToZip=str_replace($scriptDir, '', $key);
+			if (is_array($value)) {
+				$zip->addEmptyDir($fileToZip);
+				$zip=self::array2zip($value,$destino,$zip);
+			} else {
+				$zip->addFile($fileToZip);
+			}
+		}
+		if (is_null($zip)) {
+			return $zip->close();
+		} else {
+			return $zip;
+		}
+	}
+
+	public function acPackCode () {
+		$excludingRexEx=array (
+			"/",
+			"vendor",
+			"|",
+			"aaReferences",
+			"|",
+			"(css|jsMin)\.(.+)\.(css|js)",
+			"|",
+			"zzWorkspace",
+			"|",
+			".zip$",
+			"/"
+		);
+		$arr=self::path2array("./",implode('',$excludingRexEx));
+		$file='./zCache/tmpUpload/Sintax.zip';
+		if (file_exists($file)) {unlink($file);}
+		self::array2zip($arr,$file);
+
+		header ("Content-Disposition: attachment; filename=".basename($file)."\n\n");
+		header ('Content-Transfer-Encoding: binary');
+		header ("Content-Type: application/octet-stream");
+		header ("Content-Length: ".filesize($file));
+		readfile($file);
 	}
 }
 ?>

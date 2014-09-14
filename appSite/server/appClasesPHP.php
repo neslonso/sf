@@ -41,9 +41,6 @@ spl_autoload_register(function ($clase) {
 	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/Home/Home.php');
 /**/
 /* Samples */
-	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzSamples/forms/forms.php');
-	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzSamples/Cert/Cert.php');
-	//require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzSamples/Intro/Intro.php');
 	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzSamples/HomeSample/HomeSample.php');
 /**/
 	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzTools/Creacion/Creacion.php');
