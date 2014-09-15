@@ -764,8 +764,8 @@ class Creacion extends Home implements IPage {
 	private function markupDBdataTable($fp,$page,$class,$stdObjTableInfo) {
 		$sl="\n";
 		$sg="\t";
-		fwrite ($fp,'<form action="./actions.php" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'">'.$sl);
-		fwrite ($fp,$sg.'<input name="APP" id="APP" type="hidden" value="'.$GLOBALS['app'].'"/>'.$sl);
+		fwrite ($fp,'<form action="<?=FILE_APP?>" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'">'.$sl);
+		fwrite ($fp,$sg.'<input name="MODULE" id="MODULE" type="hidden" value="actions"/>'.$sl);
 		fwrite ($fp,$sg.'<input name="acClase" id="acClase" type="hidden" value="'.$page.'"/>'.$sl);
 		fwrite ($fp,$sg.'<input name="acMetodo" id="acMetodo" type="hidden" value="'.'acGrabar'.'"/>'.$sl);
 		fwrite ($fp,$sg.'<input name="acTipo" id="acTipo" type="hidden" value="stdAssoc"/>'.$sl);
@@ -803,14 +803,16 @@ class Creacion extends Home implements IPage {
 			//$objCreadora=new Creadora (ucfirst($tableName), $arrAttrs, $tableName);
 			//$objCreadora->creadoraJS (ucfirst($tableName), $arrAttrs, $tableName);
 			//$objCreadora->frmSimple($arrAttrs,ucfirst($tableName));
-			$_SESSION['returnInfo']['title']='Clase '.$class.' creada';
-			$_SESSION['returnInfo']['msg']='<h2 title="'.print_r ($stdObjTableInfo->arrAttrs,true).'">Creando clase '.ucfirst($stdObjTableInfo->tableName).' (tooltip)</h2>';
-			$_SESSION['returnInfo']['msg'].="<h3>Atributos</h3><pre>".print_r ($stdObjTableInfo->arrAttrs,true)."</pre>";
-			$_SESSION['returnInfo']['msg'].="<h3>FKs</h3><pre>".print_r ($stdObjTableInfo->arrFksTo,true)."</pre>";
-			$_SESSION['returnInfo']['msg'].="<hr /><hr /><hr />";
+			$title='Clase '.$class.' creada';
+			$msg='<h2 title="'.print_r ($stdObjTableInfo->arrAttrs,true).'">Creando clase '.ucfirst($stdObjTableInfo->tableName).' (tooltip)</h2>';
+			$msg.="<h3>Atributos</h3><pre>".print_r ($stdObjTableInfo->arrAttrs,true)."</pre>";
+			$msg.="<h3>FKs</h3><pre>".print_r ($stdObjTableInfo->arrFksTo,true)."</pre>";
+			$msg.="<hr /><hr /><hr />";
+			addReturnInfo($msg,$title);
 		} else {
-			$_SESSION['returnInfo']['title']='Clase '.$class.' NO re-creada';
-			$_SESSION['returnInfo']['msg']='La clase ya existe.';
+			$title='Clase '.$class.' NO re-creada';
+			$msg='La clase ya existe.';
+			addReturnInfo($msg,$title);
 		}
 	}
 
@@ -904,12 +906,12 @@ class Creacion extends Home implements IPage {
 					WHERE
 					TABLE_NAME = '".$stdObjTableInfo->tableName."' AND
 					REFERENCED_TABLE_NAME IS NOT NULL
-					AND TABLE_SCHEMA = '"._DB_NAME_."';
+					AND TABLE_SCHEMA = '".cDb::_DB_NAME_."';
 				");
 				$stdObjTableInfo->rslFksTo = $mysqli->query("
 					SELECT * FROM information_schema.KEY_COLUMN_USAGE
 					WHERE REFERENCED_TABLE_NAME = '".$stdObjTableInfo->tableName."'
-					AND TABLE_SCHEMA = '"._DB_NAME_."';
+					AND TABLE_SCHEMA = '".cDb::_DB_NAME_."';
 				");
 
 				$stdObjTableInfo->arrCreateInfo = $rslCreate->fetch_array(MYSQLI_ASSOC);

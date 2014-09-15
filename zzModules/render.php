@@ -16,8 +16,6 @@ date_default_timezone_set('Europe/Madrid');
 ?>
 <?
 try {
-	//$db=new mysqliDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
-	$db=cDb::getInstance();
 	session_start();
 
 	/*mail (DEBUG_EMAIL,SITE_NAME.". RENDER.PHP ".FILE_APP.": ".$_SERVER['REMOTE_ADDR'],

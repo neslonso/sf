@@ -8,7 +8,7 @@ ob_start();
 //modo
 //formato
 try {
-	$db=new mysqliDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
+	$db=cDb::getInstance();
 	switch ($_GET["almacen"]) {
 		case "LOREMPIXEL":
 			/*

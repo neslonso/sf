@@ -249,6 +249,7 @@ class Home extends Error implements IPage {
 		if (file_exists($file)) {unlink($file);}
 		self::array2zip($arr,$file);
 
+		ob_clean();//limpiamos el buffer antes de mandar el fichero, no queremos nada más que el fichero
 		header ("Content-Disposition: attachment; filename=".basename($file)."\n\n");
 		header ('Content-Transfer-Encoding: binary');
 		header ("Content-Type: application/octet-stream");

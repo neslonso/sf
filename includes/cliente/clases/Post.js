@@ -1,7 +1,6 @@
 // JavaScript Document
 function Post() {
 	form=document.createElement("form");
-	//form.setAttribute("action","<?=$_SERVER['PHP_SELF']?>");
 	form.setAttribute("action",window.location);
 	form.setAttribute("method","post");
 

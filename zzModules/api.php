@@ -20,7 +20,6 @@ date_default_timezone_set('Europe/Madrid');
 ?>
 <?
 try {
-	$db=new mysqliDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 	//session_start();//Las llamadas al api no inician session
 ?>
 <?

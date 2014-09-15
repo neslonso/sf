@@ -11,8 +11,6 @@ date_default_timezone_set('Europe/Madrid');
 ?>
 <?
 try {
-	//$db=new mysqliDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
-
 	session_cache_limiter('public');
 	session_start();
 	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 60*60*24*364));

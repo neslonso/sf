@@ -1,6 +1,7 @@
 <?="\n<!-- ".get_class()." -->\n"?>
-<form action="./actions.php" method="post" enctype="multipart/form-data">
-	<input name="APP" id="APP" type="hidden" value="appSite"/>
+<form action="./<?=FILE_APP?>" method="post" enctype="multipart/form-data"
+ 	style="background-color: #FFF;" class="sobreAnterior">
+	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
 	<input name="acClase" id="acClase" type="hidden" value="Creacion"/>
 	<input name="acMetodo" id="acMetodo" type="hidden" value="CrearPagina"/>
 	<input name="acTipo" id="acTipo" type="hidden" value="stdAssoc"/>
@@ -8,64 +9,63 @@
 
 	<fieldset>
 		<legend>Creación de Page Class</legend>
-	</fieldset>
 
-	<label for="ruta">Ruta:</label> <input type="text" name="ruta" id="ruta" value="<?=RUTA_APP?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
-	<label for="page">Nombre:</label> <input type="text" name="page" id="page" value="" /> (Nombre para la Page,  corresponde al valor del parametro GET 'page' para acceder a ella)<br />
-	<label for="extends">Extends:</label> <input type="text" name="extends" id="extends" value="Home" /> (Page a la que extiende, se usará para herencias de css, js y marcado)<br />
-	<label for="markupFunc">MarkupFunc:</label> <input type="text" name="markupFunc" id="markupFunc" value="cuerpo" /> (Función de marcado, puede usarse para sobreescribir parte del marcado de la Page base y reutilizar el resto)<br />
-	<label for="markupFile">MarkupFile:</label> <input type="text" name="markupFile" id="markupFile" value="" /> (Fichero del que copiar el marcado original, util para convertir un php standalone en una Page)<br />
+		<label for="ruta">Ruta:</label> <input type="text" name="ruta" id="ruta" value="<?=RUTA_APP?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
+		<label for="page">Nombre:</label> <input type="text" name="page" id="page" value="" /> (Nombre para la Page,  corresponde al valor del parametro GET 'page' para acceder a ella)<br />
+		<label for="extends">Extends:</label> <input type="text" name="extends" id="extends" value="Home" /> (Page a la que extiende, se usará para herencias de css, js y marcado)<br />
+		<label for="markupFunc">MarkupFunc:</label> <input type="text" name="markupFunc" id="markupFunc" value="cuerpo" /> (Función de marcado, puede usarse para sobreescribir parte del marcado de la Page base y reutilizar el resto)<br />
+		<label for="markupFile">MarkupFile:</label> <input type="text" name="markupFile" id="markupFile" value="" /> (Fichero del que copiar el marcado original, util para convertir un php standalone en una Page)<br />
 
-	<!--Table(Class): (CRUD)<input type="text" name="class" value="" /><br />-->
-	<label for="pageType">Tipo:</label>
-	<select name="pageType" id="pageType" onchange="
-		if (this.value!='Blank') {
-			document.getElementById('divClass').style.display='block';
-		} else {
-			document.getElementById('divClass').style.display='none';
-			document.getElementById('class').value='';
-			document.getElementById('class').onchange();
-		}
-	">
-		<option value="Blank">Blank</option>
-		<option value="CRUD">CRUD</option>
-		<option value="DBdataTable">DBdataTable</option>
-	</select> (Tipo de Page a crear: Blank => Ficheros en blanco, CRUD => Formulario de campos validados, DBdataTable => Listado datatables server side)
-
-	<div style="display:none;" id="divClass">
-		<label for="class">Tabla (Class):</label>
-		<select name="class" id="class" onchange="
-			var children = document.getElementById('divTables').childNodes;
-			for (var i = 0; i < children.length; i++) {
-				if (children[i].style) {
-					children[i].style.display='none';
-				}
-			};
-			var divTable=document.getElementById('div'+this.value);
-			if (divTable) {
-				divTable.style.display='block';
+		<!--Table(Class): (CRUD)<input type="text" name="class" value="" /><br />-->
+		<label for="pageType">Tipo:</label>
+		<select name="pageType" id="pageType" onchange="
+			if (this.value!='Blank') {
+				document.getElementById('divClass').style.display='block';
+			} else {
+				document.getElementById('divClass').style.display='none';
+				document.getElementById('class').value='';
+				document.getElementById('class').onchange();
 			}
 		">
-			<option value="">Seleecionar tabla</option>
+			<option value="Blank">Blank</option>
+			<option value="CRUD">CRUD</option>
+			<option value="DBdataTable">DBdataTable</option>
+		</select> (Tipo de Page a crear: Blank => Ficheros en blanco, CRUD => Formulario de campos validados, DBdataTable => Listado datatables server side)
+
+		<div style="display:none;" id="divClass">
+			<label for="class">Tabla (Class):</label>
+			<select name="class" id="class" onchange="
+				var children = document.getElementById('divTables').childNodes;
+				for (var i = 0; i < children.length; i++) {
+					if (children[i].style) {
+						children[i].style.display='none';
+					}
+				};
+				var divTable=document.getElementById('div'+this.value);
+				if (divTable) {
+					divTable.style.display='block';
+				}
+			">
+				<option value="">Seleecionar tabla</option>
 <?
 foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 ?>
-			<option value="<?=$stdObjTableInfo->tableName?>"><?=$stdObjTableInfo->tableName?></option>
+				<option value="<?=$stdObjTableInfo->tableName?>"><?=$stdObjTableInfo->tableName?></option>
 <?
 }
 ?>
-		</select> (Tabla de la BD en la que se basa la Page, tambien se creará en '<?=RUTA_APP?>server/clases/Logic/' la clase de lógica (Clase Logic o Clase ORM) asociada si no existe)
-	</div>
-	<div id="divTables">
+			</select> (Tabla de la BD en la que se basa la Page, tambien se creará en '<?=RUTA_APP?>server/clases/Logic/' la clase de lógica (Clase Logic o Clase ORM) asociada si no existe)
+		</div>
+		<div id="divTables">
 <?
 	foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 ?>
-		<div id="div<?=$stdObjTableInfo->tableName?>" style="display:none">
-			<h3>Tabla: <?=$stdObjTableInfo->tableName?></h3>
-			<div id="divFields<?=$stdObjTableInfo->tableName?>">
-				<span title="<?=$stdObjTableInfo->arrCreateInfo['Create Table']?>">SQL Create Table (tooltip)</span>
-				<h3>COLUMNAS</h3>
-				<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslColumns,function ($row,$columnInfo) use ($stdObjTableInfo) {
+			<div id="div<?=$stdObjTableInfo->tableName?>" style="display:none">
+				<h3>Tabla: <?=$stdObjTableInfo->tableName?></h3>
+				<div id="divFields<?=$stdObjTableInfo->tableName?>">
+					<span title="<?=$stdObjTableInfo->arrCreateInfo['Create Table']?>">SQL Create Table (tooltip)</span>
+					<h3>COLUMNAS</h3>
+					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslColumns,function ($row,$columnInfo) use ($stdObjTableInfo) {
 					if ($row==0) {
 						return '
 							<th>Excluir (La columna no se incluira en la Page)</th>
@@ -131,24 +131,25 @@ foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 						</td>';
 					}
 				});?>
+				</div>
+				<div id="divIdx<?=$stdObjTableInfo->tableName?>">
+					<h3>ÍNDICES</h3>
+					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslIdx);?>
+				</div>
+				<div id="divFKs<?=$stdObjTableInfo->tableName?>">
+					<h3>FKs FROM (Tablas a las que hace referencia <?=$stdObjTableInfo->tableName?>)</h3>
+					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksFrom);?>
+				</div>
+				<div id="divFKs<?=$stdObjTableInfo->tableName?>">
+					<h3>FKs TO (Tablas que contienen referencias a <?=$stdObjTableInfo->tableName?>)</h3>
+					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksTo);?>
+				</div>
 			</div>
-			<div id="divIdx<?=$stdObjTableInfo->tableName?>">
-				<h3>ÍNDICES</h3>
-				<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslIdx);?>
-			</div>
-			<div id="divFKs<?=$stdObjTableInfo->tableName?>">
-				<h3>FKs FROM (Tablas a las que hace referencia <?=$stdObjTableInfo->tableName?>)</h3>
-				<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksFrom);?>
-			</div>
-			<div id="divFKs<?=$stdObjTableInfo->tableName?>">
-				<h3>FKs TO (Tablas que contienen referencias a <?=$stdObjTableInfo->tableName?>)</h3>
-				<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksTo);?>
-			</div>
-		</div>
 <?
 	}
 ?>
-	</div>
-	<input type="submit" />
+		</div>
+		<input type="submit" />
+	</fieldset>
 </form>
 <?="\n<!-- /".get_class()." -->\n"?>

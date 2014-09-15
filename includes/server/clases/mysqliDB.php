@@ -2,7 +2,18 @@
 class DBException extends Exception {}
 
 class mysqliDB extends mysqli {
-	public function __construct($host, $user, $pass, $db) {
+	const _DB_HOST_='localhost';
+	const _DB_USER_='celorrio3';
+	const _DB_PASSWD_='3c3l0rr10';
+	const _DB_NAME_='celorrio3';
+
+	public function __construct($host=NULL, $user=NULL, $pass=NULL, $db=NULL) {
+		if (is_null($host)) {
+			$host=self::_DB_HOST_;
+			$user=self::_DB_USER_;
+			$pass=self::_DB_PASSWD_;
+			$db=self::_DB_NAME_;
+		}
 		parent::init();
 		/*
 		if (!parent::options(MYSQLI_INIT_COMMAND, 'SET AUTOCOMMIT = 0')) {
@@ -23,7 +34,11 @@ class mysqliDB extends mysqli {
 			throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
 		}
 	}
-
+	public function __destruct() {
+		if (!parent::close()) {
+			throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
+		}
+	}
 	public function query($query) {
 		$localeActual=setlocale(LC_ALL, 0);
 	 	setlocale(LC_ALL,'en_US.utf8');
@@ -169,8 +184,7 @@ class mysqliDB extends mysqli {
 class cDb extends mysqliDB {
 	private static $singleton;
 	public static function getInstance() {
-		if(!isset(self::$singleton))
-			self::$singleton = new cDb(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
+		if(!self::$singleton instanceof self) self::$singleton = new self();
 		return self::$singleton;
 	}
 	public static function gI() {

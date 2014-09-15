@@ -17,32 +17,6 @@ ClaseCreadora 1.2
 	* Empezamos la history
 	* Añadida llamada a htmlentities en cargarId, ya que los valores cargados de la BD serán usados en HTML y
 	* los caracteres convertidos a entidades HTML para que no produzcan problemas.
-
-TODO:
-- Parametrizar CORRECTAMTE la referencia a la clase de Acceso a datos.
-   NOTA :  Néstor, de momento, como no sabemos como quieres parametrizar esto, hemos definido unas constantes
-   para ti y otras para nosotros con las diferencias este nivel .. hemos cambiado cosa de nuestra clase
-   de accesos a datos para minimizar esas diferencias, pero mas no podemos minimizarlas.
-	Queda de tu mano el poner esto aqui como merjor creas, pero a través de estas constantes ya sabes lo que nos
-	hace falta.
-*/
-
-
-/* DEFINES PARA CLASE DE ACCESO A DATOS mysqliDB */
-define("CAD_CLASE_DATOS","\$GLOBALS['db']->");
-define("CAD_LLAMADA_QUERY_INSERT_UPDATE","\$GLOBALS['db']->query (\$sql);");
-
-
-
-/* DEFINES PARA CLASE DE ACCESO A DATOS cDB */
-/*
-define("CAD_CLASE_DATOS","cDb::");
-define("CAD_LLAMADA_QUERY_INSERT_UPDATE","cDb::dbQuery(\$sql,false);");
-*/
-
-
-
-
 /**************************************************************************************************************/
 //Crea un fichero php con el codigo basico que solemos usar para las clases
 //El fichero creado tira de las funciones de mysqliDB.php
@@ -66,28 +40,19 @@ class Creadora {
 		fwrite ($fp,$sg.$sg."if (\$id!=\"\") {".$sl);
 		fwrite ($fp,$sg.$sg.$sg."\$this->cargarId (\$id);".$sl);
 		fwrite ($fp,$sg.$sg."}".$sl);
-		//fwrite ($fp,$sg.$sg."return \$result;".$sl);//<- El constructor no puede devolver nada
 		fwrite ($fp,$sg."}".$sl);
 		fwrite ($fp,$sl);
-
-		//fwrite ($fp,$sg."//Incluida para compatibilidad con versiones anteriores de PHP;".$sl);
-		//fwrite ($fp,$sg."public function ".$nombreClase." (\$id=\"\") {".$sl);
-		//fwrite ($fp,$sg.$sg."return __construct(\$id);".$sl);
-		//fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion Constructor
-		//fwrite ($fp,$sl);
+		//Funcion db
+		fwrite ($fp,$sg.'private static function db() {'.$sl);
+		fwrite ($fp,$sg.'	return cDb::gI();'.$sl);
+		fwrite ($fp,$sg.'}'.$sl);
+		fwrite ($fp,$sl);
 
 		//Funcion cargarId
 		fwrite ($fp,$sg."public function cargarId (\$id) {".$sl);
 		fwrite ($fp,$sg.$sg."\$result=false;".$sl);
-		//fwrite ($fp,$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".\$GLOBALS['db']->real_escape_string(\$id).\"'\";".$sl);
-		fwrite ($fp,$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".".CAD_CLASE_DATOS."real_escape_string(\$id).\"'\";".$sl);
-
-		/*por parametrizacion de clase de accesos a datos */
-		//fwrite ($fp,$sg.$sg."\$data=\$GLOBALS['db']->get_row(\$sql);".$sl);
-		fwrite ($fp,$sg.$sg."\$data=".CAD_CLASE_DATOS."get_row(\$sql);".$sl);
-
-
+		fwrite ($fp,$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".self::db()->real_escape_string(\$id).\"'\";".$sl);
+		fwrite ($fp,$sg.$sg."\$data=self::db()->get_row(\$sql);".$sl);
 		fwrite ($fp,$sg.$sg."if (\$data) {".$sl);
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
 			//fwrite ($fp,$sg.$sg.$sg."\$this->".$nombreAtributo."=htmlentities(\$data->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\");".$sl);
@@ -103,9 +68,7 @@ class Creadora {
 		fwrite ($fp,$sg."public function grabar () {".$sl);
 		fwrite ($fp,$sg.$sg."\$result=false;".$sl);
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
-			/*por parametrizacion de clase de accesos a datos */
-			//fwrite ($fp,$sg.$sg."\$sqlValue_".$nombreAtributo."=(is_null(\$this->".$nombreAtributo."))?\"NULL\":\"'\".\$GLOBALS['db']->real_escape_string(\$this->".$nombreAtributo.").\"'\";".$sl);
-			fwrite ($fp,$sg.$sg."\$sqlValue_".$nombreAtributo."=(is_null(\$this->".$nombreAtributo."))?\"NULL\":\"'\".".CAD_CLASE_DATOS."real_escape_string(\$this->".$nombreAtributo.").\"'\";".$sl);
+			fwrite ($fp,$sg.$sg."\$sqlValue_".$nombreAtributo."=(is_null(\$this->".$nombreAtributo."))?\"NULL\":\"'\".self::db()->real_escape_string(\$this->".$nombreAtributo.").\"'\";".$sl);
 		}
 		fwrite ($fp,$sg.$sg."if (\$this->id!=\"\") { //UPDATE".$sl);
 
@@ -125,11 +88,7 @@ class Creadora {
 		fwrite ($fp,$sg.$sg."} else { //INSERT".$sl);
 
 		$arrKeys=array_keys($arrAtributos);
-
-		/*por parametrizacion de clase de accesos a datos */
-		//fwrite ($fp,$sg.$sg.$sg."\$this->id=\$sqlValue_id=\$GLOBALS['db']->nextId (\"".$nombreTabla."\",\"".$arrKeys[0]."\");".$sl);
-		fwrite ($fp,$sg.$sg.$sg."\$this->id=\$sqlValue_id=".CAD_CLASE_DATOS."nextId (\"".$nombreTabla."\",\"".$arrKeys[0]."\");".$sl);
-
+		fwrite ($fp,$sg.$sg.$sg."\$this->id=\$sqlValue_id=self::db()->nextId (\"".$nombreTabla."\",\"".$arrKeys[0]."\");".$sl);
 		fwrite ($fp,$sg.$sg.$sg."\$this->insert=\$sqlValue_insert=\$this->update=\$sqlValue_update=date(\"YmdHis\");".$sl);
 		fwrite ($fp,$sg.$sg.$sg."\$sql=\"INSERT INTO ".$nombreTabla." ( \".".$sl);
 		$code="";
@@ -150,10 +109,7 @@ class Creadora {
 		fwrite ($fp,$code.")\";".$sl);
 		fwrite ($fp,$sg.$sg."}".$sl);
 
-		/*por parametrizacion de clase de accesos a datos */
-		// fwrite ($fp,$sg.$sg."\$result=\$GLOBALS['db']->query (\$sql);".$sl);
-		fwrite ($fp,$sg.$sg."\$result=".CAD_LLAMADA_QUERY_INSERT_UPDATE.$sl);
-
+		fwrite ($fp,$sg.$sg."\$result=self::db()->query (\$sql);".$sl);
 
 		fwrite ($fp,$sg.$sg."return \$result;".$sl);
 		fwrite ($fp,$sg."}".$sl);
@@ -163,8 +119,8 @@ class Creadora {
 		fwrite ($fp,$sg.'public function borrar() {'.$sl);
 		fwrite ($fp,$sg.$sg.'$result=false;'.$sl);
 		fwrite ($fp,$sg.$sg.'if ($this->noReferenciado()) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'$sql="DELETE FROM '.$nombreTabla.' WHERE id=\'".'.CAD_CLASE_DATOS.'real_escape_string($this->id)."\'";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.''.CAD_CLASE_DATOS.'query($sql);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'$sql="DELETE FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'self::db()->query($sql);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$result=true;'.$sl);
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
@@ -248,8 +204,8 @@ class Creadora {
 		fwrite ($fp,$sl);
 		//Inicio funcion existeID
 		fwrite ($fp,$sg.'public static function existeId($id) {'.$sl);
-		fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.' WHERE id=\'".'.CAD_CLASE_DATOS.'real_escape_string($id)."\'";'.$sl);
-		fwrite ($fp,$sg.$sg.'$data='.CAD_CLASE_DATOS.'get_row($sql);'.$sl);
+		fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($id)."\'";'.$sl);
+		fwrite ($fp,$sg.$sg.'$data=self::db()->get_row($sql);'.$sl);
 		fwrite ($fp,$sg.$sg.'if ($data) {$result=true;} else {$result=false;}'.$sl);
 		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
 		fwrite ($fp,$sg."}".$sl);
@@ -262,7 +218,7 @@ class Creadora {
 		fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
 		fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM cliente".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
 		fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-		fwrite ($fp,$sg.$sg.'$rsl='.CAD_CLASE_DATOS.'query($sql);'.$sl);
+		fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
 		fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);
@@ -291,13 +247,13 @@ class Creadora {
 		fwrite ($fp,$sg.'	$sqlView="CREATE OR REPLACE VIEW `'.$nombreVista.'` AS'.$sl);
 		fwrite ($fp,$sg.'		SELECT * FROM '.$nombreTabla.';'.$sl);
 		fwrite ($fp,$sg.'	";'.$sl);
-		fwrite ($fp,$sg.'	'.CAD_CLASE_DATOS.'query($sqlView);'.$sl);
+		fwrite ($fp,$sg.'	self::db()->query($sqlView);'.$sl);
 		fwrite ($fp,$sg.'	$sqlWhere=($where!="")?" WHERE ".$where:"";'.$sl);
 		fwrite ($fp,$sg.'	$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
 		fwrite ($fp,$sg.'	$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
 		fwrite ($fp,$sg.'	$sql="SELECT * FROM '.$nombreVista.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
 		fwrite ($fp,$sg.'	$arr=array();'.$sl);
-		fwrite ($fp,$sg.'	$rsl='.CAD_CLASE_DATOS.'query($sql);'.$sl);
+		fwrite ($fp,$sg.'	$rsl=self::db()->query($sql);'.$sl);
 		fwrite ($fp,$sg.'	while ($data=$rsl->fetch_object()) {'.$sl);
 		fwrite ($fp,$sg.'		$objSeg=new self($data->id);'.$sl);
 		fwrite ($fp,$sg.'		foreach ($data as $field => $value) {'.$sl);
@@ -318,8 +274,8 @@ class Creadora {
 		foreach ($arrFksTo as $objFkInfo) {
 			$fTable=$objFkInfo->TABLE_NAME;
 			$fField=$objFkInfo->COLUMN_NAME;
-			fwrite ($fp,$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".'.CAD_CLASE_DATOS.'real_escape_string($this->id)."\'";'.$sl);
-			fwrite ($fp,$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=('.CAD_CLASE_DATOS.'get_num_rows($sql)==0)?true:false;'.$sl);
+			fwrite ($fp,$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
+			fwrite ($fp,$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=(self::db()->get_num_rows($sql)==0)?true:false;'.$sl);
 		}
 		$strConds='';
 		foreach ($arrFksTo as $objFkInfo) {
@@ -353,12 +309,12 @@ class Creadora {
 		if (FUNCION_FKTO_UNICA) {
 			//Alternativa sin probar
 			fwrite ($fp,$sg.'public function arrFkTo($table,$field,$where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl);
-			fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$field."=\'".'.CAD_CLASE_DATOS.'real_escape_String($this->id)."\' AND ".$where:" WHERE ".$field."=\'".'.CAD_CLASE_DATOS.'real_escape_string($this->id)."\'";'.$sl);
+			fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$field."=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE ".$field."=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
 			fwrite ($fp,$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
 			fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
 			fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM ".$table.$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
 			fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-			fwrite ($fp,$sg.$sg.'$rsl='.CAD_CLASE_DATOS.'query($sql);'.$sl);
+			fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
 			fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
 			fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
 			fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);
@@ -383,12 +339,12 @@ class Creadora {
 				$fField=$objFkInfo->COLUMN_NAME;
 
 				fwrite ($fp,$sg.'public function arr'.ucfirst($fTable).'($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl);
-				fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".'.CAD_CLASE_DATOS.'real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".'.CAD_CLASE_DATOS.'real_escape_string($this->id)."\'";'.$sl);
+				fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
 				fwrite ($fp,$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
 				fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
 				fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM '.$fTable.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
 				fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-				fwrite ($fp,$sg.$sg.'$rsl='.CAD_CLASE_DATOS.'query($sql);'.$sl);
+				fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
 				fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
 				fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
 				fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);

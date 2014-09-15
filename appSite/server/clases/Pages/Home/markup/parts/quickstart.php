@@ -50,7 +50,8 @@
 				</div>
 				<div class="meta"><span>Conexión</span> y mysqliDB</div>
 				<div class="body">
-					sharedDefines.php / appDefines.php
+					sharedDefines.php / appDefines.php<br />
+					_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_
 				</div>
 				<!---->
 				<div class="title">

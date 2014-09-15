@@ -67,7 +67,7 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
 	var methods = {
 		init: function(settings) {
 			var self=this;//Al estar en $.overlay, this es una funcion
-			var $db=$(document.body);
+			var $body=$(document.body);
 
 			self.opt = $.extend(true, {}, $.overlay.defaults, settings);
 
@@ -86,20 +86,20 @@ jQuery.fn.exists = function(){return jQuery(this).length>0;};
 				.addClass(self.opt.imgClass)
 				.appendTo($divCell);
 
-			$overlay.appendTo($db);
-			$divTable.appendTo($db);
-			$db.data('overlay', {
+			$overlay.appendTo($body);
+			$divTable.appendTo($body);
+			$body.data('overlay', {
 				settings:self.opt,
 				$overlay:$overlay,
 				$divTable:$divTable
 			});
 		},
 		destroy:function() {
-			var $db=$(document.body);
-			if ($db.data('overlay')) {
-				$db.data('overlay').$overlay.remove();
-				$db.data('overlay').$divTable.remove();
-				$db.removeData('overlay');
+			var $body=$(document.body);
+			if ($body.data('overlay')) {
+				$body.data('overlay').$overlay.remove();
+				$body.data('overlay').$divTable.remove();
+				$body.removeData('overlay');
 			}
 		}
 	};

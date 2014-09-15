@@ -132,13 +132,13 @@
 			background-attachment: fixed;
 		}
 		.fragment:nth-child(n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=600);
+			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=600&formato=jpg);
 		}
 		.fragment:nth-child(2n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=601);
+			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=601&formato=jpg);
 		}
 		.fragment:nth-child(3n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=602);
+			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=602&formato=jpg);
 		}
 	/**/
 	.fragment .titulo {

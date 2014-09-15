@@ -60,13 +60,14 @@ function logPageData($titulo="Grupo logPageData") {
 }
 
 function dataTablesGenericServerSide($objCliente=NULL) {
+	$db=cDb::gI();
 	$sOrder = "";
 	if ( isset( $_REQUEST['iSortCol_0'] ) ) {
 		for ( $i=0 ; $i<intval( $_REQUEST['iSortingCols'] ) ; $i++ ) {
 			if ( $_REQUEST[ 'bSortable_'.intval($_REQUEST['iSortCol_'.$i]) ] == "true" ) {
 				$sOrder .= "`"
-					.$GLOBALS['db']->real_escape_string($_REQUEST['mDataProp_'.intval( $_REQUEST['iSortCol_'.$i])])
-					."` ".$GLOBALS['db']->real_escape_string($_REQUEST['sSortDir_'.$i]).", ";
+					.$db->real_escape_string($_REQUEST['mDataProp_'.intval( $_REQUEST['iSortCol_'.$i])])
+					."` ".$db->real_escape_string($_REQUEST['sSortDir_'.$i]).", ";
 			}
 		}
 		$sOrder = substr_replace( $sOrder, "", -2 );
@@ -86,8 +87,8 @@ function dataTablesGenericServerSide($objCliente=NULL) {
 		for ($i=0; $i<$_REQUEST['iColumns'];$i++) {
 			if ( isset($_REQUEST['bSearchable_'.$i]) && $_REQUEST['bSearchable_'.$i] == "true" ) {
 				$sWhere .= "`"
-					.$GLOBALS['db']->real_escape_string($_REQUEST['mDataProp_'.$i])
-					."` LIKE '%".$GLOBALS['db']->real_escape_string($_REQUEST['sSearch'])."%' OR ";
+					.$db->real_escape_string($_REQUEST['mDataProp_'.$i])
+					."` LIKE '%".$db->real_escape_string($_REQUEST['sSearch'])."%' OR ";
 			}
 		}
 		$sWhere = substr_replace( $sWhere, "", -3 );
@@ -102,7 +103,7 @@ function dataTablesGenericServerSide($objCliente=NULL) {
 			} else {
 				$sWhere .= " AND ";
 			}
-			$sWhere .= "`".$GLOBALS['db']->real_escape_string($_REQUEST['mDataProp_'.$i])."` LIKE '%".$GLOBALS['db']->real_escape_string($_REQUEST['sSearch_'.$i])."%' ";
+			$sWhere .= "`".$db->real_escape_string($_REQUEST['mDataProp_'.$i])."` LIKE '%".$db->real_escape_string($_REQUEST['sSearch_'.$i])."%' ";
 		}
 	}
 	*/
