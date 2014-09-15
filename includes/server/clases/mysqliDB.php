@@ -1,19 +1,36 @@
 <?
 class DBException extends Exception {}
 
-class mysqliDB extends mysqli {
-	const _DB_HOST_='localhost';
-	const _DB_USER_='celorrio3';
-	const _DB_PASSWD_='3c3l0rr10';
-	const _DB_NAME_='celorrio3';
+class cDb extends mysqliDB {
+	private static $host;
+	private static $user;
+	private static $pass;
+	private static $db;
 
-	public function __construct($host=NULL, $user=NULL, $pass=NULL, $db=NULL) {
-		if (is_null($host)) {
-			$host=self::_DB_HOST_;
-			$user=self::_DB_USER_;
-			$pass=self::_DB_PASSWD_;
-			$db=self::_DB_NAME_;
+	private static $singleton;
+
+	public static function conf($host, $user, $pass, $db) {
+		self::$host=$host;
+		self::$user=$user;
+		self::$pass=$pass;
+		self::$db=$db;
+		self::$singleton=NULL;
+	}
+
+	public static function getInstance() {
+		if(!self::$singleton instanceof self) {
+			//self::$singleton = new self(self::_DB_HOST_, self::_DB_USER_, self::_DB_PASSWD_, self::_DB_NAME_);
+			self::$singleton = new self(self::$host, self::$user, self::$pass, self::$db);
 		}
+		return self::$singleton;
+	}
+	public static function gI() {
+		return self::getInstance();
+	}
+}
+
+class mysqliDB extends mysqli {
+	public function __construct($host, $user, $pass, $db) {
 		parent::init();
 		/*
 		if (!parent::options(MYSQLI_INIT_COMMAND, 'SET AUTOCOMMIT = 0')) {
@@ -179,16 +196,5 @@ class mysqliDB extends mysqli {
 		return $result;
 	}
 
-}
-
-class cDb extends mysqliDB {
-	private static $singleton;
-	public static function getInstance() {
-		if(!self::$singleton instanceof self) self::$singleton = new self();
-		return self::$singleton;
-	}
-	public static function gI() {
-		return self::getInstance();
-	}
 }
 ?>

@@ -48,10 +48,36 @@
 				<div class="title">
 					<span>MySQL</span>
 				</div>
-				<div class="meta"><span>Conexión</span> y mysqliDB</div>
+				<div class="meta">Conexión a <span>MySQL</span>. La clase <span>mysqliDB</span></div>
 				<div class="body">
-					sharedDefines.php / appDefines.php<br />
-					_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_
+					<p>
+						S!nt@x proporciona clases para la conexión a MySQL, tanto para su uso mediante diversas instancias, como para su uso
+						mediante el patrón <strong>Singleton</strong>. Ambos metodos son útiles dependiendo de la naturaleza del proyecto a
+						desarrollar y se encuentran implementados como una jerarquia de clases.
+					</p>
+					<p>
+					S!nt@x proporciona una clase de acceso a datos para MySQL llamada <code>mysqliDB</code>, que extiende a la clase nativa
+					<code>mysqli</code>. A su vez, esta clase es extendida por la clase <code>cDb</code>, que implementa el patron
+					<strong>Singleton</strong>. La implementación <strong>Singleton</strong> de la clase <code>cDb</code> debe ser inicializada
+					antes de su uso, mediante una llamada a su metodo estatico <code>conf</code>. Este metodo tambien puede ser usado para
+					desconectar de la base de datos activa y preparar la clase para una nueva conexión.
+					</p>
+					<div class="bs-callout bs-callout-info">
+						<h4>Conexión a MySQL</h4>
+						<p>
+							Aunque se proporcionan clases para la conexión a MySQL, S!nt@x no realiza ninguna conexión, por lo que es
+							necesario que las APPs realicen sus propias conexiones bien instanciando la clase <code>mysqliDB</code>
+							directamente o bien mediante una llamada al metodo estático <code>conf</code> de la clase <code>cDb</code>
+<pre>
+$db=new mysqliDB ($host, $user, $pass, $db);
+$mysqli_result=$db->query('SELECT * FROM tabla');
+cDb::conf($host, $user, $pass, $db);
+cDb::getInstance()->query('SELECT * FROM tabla');
+	// o usando el alias gI:
+	cDb::gI()->query('SELECT * FROM tabla');
+</pre>
+						</p>
+					</div>
 				</div>
 				<!---->
 				<div class="title">

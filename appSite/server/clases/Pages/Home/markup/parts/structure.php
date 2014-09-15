@@ -36,12 +36,6 @@
 ?>
 </pre>
 						</p>
-						<p>
-<?
-	$objCliente=new Cliente (12);
-	print_r($objCliente);
-?>
-						</p>
 					</div>
 					<date>Creado: 13 de septiembre, 2014</date>
 				</div>

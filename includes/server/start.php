@@ -53,7 +53,6 @@ define ('DEBUG_EMAIL','nestor@parqueweb.com');
 define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consideran validos los datos de lastAction
 /**/
 
-
 require_once "./includes/server/clientLibs.php";
 require_once "./includes/server/serverLibs.php";
 
