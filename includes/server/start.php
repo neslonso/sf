@@ -57,9 +57,11 @@ require_once "./includes/server/clientLibs.php";
 require_once "./includes/server/serverLibs.php";
 
 if (defined('RUTA_APP')) {
-	require_once "./includes/server/clasesPHP.php";
 	if (file_exists(RUTA_APP."server/appDefines.php")) {
 		require_once RUTA_APP."server/appDefines.php";
+		if (file_exists(RUTA_APP."server/appClasesPHP.php")) {
+			require_once RUTA_APP."server/appClasesPHP.php";
+		}
 	} else {
 		error_log("/**/");
 		error_log("/*".__FILE__.":".__LINE__."*/");
@@ -79,4 +81,5 @@ if (defined('RUTA_APP')) {
 	//throw new Exception("RUTA_APP no definida. La App a utilizar debe estar asociada al nombre del script (index.php, admin.php...) o ser suministrada en el parametro APP ");
 	throw new Exception("RUTA_APP no definida. SCRIPT_NAME: ".$_SERVER['SCRIPT_NAME']." :-: Basename: ".basename($_SERVER['SCRIPT_NAME']));
 }
+cDb::conf(_DB_HOST_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 ?>
