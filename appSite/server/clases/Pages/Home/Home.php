@@ -160,7 +160,7 @@ class Home extends Error implements IPage {
 			if ($filename=="." || $filename=="..") {continue;}
 			$fileFullPath=$path.$filename;
 			$exclude=false;
-			if (preg_match($excludingRegEx, $fileFullPath)) {
+			if (preg_match($excludingRegEx, $fileFullPath)===1) {
 				$exclude=true;
 			}
 			if ($exclude) {continue;}
@@ -255,25 +255,42 @@ class Home extends Error implements IPage {
 		}
 	}
 
-	public function acPackCode () {
+	public function acPackCode ($type='noVendorCode') {
 		$dir='./zCache/tmpUpload/';
-		foreach (glob($dir."Sintax*") as $file) {
-			error_log($file);
-			if (file_exists($file)) {unlink($file);}
+		$arrFilesOrFalse=glob($dir."Sintax*");
+		if ($arrFilesOrFalse) {
+			foreach ($arrFilesOrFalse as $file) {
+				if (file_exists($file)) {unlink($file);}
+			}
 		}
-		$excludingRexEx=array (
-			"/",
-			"vendor",
-			"|",
-			"aaReferences",
-			"|",
-			"(css|jsMin)\.(.+)\.(css|js)",
-			"|",
-			"zzWorkspace",
-			"|",
-			".zip$",
-			"/"
-		);
+		error_log($type);
+		if ($type=='withVendorCode') {
+			$excludingRexEx=array (
+				"/",
+				"aaReferences",
+				"|",
+				"(css|jsMin)\.(.+)\.(css|js)",
+				"|",
+				"zzWorkspace",
+				"|",
+				".zip$",
+				"/"
+			);
+		} else {
+			$excludingRexEx=array (
+				"/",
+				"vendor\/.*",
+				"|",
+				"aaReferences",
+				"|",
+				"(css|jsMin)\.(.+)\.(css|js)",
+				"|",
+				"zzWorkspace",
+				"|",
+				".zip$",
+				"/"
+			);
+		}
 		$arr=self::path2array("./",implode('',$excludingRexEx));
 		$file=$dir.'Sintax.'.SKEL_VERSION.'.zip';
 		self::array2zip($arr,$file);

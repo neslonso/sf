@@ -2,6 +2,9 @@
 try {
 	require_once "./includes/server/start.php";
 	$module=(isset($_REQUEST['MODULE']))?strtolower($_REQUEST['MODULE']):"render";
+	if (isset($_REQUEST['MODULE'])) {unset ($_REQUEST['MODULE']);}
+	if (isset($_POST['MODULE'])) {unset ($_POST['MODULE']);}
+	if (isset($_GET['MODULE'])) {unset ($_GET['MODULE']);}
 	$arrModules=unserialize(MODULES);
 	if (array_key_exists($module,$arrModules)) {
 		require $arrModules[$module];

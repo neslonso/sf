@@ -14,10 +14,20 @@
 
 					</p>
 					<p>
-						<a href="#" onclick="
-							Post('MODULE','actions','acClase','Home','acMetodo','acPackCode','acTipo','plainAssoc');
-							return false;
-						">Version <?=SKEL_VERSION?></a>
+						<ul>
+							<li>
+								<a href="#" onclick="
+									Post('MODULE','actions','acClase','Home','acMetodo','acPackCode','acTipo','plain');
+									return false;
+								">Versión <?=SKEL_VERSION?></a>
+							</li>
+							<li>
+								<a href="#" onclick="
+									Post('MODULE','actions','acClase','Home','acMetodo','acPackCode','acTipo','plain','type','withVendorCode');
+									return false;
+								">Versión <?=SKEL_VERSION?> + plugins</a>
+							</li>
+						</ul>
 					</p>
 					<date>Creado: 13 de septiembre, 2014</date>
 				</div>
