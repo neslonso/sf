@@ -4,6 +4,5 @@ sftp-config.json
 aaReferences
 vendor/
 zzWorkspace/
-prueba*/
-*Prueba/
-Logic/
+*prueba*/
+appSite/server/clases/Logic/*.php
