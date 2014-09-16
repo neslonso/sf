@@ -20,7 +20,7 @@ date_default_timezone_set('Europe/Madrid');
 ?>
 <?
 try {
-	session_start();
+	//session_start();
 
 	if (isset($_GET['sitemap'])) {
 		sitemap();

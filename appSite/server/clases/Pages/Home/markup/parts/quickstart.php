@@ -71,11 +71,24 @@
 <pre>
 $db=new mysqliDB ($host, $user, $pass, $db);
 $mysqli_result=$db->query('SELECT * FROM tabla');
+</pre>
+<pre>
 cDb::conf($host, $user, $pass, $db);
 cDb::getInstance()->query('SELECT * FROM tabla');
 	// o usando el alias gI:
 	cDb::gI()->query('SELECT * FROM tabla');
 </pre>
+						</p>
+					</div>
+					<div class="bs-callout bs-callout-info">
+						<h4>New vs singleton</h4>
+						<p>
+							Cuando instanciamos la clase <code>mysqliDB</code> se realiza la conexión a MySQL, que durará hasta que
+							la variable que hace referencia a la instancia de <code>mysqliDB</code> sea destruida.
+							Por contra, una vez que <code>cDb::conf</code> ha
+							sido llamado, la clase <code>cDb</code> almacenará una instancia estática de si misma que será devuelta
+							cuando se llame a los metodos <code>getInstance</code> o <code>gI</code>. Cada nueva llamada a
+							<code>cDb::conf</code> cerrará la conexión abierta y abrirá una nueva con los nuevos datos.
 						</p>
 					</div>
 				</div>

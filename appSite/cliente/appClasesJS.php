@@ -1,3 +1,3 @@
 <?/*
-<script type="text/javascript" src="./appZzShared/cliente/plugins/jquery.prodSelector/jquery.prodSelector.js"></script>
+<script type="text/javascript" src="./appZzShared/cliente/lib/jquery.prodSelector/jquery.prodSelector.js"></script>
 */?>

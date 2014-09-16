@@ -906,12 +906,12 @@ class Creacion extends Home implements IPage {
 					WHERE
 					TABLE_NAME = '".$stdObjTableInfo->tableName."' AND
 					REFERENCED_TABLE_NAME IS NOT NULL
-					AND TABLE_SCHEMA = '".cDb::_DB_NAME_."';
+					AND TABLE_SCHEMA = '"._DB_NAME_."';
 				");
 				$stdObjTableInfo->rslFksTo = $mysqli->query("
 					SELECT * FROM information_schema.KEY_COLUMN_USAGE
 					WHERE REFERENCED_TABLE_NAME = '".$stdObjTableInfo->tableName."'
-					AND TABLE_SCHEMA = '".cDb::_DB_NAME_."';
+					AND TABLE_SCHEMA = '"._DB_NAME_."';
 				");
 
 				$stdObjTableInfo->arrCreateInfo = $rslCreate->fetch_array(MYSQLI_ASSOC);

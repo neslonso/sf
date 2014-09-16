@@ -14,7 +14,9 @@ class cDb extends mysqliDB {
 		self::$user=$user;
 		self::$pass=$pass;
 		self::$db=$db;
+		if(self::$singleton instanceof self) {self::$singleton->close();}
 		self::$singleton=NULL;
+		return self::getInstance();
 	}
 
 	public static function getInstance() {

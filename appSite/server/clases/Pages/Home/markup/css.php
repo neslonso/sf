@@ -243,49 +243,53 @@
 	.sobreSiguiente>.btn {
 		border-radius: 0;
 	}
+	/* Quickstart */
+		table.features {
+			width:100%;
+			text-align: center;
+		}
+		table.features td {
+			padding: 1em;
+		}
+		.fa-icon-big {
+			cursor: default;
+			color:#c0c0c0;
+			font-size: 7em;
+			text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
+		}
+	/**/
+	/* Workflow */
+		table.MWconfig {
+			width:100%;
+			margin-bottom: 10px;
+			border:double #000 1px;
+		}
+		table.MWconfig tr:nth-child(odd){
+			background-color: rgba(128,128,128,0.5);
+		}
+		table.MWconfig tr:nth-child(even){
+			background-color: rgba(128,128,128,0.25);
+		}
+		table.MWconfig td.option{
+			text-align: right;
+			padding-right:1em;
+		}
+		table.MWconfig td.value{
+			font-weight: bold;
+		}
 
-	table.features {
-		width:100%;
-		text-align: center;
-	}
-
-	table.features td {
-		padding: 1em;
-	}
-
-	.fa-icon-big {
-		cursor: default;
-		color:#c0c0c0;
-		font-size: 7em;
-		text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
-	}
-
-	table.MWconfig {
-		width:100%;
-		margin-bottom: 10px;
-		border:double #000 1px;
-	}
-	table.MWconfig tr:nth-child(odd){
-		background-color: rgba(128,128,128,0.5);
-	}
-	table.MWconfig tr:nth-child(even){
-		background-color: rgba(128,128,128,0.25);
-	}
-
-	table.MWconfig td.option{
-		text-align: right;
-		padding-right:1em;
-	}
-	table.MWconfig td.value{
-		font-weight: bold;
-	}
-
-	ul.filesStruct li {
-		font-weight: bold;
-	}
-	ul.filesStruct li>span {
-		font-weight: normal;
-	}
+		ul.filesStruct li {
+			font-weight: bold;
+		}
+		ul.filesStruct li>span {
+			font-weight: normal;
+		}
+	/**/
+	/* Structure */
+		ul.ulFiles {
+			list-style-type:none;
+		}
+	/**/
 	/* Como no tenemos selector para ".fragment que preceda a .sobreAnterior" se lo ponemos a .fragment */
 		.fragment {
 			padding-bottom: 7px;

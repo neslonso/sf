@@ -97,7 +97,7 @@ $( document ).ready(function() {
 
 function scrollToName (name) {
 	var elDest=$('[name="' + name + '"]');
-	var scrollDest=(elDest.offset().top-elDest.height())*0.97;
+	var scrollDest=(elDest.offset().top-elDest.height()*1.50);
 	$('html, body').animate({
 		scrollTop: scrollDest
 	}, 500);

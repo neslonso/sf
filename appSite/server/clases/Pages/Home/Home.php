@@ -66,6 +66,30 @@ class Home extends Error implements IPage {
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/workflow.php');
 			break;
 			case '4':
+				$excludingRexEx=array (
+					"/",
+					"vendor\/.*", "|",
+					"aaReferences", "|",
+					"(css|jsMin)\.(.+)\.(css|js)", "|",
+					"zzWorkspace", "|",
+					"google", "|",
+					//excluimos tambien las direcorios de APPs
+					preg_quote(BASE_DIR,'/')."app(?!Zz)(.*)", "|",
+					//excluimos ficheros varios
+					"(\.htaccess|LICENSE|README\.md|crossdomain\.xml|humans\.txt|robots\.txt)",
+					"/"
+				);
+				$arrSintaxFiles=self::path2array("./",implode('',$excludingRexEx));
+				$excludingRexEx=array (
+					"/",
+					preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Logic\/.*",
+					"|",preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Pages\/(?!Home|Error)",
+					"|","markup\/parts",
+					"|",".htaccess",
+					"/"
+				);
+
+				$arrAppFiles=self::path2array("./appSite/",implode('',$excludingRexEx));
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/structure.php');
 			break;
 			case '5':
@@ -134,20 +158,21 @@ class Home extends Error implements IPage {
 		$arrFilenames = scandir($path);
 		foreach($arrFilenames as $filename) {
 			if ($filename=="." || $filename=="..") {continue;}
+			$fileFullPath=$path.$filename;
 			$exclude=false;
-			if (preg_match($excludingRegEx, $path.$filename)) {
+			if (preg_match($excludingRegEx, $fileFullPath)) {
 				$exclude=true;
 			}
 			if ($exclude) {continue;}
 			if ($nodesAsSplFileInfo) {
-				$objSplFileInfo=new SplFileInfo ($path.$filename);
+				$objSplFileInfo=new SplFileInfo ($fileFullPath);
 				$isDir=$objSplFileInfo->isDir();
 			} else {
-				$isDir=is_dir($path.$filename);
+				$isDir=is_dir($fileFullPath);
 			}
-			$fileFullPath=$path.$filename;
+
 			if ($isDir) {
-				$newPath=$path.$filename;
+				$newPath=$fileFullPath;
 				$newDepth=$maxDepth-1;
 				if ($newDepth>0) {
 					$children=self::path2array($newPath,$excludingRegEx,$newDepth);
@@ -177,15 +202,15 @@ class Home extends Error implements IPage {
 		return $result;
 	}
 
-	public static function array2list($array,$recursiveCall=false) {
-		$ulStyle='list-style-type:none;';
+	public static function array2list($array, $cssClass='ulFiles', $recursiveCall=false) {
+		$ulStyle='';
 		if ($recursiveCall) {$ulStyle.='display:none;';}
-		$result='<ul style="'.$ulStyle.'">';
+		$result='<ul class="'.$cssClass.'" style="'.$ulStyle.'">';
 		foreach ($array as $key => $value) {
 			$nameForList=basename($key);
 			if (is_array($value)) {
 				$liStyle="cursor:pointer;";
-				$liContent='<i class="fa fa-folder-o"></i> '.$nameForList.self::array2list($value,true);
+				$liContent='<i class="fa fa-folder-o"></i> '.$nameForList.self::array2list($value,$cssClass,true);
 				$liClick='
 					$(this).children(\'ul\').toggle();
 					$(this).children(\'i\').toggleClass(\'fa-folder-o\');
@@ -231,6 +256,11 @@ class Home extends Error implements IPage {
 	}
 
 	public function acPackCode () {
+		$dir='./zCache/tmpUpload/';
+		foreach (glob($dir."Sintax*") as $file) {
+			error_log($file);
+			if (file_exists($file)) {unlink($file);}
+		}
 		$excludingRexEx=array (
 			"/",
 			"vendor",
@@ -245,8 +275,7 @@ class Home extends Error implements IPage {
 			"/"
 		);
 		$arr=self::path2array("./",implode('',$excludingRexEx));
-		$file='./zCache/tmpUpload/Sintax.zip';
-		if (file_exists($file)) {unlink($file);}
+		$file=$dir.'Sintax.'.SKEL_VERSION.'.zip';
 		self::array2zip($arr,$file);
 
 		ob_clean();//limpiamos el buffer antes de mandar el fichero, no queremos nada más que el fichero
