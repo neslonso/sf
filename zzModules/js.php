@@ -3,13 +3,6 @@ $minify=false;//true no funciona del todo bien, debe existir algun problema en l
 ob_start();
 ?>
 <?
-header('Content-type: text/javascript; charset=utf-8');
-
-mb_internal_encoding("UTF-8");
-//El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
-date_default_timezone_set('Europe/Madrid');
-?>
-<?
 try {
 	session_cache_limiter('public');
 	session_start();

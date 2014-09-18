@@ -15,5 +15,6 @@ try {
 	$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
 	error_log ($infoExc);
 	header('HTTP/1.1 500 Internal Server Error',true,500);
+	echo ($infoExc);
 }
 ?>

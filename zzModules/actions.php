@@ -3,21 +3,10 @@ $tInicial=microtime(true);
 ob_start();
 ?>
 <?
-header('Content-Type: text/html; charset=utf-8');
-
 $uniqueId=uniqid("actions.");
 //error_log ('----------------------');
 //error_log ('/********************/');
 //error_log ('LLAMADA A ACTIONS.PHP: '.$uniqueId);
-
-mb_internal_encoding("UTF-8");
-//El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
-
-date_default_timezone_set('Europe/Madrid');
-
-//No utilizo setlocale, en cuestion de numeros, hace que los floats tengan la , por separador decimal al
-//convertirlos a cadena, lo que da problemas al construir sentencias SQL o mandar JSON a JS
-//setlocale(LC_ALL,'es_ES');
 ?>
 <?
 try {

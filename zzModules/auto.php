@@ -2,25 +2,33 @@
 ob_start();
 ?>
 <?
-header('Content-Type: text/html; charset=utf-8');
-
 $uniqueId=uniqid("auto.");
 //error_log ('----------------------');
 //error_log ('/********************/');
-//error_log ('LLAMADA A AUTO.PHP: '.$uniqueId);
-
-mb_internal_encoding("UTF-8");
-//El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
-
-date_default_timezone_set('Europe/Madrid');
-
-//No utilizo setlocale, en cuestion de numeros, hace que los floats tengan la , por separador decimal al
-//convertirlos a cadena, lo que da problemas al construir sentencias SQL o mandar JSON a JS
-//setlocale(LC_ALL,'es_ES');
+error_log ('LLAMADA A AUTO.PHP: '.$uniqueId);
 ?>
 <?
 try {
-	//session_start();
+	$shellCmd='crontab -l | grep '.BASE_URL.FILE_APP.'?MODULE=auto';
+	//echo $shellCmd;
+	$jobSearch = shell_exec($shellCmd);
+	if ($jobSearch=='') {
+		$job='*/5 * * * * curl '.BASE_URL.FILE_APP.'?MODULE=auto &>/dev/null'.PHP_EOL;
+		$output = shell_exec('crontab -l');
+		$tmpFile=TMP_UPLOAD_DIR.'crontab.txt';
+		file_put_contents($tmpFile, $output.PHP_EOL.$job.PHP_EOL);
+		echo exec('crontab '.$tmpFile);
+		//unlink ($tmpFile);
+	} else {
+		echo "cronjob found";
+		echo "<pre>".$jobSearch."</pre>";
+	}
+
+	foreach (unserialize(ARR_CRON_JOBS) as $nombreJob => $arrDatosJob) {
+		if ($arrDatosJob['activado']) {
+
+		}
+	}
 
 	if (isset($_GET['sitemap'])) {
 		sitemap();

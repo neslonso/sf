@@ -1,8 +1,7 @@
 .DS_Store
 Thumbs.db
 sftp-config.json
-aaReferences
-vendor/
+aaReferences/
 zzWorkspace/
 *prueba*/
 appSite/server/clases/Logic/*.php

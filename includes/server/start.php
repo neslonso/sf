@@ -1,4 +1,16 @@
 <?
+header('Content-Type: text/html; charset=utf-8');
+mb_internal_encoding("UTF-8");
+//El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
+
+date_default_timezone_set('Europe/Madrid');
+
+//No utilizo setlocale, en cuestion de numeros, hace que los floats tengan la , por separador decimal al
+//convertirlos a cadena, lo que da problemas al construir sentencias SQL o mandar JSON a JS
+//setlocale(LC_ALL,'es_ES');
+
+/**/
+
 define ('SKEL_VERSION','1.0.0');
 
 define ('IPS_DEV', serialize(array(
@@ -45,7 +57,7 @@ define('BASE_DIR',dirname($_SERVER['SCRIPT_NAME']).'/');//Tiene que terminar en 
 define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);
 
 define('CACHE_DIR','./zCache/');
-define('TMP_UPLOAD_DIR','./zCache/tmpUpload');
+define('TMP_UPLOAD_DIR','./zCache/tmpUpload/');
 
 define ('DEBUG_EMAIL','nestor@parqueweb.com');
 
@@ -61,6 +73,9 @@ if (defined('RUTA_APP')) {
 		require_once RUTA_APP."server/appDefines.php";
 		if (file_exists(RUTA_APP."server/appClasesPHP.php")) {
 			require_once RUTA_APP."server/appClasesPHP.php";
+		}
+		if (file_exists(RUTA_APP."server/appAuto.php")) {
+			require_once RUTA_APP."server/appAuto.php";
 		}
 	} else {
 		error_log("/**/");
