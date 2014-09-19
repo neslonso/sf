@@ -12,4 +12,8 @@ require_once "./includes/server/clases/Page.php";
 require_once "./includes/server/vendor/PHPMailer_v5.1/class.phpmailer.php";
 require_once "./includes/server/vendor/blueimp-jQuery-File-Upload/UploadHandler.php";
 require_once "./includes/server/vendor/jsmin-1.1.1.php";
+
+//CronExpression: https://github.com/mtdowling/cron-expression
+require_once "./includes/server/vendor/cron-expression-1.0.3/src/Cron/FieldInterface.php";
+foreach (glob("./includes/server/vendor/cron-expression-1.0.3/src/Cron/*.php") as $filename) {require_once $filename;}
 ?>

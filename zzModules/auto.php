@@ -5,7 +5,7 @@ ob_start();
 $uniqueId=uniqid("auto.");
 //error_log ('----------------------');
 //error_log ('/********************/');
-error_log ('LLAMADA A AUTO.PHP: '.$uniqueId);
+//error_log ('LLAMADA A AUTO.PHP: '.$uniqueId);
 ?>
 <?
 try {
@@ -13,7 +13,7 @@ try {
 	//echo $shellCmd;
 	$jobSearch = shell_exec($shellCmd);
 	if ($jobSearch=='') {
-		$job='*/5 * * * * curl '.BASE_URL.FILE_APP.'?MODULE=auto &>/dev/null'.PHP_EOL;
+		$job='* * * * * curl '.BASE_URL.FILE_APP.'?MODULE=auto &>/dev/null'.PHP_EOL;
 		$output = shell_exec('crontab -l');
 		$tmpFile=TMP_UPLOAD_DIR.'crontab.txt';
 		file_put_contents($tmpFile, $output.PHP_EOL.$job.PHP_EOL);
@@ -24,14 +24,22 @@ try {
 		echo "<pre>".$jobSearch."</pre>";
 	}
 
-	foreach (unserialize(ARR_CRON_JOBS) as $nombreJob => $arrDatosJob) {
-		if ($arrDatosJob['activado']) {
-
+	//TODO: Mejora: Quiza habría que comprobar de algun mod si la llamada procede del cron,
+	//para evitar que se repitan tareas si se llama a auto.
+	if (defined('ARR_CRON_JOBS')) {
+		foreach (unserialize(ARR_CRON_JOBS) as $nombreJob => $arrDatosJob) {
+			if ($arrDatosJob['activado']) {
+				$cronExpr=$arrDatosJob['minuto'].' '.
+					$arrDatosJob['hora'].' '.
+					$arrDatosJob['diaMes'].' '.
+					$arrDatosJob['mes'].' '.
+					$arrDatosJob['diaSemana'];
+				$cron=Cron\CronExpression::factory($cronExpr);
+				if ($cron->isDue()) {
+					eval($arrDatosJob['comando']);
+				}
+			}
 		}
-	}
-
-	if (isset($_GET['sitemap'])) {
-		sitemap();
 	}
 ?>
 <?
