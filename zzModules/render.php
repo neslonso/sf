@@ -3,6 +3,7 @@ ob_start();
 ?>
 <?
 try {
+	header('Content-Type: text/html; charset=utf-8');
 	session_start();
 
 	/*mail (DEBUG_EMAIL,SITE_NAME.". RENDER.PHP ".FILE_APP.": ".$_SERVER['REMOTE_ADDR'],

@@ -81,7 +81,7 @@
 		opacity: 0.3;
 		z-index: -1;
 		background-size: cover;
-		background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=250);
+		background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=250&formato=jpg);
 	}
 
 	.content {

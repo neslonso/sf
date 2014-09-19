@@ -1,5 +1,4 @@
 <?
-header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding("UTF-8");
 //El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
 

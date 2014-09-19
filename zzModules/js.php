@@ -4,6 +4,7 @@ ob_start();
 ?>
 <?
 try {
+	header('Content-type: text/javascript; charset=utf-8');
 	session_cache_limiter('public');
 	session_start();
 	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 60*60*24*364));

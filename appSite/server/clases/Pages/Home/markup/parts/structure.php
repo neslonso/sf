@@ -133,14 +133,14 @@ try {
 							</li>
 							<li>
 								<a href="<?=BASE_URL?>modules/#auto">auto</a>: Módulo de tareas programadas, destinado a ejecutarse
-									periodicamente y (aún no implementado) llamar a las acciones especificadas en el fichero de
+									periodicamente y llamar a las acciones especificadas en el fichero de
 									configuración de tareas	programadas de la aplicación. El fichero de configuración de tareas
-									programadas se encuentra en <code>server/appAuto.php</code>.
+									programadas se encuentra en <code>./server/appAuto.php</code>.
 								<div class="bs-callout bs-callout-danger">
 									<h4>Módulo <em>auto</em> y cron</h4>
-									Para el correcto funcionamiento del módulo <code>auto</code>, es necesario añadir
-									una tarea programada (cronjob) que llame a la URL del módulo <code>auto</code> de
-									cada aplicación con frecuencia (cada 1/3/5 o 10 minutos).
+									Cuando es ejecutado por primera vez, el módulo <code>auto</code>, se añade a si mismo
+									al crontab del usuario que lo ejecuta, por lo que es necesaria una primera ejecucción
+									manual del módulo para cada <em>APP</em>.
 								</div>
 							</li>
 							<li>

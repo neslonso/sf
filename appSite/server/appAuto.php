@@ -25,7 +25,7 @@ define ('ARR_CRON_JOBS', serialize(array(
 		'diaMes' => '*', //(1 - 31)
 		'mes' => '*', //(1 - 12)
 		'diaSemana' => '*', //(0 - 7) (Domingo=0 o 7)
-		'comando' => 'sitemap(); error_log("sitemap job");', //argumento para eval
+		'comando' => 'error_log("sitemap job");sitemap();', //argumento para eval
 	),
 )));
 ?>

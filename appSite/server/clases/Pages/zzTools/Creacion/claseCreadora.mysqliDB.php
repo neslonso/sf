@@ -22,260 +22,367 @@ ClaseCreadora 1.2
 //El fichero creado tira de las funciones de mysqliDB.php
 //Se supone que el primer atributo de arrAtributos es la clave primaria de la tabla
 class Creadora {
+
+	private $ruta;
+	private $nombreClase;
+	private $arrAtributos;
+	private $nombreTabla;
+	private $arrFksFrom;
+	private $arrFksTo;
+	private $sl;//saltoLinea
+	private $sg;//sangrado
+
 	function creadora($ruta,$nombreClase, $arrAtributos, $nombreTabla, $arrFksFrom,$arrFksTo) {
-		$sl="\n";
-		$sg="\t";
+		$this->ruta=$ruta;
+		$this->nombreClase=$nombreClase;
+		$this->arrAtributos=$arrAtributos;
+		$this->nombreTabla=$nombreTabla;
+		$this->arrFksFrom=$arrFksFrom;
+		$this->arrFksTo=$arrFksTo;
+		$this->sl="\n";
+		$this->sg="\t";
+		$sl=$this->sl;
+		$sg=$this->sg;
+
+		$classCode='';
+		$classCode.="<?".$sl;
+		//Apertura de la clase
+		$classCode.="class ".$nombreClase." {".$sl;
+
+		//Main
+			$classCode.=$this->declaraciones($arrAtributos);
+			$classCode.=$this->constructor();
+			$classCode.=$this->db();
+			$classCode.=$this->cargarId($arrAtributos,$nombreTabla);
+			$classCode.=$this->grabar($arrAtributos,$nombreTabla);
+			$classCode.=$this->borrar($nombreTabla,$nombreTabla);
+			$classCode.=$this->cargarArray();
+			$classCode.=$this->cargarObj();
+			$classCode.=$this->toJson();
+			$classCode.=$this->toArray();
+			$classCode.=$this->settersGetters($arrAtributos);
+		//estaticas
+			$classCode.=$sl;
+			$classCode.="/* Funciones estaticas ********************************************************/".$sl;
+			$classCode.=$sl;
+			$classCode.=$this->existeID($nombreTabla);
+			$classCode.=$this->allToArray($nombreTabla);
+			$classCode.=$this->ls($nombreTabla);
+		//dinamicas
+			$classCode.=$sl;
+			$classCode.="/* Funciones dinamicas ********************************************************/".$sl;
+			$classCode.=$sl;
+			$classCode.=$this->noReferenciado($arrFksTo);
+		//FkFrom
+			$classCode.=$sl;
+			$classCode.="/* Funciones FkFrom ***********************************************************/".$sl;
+			$classCode.=$sl;
+			//Inicio funciones FkFrom
+			$classCode.=$this->FkFrom($arrFksFrom);
+			//Fin funciones FkFrom
+		//FkTo
+			$classCode.=$sl;
+			$classCode.="/* Funciones FkTo *************************************************************/".$sl;
+			$classCode.=$sl;
+			//Inicio funciones FkTo
+			$classCode.=$this->FkTo($arrFksTo);
+			//Fin funciones FkTo
+
+		//Llave de cierre de la clase
+		$classCode.="}".$sl;
+		$classCode.="?>".$sl;
 		//$file="./creacion/".$nombreClase.".php";
 		$file=$ruta."/".$nombreClase.".php";
 		$fp=fopen ($file,"w");
-		fwrite ($fp,"<?".$sl);
-		fwrite ($fp,"class ".$nombreClase." {".$sl);
-		//Declaración de varialbes
-		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
-			fwrite ($fp,$sg."private $".$nombreAtributo.";".$sl);
-		}
-		fwrite ($fp,$sl);
-		//Funcion Constructor
-		fwrite ($fp,$sg."public function __construct (\$id=\"\") {".$sl);
-		fwrite ($fp,$sg.$sg."if (\$id!=\"\") {".$sl);
-		fwrite ($fp,$sg.$sg.$sg."\$this->cargarId (\$id);".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		fwrite ($fp,$sl);
-		//Funcion db
-		fwrite ($fp,$sg.'private static function db() {'.$sl);
-		fwrite ($fp,$sg.'	return cDb::gI();'.$sl);
-		fwrite ($fp,$sg.'}'.$sl);
-		fwrite ($fp,$sl);
+		fwrite ($fp,$classCode);
+		fclose ($fp);
+		chmod ($file,0777);
+	}
 
-		//Funcion cargarId
-		fwrite ($fp,$sg."public function cargarId (\$id) {".$sl);
-		fwrite ($fp,$sg.$sg."\$result=false;".$sl);
-		fwrite ($fp,$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".self::db()->real_escape_string(\$id).\"'\";".$sl);
-		fwrite ($fp,$sg.$sg."\$data=self::db()->get_row(\$sql);".$sl);
-		fwrite ($fp,$sg.$sg."if (\$data) {".$sl);
+	private function declaraciones($arrAtributos) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
-			//fwrite ($fp,$sg.$sg.$sg."\$this->".$nombreAtributo."=htmlentities(\$data->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\");".$sl);
-			fwrite ($fp,$sg.$sg.$sg."\$this->".$nombreAtributo."=\$data->".$nombreAtributo.";".$sl);
+			$resultCode.=$sg."private $".$nombreAtributo.";".$sl;
 		}
-		fwrite ($fp,$sg.$sg.$sg."\$result=true;".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg."return \$result;".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin funcion cargarId
-		fwrite ($fp,$sl);
-		//Funcion grabar
-		fwrite ($fp,$sg."public function grabar () {".$sl);
-		fwrite ($fp,$sg.$sg."\$result=false;".$sl);
+		return $resultCode;
+	}
+	private function constructor() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function __construct (\$id=\"\") {".$sl;
+		$resultCode.=$sg.$sg."if (\$id!=\"\") {".$sl;
+		$resultCode.=$sg.$sg.$sg."\$this->cargarId (\$id);".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
+		$resultCode.=$sg."}".$sl;
+		$resultCode.=$sl;
+		return $resultCode;
+	}
+	private function db() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg.'private static function db() {'.$sl;
+		$resultCode.=$sg.'	return cDb::gI();'.$sl;
+		$resultCode.=$sg.'}'.$sl;
+		$resultCode.=$sl;
+		return $resultCode;
+	}
+	private function cargarId($arrAtributos,$nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function cargarId (\$id) {".$sl;
+		$resultCode.=$sg.$sg."\$result=false;".$sl;
+		$resultCode.=$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".self::db()->real_escape_string(\$id).\"'\";".$sl;
+		$resultCode.=$sg.$sg."\$data=self::db()->get_row(\$sql);".$sl;
+		$resultCode.=$sg.$sg."if (\$data) {".$sl;
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
-			fwrite ($fp,$sg.$sg."\$sqlValue_".$nombreAtributo."=(is_null(\$this->".$nombreAtributo."))?\"NULL\":\"'\".self::db()->real_escape_string(\$this->".$nombreAtributo.").\"'\";".$sl);
+			//$resultCode.=$sg.$sg.$sg."\$this->".$nombreAtributo."=htmlentities(\$data->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\");".$sl;
+			$resultCode.=$sg.$sg.$sg."\$this->".$nombreAtributo."=\$data->".$nombreAtributo.";".$sl;
 		}
-		fwrite ($fp,$sg.$sg."if (\$this->id!=\"\") { //UPDATE".$sl);
+		$resultCode.=$sg.$sg.$sg."\$result=true;".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg."return \$result;".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function grabar($arrAtributos,$nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function grabar () {".$sl;
+		$resultCode.=$sg.$sg."\$result=false;".$sl;
+		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
+			$resultCode.=$sg.$sg."\$sqlValue_".$nombreAtributo."=(is_null(\$this->".$nombreAtributo."))?\"NULL\":\"'\".self::db()->real_escape_string(\$this->".$nombreAtributo.").\"'\";".$sl;
+		}
+		$resultCode.=$sg.$sg."if (\$this->id!=\"\") { //UPDATE".$sl;
 
-		fwrite ($fp,$sg.$sg.$sg."\$this->update=\$sqlValue_update=date(\"YmdHis\");".$sl);
-		fwrite ($fp,$sg.$sg.$sg."\$sql=\"UPDATE ".$nombreTabla." SET \".".$sl);
+		$resultCode.=$sg.$sg.$sg."\$this->update=\$sqlValue_update=date(\"YmdHis\");".$sl;
+		$resultCode.=$sg.$sg.$sg."\$sql=\"UPDATE ".$nombreTabla." SET \".".$sl;
 		$code="";
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
 			$code.=$sg.$sg.$sg.$sg."\"`".$nombreAtributo."`=\".\$sqlValue_".$nombreAtributo.".\", \".".$sl;
 		}
-		//restamos a code los 5 ultimos caracteres (", ".) porque son del ultimo atributo
-		//y su linea de codigo acaba de manera diferente al resto
 		$code=substr ($code,0,-5);
 		$code.=" \".".$sl;
 		$code.=$sg.$sg.$sg.$sg."\"WHERE id='\".\$this->id.\"'\";".$sl;
-		fwrite ($fp,$code);
+		$resultCode.=$code;
 
-		fwrite ($fp,$sg.$sg."} else { //INSERT".$sl);
+		$resultCode.=$sg.$sg."} else { //INSERT".$sl;
 
 		$arrKeys=array_keys($arrAtributos);
-		fwrite ($fp,$sg.$sg.$sg."\$this->id=\$sqlValue_id=self::db()->nextId (\"".$nombreTabla."\",\"".$arrKeys[0]."\");".$sl);
-		fwrite ($fp,$sg.$sg.$sg."\$this->insert=\$sqlValue_insert=\$this->update=\$sqlValue_update=date(\"YmdHis\");".$sl);
-		fwrite ($fp,$sg.$sg.$sg."\$sql=\"INSERT INTO ".$nombreTabla." ( \".".$sl);
+		$resultCode.=$sg.$sg.$sg."\$this->id=\$sqlValue_id=self::db()->nextId (\"".$nombreTabla."\",\"".$arrKeys[0]."\");".$sl;
+		$resultCode.=$sg.$sg.$sg."\$this->insert=\$sqlValue_insert=\$this->update=\$sqlValue_update=date(\"YmdHis\");".$sl;
+		$resultCode.=$sg.$sg.$sg."\$sql=\"INSERT INTO ".$nombreTabla." ( \".".$sl;
 		$code="";
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
 			$code.=$sg.$sg.$sg.$sg."\"`".$nombreAtributo."`, \".".$sl;
 		}
-		//restamos a code los 5 ultimos caracteres (", ".) porque son del ultimo atributo
-		//y su linea de codigo acaba de manera diferente al resto
 		$code=substr ($code,0,-5);
-		fwrite ($fp,$code.") VALUES (\".".$sl);
+		$resultCode.=$code.") VALUES (\".".$sl;
 		$code="";
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
 			$code.=$sg.$sg.$sg.$sg."\$sqlValue_".$nombreAtributo.".\", \".".$sl;
 		}
-		//restamos a code los 5 ultimos caracteres (", ".) porque son del ultimo atributo
-		//y su linea de codigo acaba de manera diferente al resto
 		$code=substr ($code,0,-5);
-		fwrite ($fp,$code.")\";".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
+		$resultCode.=$code.")\";".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
 
-		fwrite ($fp,$sg.$sg."\$result=self::db()->query (\$sql);".$sl);
+		$resultCode.=$sg.$sg."\$result=self::db()->query (\$sql);".$sl;
 
-		fwrite ($fp,$sg.$sg."return \$result;".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion grabar
-		fwrite ($fp,$sl);
-		//Inicio Funcion borrar
-		fwrite ($fp,$sg.'public function borrar() {'.$sl);
-		fwrite ($fp,$sg.$sg.'$result=false;'.$sl);
-		fwrite ($fp,$sg.$sg.'if ($this->noReferenciado()) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'$sql="DELETE FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'self::db()->query($sql);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'$result=true;'.$sl);
-		fwrite ($fp,$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
-		fwrite ($fp,$sg.'}'.$sl);
-		//Fin Funcion borrar
-		fwrite ($fp,$sl);
-		//Inicio Funcion cargarArray
-		fwrite ($fp,$sg."public function cargarArray (\$array,\$usingSetters=true) {".$sl);
-		fwrite ($fp,$sg.$sg."foreach(\$this as \$key => \$value) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg."if (isset(\$array[\$key])) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."if (\$usingSetters) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$func=\"SET\".\$key;".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$this->\$func(\$array[\$key]);".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."} else {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$this->\$key=\$array[\$key];".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion cargarArray
-		fwrite ($fp,$sl);
-		//Inicio Funcion cargarObj
-		fwrite ($fp,$sg."public function cargarObj (\$obj,\$usingSetters=true) {".$sl);
-		fwrite ($fp,$sg.$sg."foreach(\$this as \$key => \$value) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg."if (isset(\$obj->\$key)) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."if (\$usingSetters) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$func=\"SET\".\$key;".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$this->\$func(\$obj->\$key);".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."} else {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."\$this->\$key=\$obj->\$key;".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion cargarObj
-		fwrite ($fp,$sl);
-		//Inicio Funcion toJson
-		fwrite ($fp,$sg."public function toJson(){".$sl);
-		fwrite ($fp,$sg.$sg."\$var = get_object_vars(\$this);".$sl);
-		fwrite ($fp,$sg.$sg."foreach(\$var as &\$value){".$sl);
-		fwrite ($fp,$sg.$sg.$sg."if(is_object(\$value) && method_exists(\$value,'toJson')){".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."\$value = \$value->toJson();".$sl);
-		fwrite ($fp,$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg.$sg."if (is_array(\$value)) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."foreach (\$value as &\$item) {".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."if(is_object(\$item) && method_exists(\$item,'toJson')){".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.$sg."\$item = \$item->toJson();".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg."}".$sl);
-		fwrite ($fp,$sg.$sg."return \$var;".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion toJson
-		fwrite ($fp,$sl);
-		//Inicio Funcion toArray
-		fwrite ($fp,$sg."public function toArray () {".$sl);
-		fwrite ($fp,$sg.$sg."\$result=get_object_vars(\$this);".$sl);
-		fwrite ($fp,$sg.$sg."return \$result;".$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin Funcion toArray
-		fwrite ($fp,$sl);
-		//Inicio Funciones de atributos
+		$resultCode.=$sg.$sg."return \$result;".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function borrar($nombreTabla,$nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg.'public function borrar() {'.$sl;
+		$resultCode.=$sg.$sg.'$result=false;'.$sl;
+		$resultCode.=$sg.$sg.'if ($this->noReferenciado()) {'.$sl;
+		$resultCode.=$sg.$sg.$sg.'$sql="DELETE FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+		$resultCode.=$sg.$sg.$sg.'self::db()->query($sql);'.$sl;
+		$resultCode.=$sg.$sg.$sg.'$result=true;'.$sl;
+		$resultCode.=$sg.$sg.'}'.$sl;
+		$resultCode.=$sg.$sg.'return $result;'.$sl;
+		$resultCode.=$sg.'}'.$sl;
+		return $resultCode;
+	}
+	private function cargarArray() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function cargarArray (\$array,\$usingSetters=true) {".$sl;
+		$resultCode.=$sg.$sg."foreach(\$this as \$key => \$value) {".$sl;
+		$resultCode.=$sg.$sg.$sg."if (isset(\$array[\$key])) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."if (\$usingSetters) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$func=\"SET\".\$key;".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$this->\$func(\$array[\$key]);".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."} else {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$this->\$key=\$array[\$key];".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function cargarObj() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function cargarObj (\$obj,\$usingSetters=true) {".$sl;
+		$resultCode.=$sg.$sg."foreach(\$this as \$key => \$value) {".$sl;
+		$resultCode.=$sg.$sg.$sg."if (isset(\$obj->\$key)) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."if (\$usingSetters) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$func=\"SET\".\$key;".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$this->\$func(\$obj->\$key);".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."} else {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."\$this->\$key=\$obj->\$key;".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function toJson() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function toJson(){".$sl;
+		$resultCode.=$sg.$sg."\$var = get_object_vars(\$this);".$sl;
+		$resultCode.=$sg.$sg."foreach(\$var as &\$value){".$sl;
+		$resultCode.=$sg.$sg.$sg."if(is_object(\$value) && method_exists(\$value,'toJson')){".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."\$value = \$value->toJson();".$sl;
+		$resultCode.=$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg.$sg."if (is_array(\$value)) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."foreach (\$value as &\$item) {".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."if(is_object(\$item) && method_exists(\$item,'toJson')){".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg."\$item = \$item->toJson();".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg."}".$sl;
+		$resultCode.=$sg.$sg."return \$var;".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function toArray() {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg."public function toArray () {".$sl;
+		$resultCode.=$sg.$sg."\$result=get_object_vars(\$this);".$sl;
+		$resultCode.=$sg.$sg."return \$result;".$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function settersGetters($arrAtributos) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
-			//fwrite ($fp,$sg."public function GET".$nombreAtributo." () {");
-			//fwrite ($fp,"return \$this->".$nombreAtributo.";");
-			fwrite ($fp,$sg."public function GET".$nombreAtributo." (\$entity_decode=false) {");
-			fwrite ($fp,"return (\$entity_decode)?html_entity_decode(\$this->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\"):\$this->".$nombreAtributo.";");
-			fwrite ($fp,"}".$sl);
+			//$resultCode.=$sg."public function GET".$nombreAtributo." () {";
+			//$resultCode.="return \$this->".$nombreAtributo.";";
+			$resultCode.=$sg."public function GET".$nombreAtributo." (\$entity_decode=false) {";
+			$resultCode.="return (\$entity_decode)?html_entity_decode(\$this->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\"):\$this->".$nombreAtributo.";";
+			$resultCode.="}".$sl;
 
-			//fwrite ($fp,$sg."public function SET".$nombreAtributo." (\$".$nombreAtributo.") {");
-			//fwrite ($fp,"\$this->".$nombreAtributo."=\$".$nombreAtributo.";");
-			fwrite ($fp,$sg."public function SET".$nombreAtributo." (\$".$nombreAtributo.",\$entity_encode=false) {");
-			fwrite ($fp,"\$this->".$nombreAtributo."=(\$entity_encode)?htmlentities(\$".$nombreAtributo.",ENT_QUOTES,\"UTF-8\"):\$".$nombreAtributo.";");
-			fwrite ($fp,"}".$sl);
-			fwrite ($fp,$sl);
+			//$resultCode.=$sg."public function SET".$nombreAtributo." (\$".$nombreAtributo.") {";
+			//$resultCode.="\$this->".$nombreAtributo."=\$".$nombreAtributo.";";
+			$resultCode.=$sg."public function SET".$nombreAtributo." (\$".$nombreAtributo.",\$entity_encode=false) {";
+			$resultCode.="\$this->".$nombreAtributo."=(\$entity_encode)?htmlentities(\$".$nombreAtributo.",ENT_QUOTES,\"UTF-8\"):\$".$nombreAtributo.";";
+			$resultCode.="}".$sl;
+			$resultCode.=$sl;
 		}
-		//Fin funciones de atributos
-		//Funciones estaticas
-		fwrite ($fp,"/* Funciones estaticas ********************************************************/".$sl);
-		fwrite ($fp,$sl);
-		//Inicio funcion existeID
-		fwrite ($fp,$sg.'public static function existeId($id) {'.$sl);
-		fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($id)."\'";'.$sl);
-		fwrite ($fp,$sg.$sg.'$data=self::db()->get_row($sql);'.$sl);
-		fwrite ($fp,$sg.$sg.'if ($data) {$result=true;} else {$result=false;}'.$sl);
-		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
-		fwrite ($fp,$sg."}".$sl);
-		//Fin funcion existeID
-		fwrite ($fp,$sl);
-		//Inicio funcion allToArray
-		fwrite ($fp,$sg.'public static function allToArray($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl);
-		fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$where:"";'.$sl);
-		fwrite ($fp,$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
-		fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
-		fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM cliente".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
-		fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-		fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
-		fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$obj=new self($data->id);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$obj=new stdClass();'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.'return $arr;'.$sl);
-		fwrite ($fp,$sg.'}'.$sl);
-		//Fin funcion allToArray
-		fwrite ($fp,$sl);
-		//Inicio funcion ls
+		return $resultCode;
+	}
+	private function existeID($nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg.'public static function existeId($id) {'.$sl;
+		$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($id)."\'";'.$sl;
+		$resultCode.=$sg.$sg.'$data=self::db()->get_row($sql);'.$sl;
+		$resultCode.=$sg.$sg.'if ($data) {$result=true;} else {$result=false;}'.$sl;
+		$resultCode.=$sg.$sg.'return $result;'.$sl;
+		$resultCode.=$sg."}".$sl;
+		return $resultCode;
+	}
+	private function allToArray($nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg.'public static function allToArray($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
+		$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$where:"";'.$sl;
+		$resultCode.=$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
+		$resultCode.=$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
+		$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+		$resultCode.=$sg.$sg.'$arr=array();'.$sl;
+		$resultCode.=$sg.$sg.'$rsl=self::db()->query($sql);'.$sl;
+		$resultCode.=$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl;
+		$resultCode.=$sg.$sg.$sg.'switch ($tipo) {'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new self($data->id);'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new stdClass();'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+		$resultCode.=$sg.$sg.$sg.'}'.$sl;
+		$resultCode.=$sg.$sg.'}'.$sl;
+		$resultCode.=$sg.$sg.'return $arr;'.$sl;
+		$resultCode.=$sg.'}'.$sl;
+		return $resultCode;
+	}
+	private function ls($nombreTabla) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
 		$nombreVista='ls'.ucfirst($nombreTabla);
-		fwrite ($fp,$sg.'public static function ls($where="",$order="",$limit="") {'.$sl);
-		fwrite ($fp,$sg.'	$sqlView="CREATE OR REPLACE VIEW `'.$nombreVista.'` AS'.$sl);
-		fwrite ($fp,$sg.'		SELECT * FROM '.$nombreTabla.';'.$sl);
-		fwrite ($fp,$sg.'	";'.$sl);
-		fwrite ($fp,$sg.'	self::db()->query($sqlView);'.$sl);
-		fwrite ($fp,$sg.'	$sqlWhere=($where!="")?" WHERE ".$where:"";'.$sl);
-		fwrite ($fp,$sg.'	$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
-		fwrite ($fp,$sg.'	$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
-		fwrite ($fp,$sg.'	$sql="SELECT * FROM '.$nombreVista.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
-		fwrite ($fp,$sg.'	$arr=array();'.$sl);
-		fwrite ($fp,$sg.'	$rsl=self::db()->query($sql);'.$sl);
-		fwrite ($fp,$sg.'	while ($data=$rsl->fetch_object()) {'.$sl);
-		fwrite ($fp,$sg.'		$objSeg=new self($data->id);'.$sl);
-		fwrite ($fp,$sg.'		foreach ($data as $field => $value) {'.$sl);
-		fwrite ($fp,$sg.'			$obj->$field=$value;'.$sl);
-		fwrite ($fp,$sg.'		}'.$sl);
-		fwrite ($fp,$sg.'		array_push($arr,$obj);'.$sl);
-		fwrite ($fp,$sg.'		unset ($obj);'.$sl);
-		fwrite ($fp,$sg.'	}'.$sl);
-		fwrite ($fp,$sg.'	return $arr;'.$sl);
-		fwrite ($fp,$sg.'}'.$sl);
-		//Fin funcion ls
-		fwrite ($fp,$sl);
-		//Fin Funciones estaticas
-		fwrite ($fp,"/* Funciones dinamicas ********************************************************/".$sl);
-		fwrite ($fp,$sl);
-		//Inicio funcion noReferenciado
-		fwrite ($fp,$sg.'public function noReferenciado() {'.$sl);
+		$resultCode.=$sg.'public static function ls($where="",$order="",$limit="") {'.$sl;
+		$resultCode.=$sg.'	$sqlView="CREATE OR REPLACE VIEW `'.$nombreVista.'` AS'.$sl;
+		$resultCode.=$sg.'		SELECT * FROM '.$nombreTabla.';'.$sl;
+		$resultCode.=$sg.'	";'.$sl;
+		$resultCode.=$sg.'	self::db()->query($sqlView);'.$sl;
+		$resultCode.=$sg.'	$sqlWhere=($where!="")?" WHERE ".$where:"";'.$sl;
+		$resultCode.=$sg.'	$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
+		$resultCode.=$sg.'	$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
+		$resultCode.=$sg.'	$sql="SELECT * FROM '.$nombreVista.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+		$resultCode.=$sg.'	$arr=array();'.$sl;
+		$resultCode.=$sg.'	$rsl=self::db()->query($sql);'.$sl;
+		$resultCode.=$sg.'	while ($data=$rsl->fetch_object()) {'.$sl;
+		$resultCode.=$sg.'		$objSeg=new self($data->id);'.$sl;
+		$resultCode.=$sg.'		foreach ($data as $field => $value) {'.$sl;
+		$resultCode.=$sg.'			$obj->$field=$value;'.$sl;
+		$resultCode.=$sg.'		}'.$sl;
+		$resultCode.=$sg.'		array_push($arr,$obj);'.$sl;
+		$resultCode.=$sg.'		unset ($obj);'.$sl;
+		$resultCode.=$sg.'	}'.$sl;
+		$resultCode.=$sg.'	return $arr;'.$sl;
+		$resultCode.=$sg.'}'.$sl;
+		return $resultCode;
+	}
+	private function noReferenciado($arrFksTo) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+		$resultCode.=$sg.'public function noReferenciado() {'.$sl;
 		foreach ($arrFksTo as $objFkInfo) {
 			$fTable=$objFkInfo->TABLE_NAME;
 			$fField=$objFkInfo->COLUMN_NAME;
-			fwrite ($fp,$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
-			fwrite ($fp,$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=(self::db()->get_num_rows($sql)==0)?true:false;'.$sl);
+			$resultCode.=$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+			$resultCode.=$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=(self::db()->get_num_rows($sql)==0)?true:false;'.$sl;
 		}
 		$strConds='';
 		foreach ($arrFksTo as $objFkInfo) {
@@ -284,93 +391,128 @@ class Creadora {
 			$strConds.='$noReferenciadoEn'.ucfirst($fTable).' && ';
 		}
 		$strConds=substr($strConds, 0, -4);
-		fwrite ($fp,$sg.$sg.'$result=('.$strConds.')?true:false;'.$sl);
-		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
-		fwrite ($fp,$sg.'}'.$sl);
-		//Fin funcion noReferenciado
-		fwrite ($fp,$sl);
-		fwrite ($fp,"/* Funciones FkFrom ***********************************************************/".$sl);
-		fwrite ($fp,$sl);
-		//Inicio funciones FkFrom
+		$resultCode.=$sg.$sg.'$result=('.$strConds.')?true:false;'.$sl;
+		$resultCode.=$sg.$sg.'return $result;'.$sl;
+		$resultCode.=$sg.'}'.$sl;
+		return $resultCode;
+	}
+	private function FkFrom($arrFksFrom) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
+
+		$arrTables=array();
 		foreach ($arrFksFrom as $objFkInfo) {
 			$fTable=$objFkInfo->TABLE_NAME;
 			$fField=$objFkInfo->COLUMN_NAME;
-			fwrite ($fp,$sg.'public function obj'.ucfirst($fTable).'() {'.$sl);
-			fwrite ($fp,$sg.$sg.'return new '.ucfirst($fTable).'($this->'.$fField.');'.$sl);
-			fwrite ($fp,$sg.'}'.$sl);
+			if (!array_key_exists($fTable, $arrTables)) {
+				$arrTables[$fTable]=$fTable;
+			} else {
+				if (!is_array($arrTables[$fTable])) {
+					$tmp=$arrTables[$fTable];
+					$arrTables[$fTable]=array();
+					$arrTables[$fTable][]=$tmp;
+				}
+				$arrTables[$fTable][]=$fField;
+			}
 		}
-		//Fin funciones FkFrom
-		fwrite ($fp,$sl);
-		fwrite ($fp,$sl);
-		fwrite ($fp,"/* Funciones FkTo *************************************************************/".$sl);
-		fwrite ($fp,$sl);
-		//Inicio funciones FkTo
+		foreach ($arrFksFrom as $objFkInfo) {
+			$fTable=$objFkInfo->TABLE_NAME;
+			$fField=$objFkInfo->COLUMN_NAME;
+			$functionName=$fTable;
+			if (is_array($arrTables[$fTable])) {
+				$functionName=$fTable.'By'.ucfirst($fField);
+			}
+			$resultCode.=$sg.'public function obj'.ucfirst($functionName).'() {'.$sl;
+			$resultCode.=$sg.$sg.'return new '.ucfirst($fTable).'($this->'.$fField.');'.$sl;
+			$resultCode.=$sg.'}'.$sl;
+		}
+		return $resultCode;
+	}
+	private function FkTo($arrFksTo) {
+		$sl=$this->sl;
+		$sg=$this->sg;
+		$resultCode='';
 		define ('FUNCION_FKTO_UNICA',false);
 		if (FUNCION_FKTO_UNICA) {
 			//Alternativa sin probar
-			fwrite ($fp,$sg.'public function arrFkTo($table,$field,$where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl);
-			fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$field."=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE ".$field."=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
-			fwrite ($fp,$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
-			fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
-			fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM ".$table.$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
-			fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-			fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
-			fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$obj=new ucfirst($table)($data->id);'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'}'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-			fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
-			fwrite ($fp,$sg.$sg.'}'.$sl);
-			fwrite ($fp,$sg.$sg.'return $arr;'.$sl);
-			fwrite ($fp,$sg.'}'.$sl);
+			$resultCode.=$sg.'public function arrFkTo($table,$field,$where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
+			$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$field."=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE ".$field."=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+			$resultCode.=$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
+			$resultCode.=$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
+			$resultCode.=$sg.$sg.'$sql="SELECT * FROM ".$table.$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+			$resultCode.=$sg.$sg.'$arr=array();'.$sl;
+			$resultCode.=$sg.$sg.'$rsl=self::db()->query($sql);'.$sl;
+			$resultCode.=$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl;
+			$resultCode.=$sg.$sg.$sg.'switch ($tipo) {'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new ucfirst($table)($data->id);'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+			$resultCode.=$sg.$sg.$sg.'}'.$sl;
+			$resultCode.=$sg.$sg.'}'.$sl;
+			$resultCode.=$sg.$sg.'return $arr;'.$sl;
+			$resultCode.=$sg.'}'.$sl;
 		} else {
+			$arrTables=array();
 			foreach ($arrFksTo as $objFkInfo) {
 				$fTable=$objFkInfo->TABLE_NAME;
 				$fField=$objFkInfo->COLUMN_NAME;
+				if (!array_key_exists($fTable, $arrTables)) {
+					$arrTables[$fTable]=$fTable;
+				} else {
+					if (!is_array($arrTables[$fTable])) {
+						$tmp=$arrTables[$fTable];
+						$arrTables[$fTable]=array();
+						$arrTables[$fTable][]=$tmp;
+					}
+					$arrTables[$fTable][]=$fField;
+				}
+			}
+			foreach ($arrFksTo as $objFkInfo) {
+				$fTable=$objFkInfo->TABLE_NAME;
+				$fField=$objFkInfo->COLUMN_NAME;
+				$functionName=$fTable;
+				if (is_array($arrTables[$fTable])) {
+					$functionName=$fTable.'By'.ucfirst($fField);
+				}
 
-				fwrite ($fp,$sg.'public function arr'.ucfirst($fTable).'($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl);
-				fwrite ($fp,$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl);
-				fwrite ($fp,$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl);
-				fwrite ($fp,$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl);
-				fwrite ($fp,$sg.$sg.'$sql="SELECT * FROM '.$fTable.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl);
-				fwrite ($fp,$sg.$sg.'$arr=array();'.$sl);
-				fwrite ($fp,$sg.$sg.'$rsl=self::db()->query($sql);'.$sl);
-				fwrite ($fp,$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.'switch ($tipo) {'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$obj=new '.ucfirst($fTable).'($data->id);'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'}'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.$sg.'break;'.$sl);
-				fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
-				fwrite ($fp,$sg.$sg.'}'.$sl);
-				fwrite ($fp,$sg.$sg.'return $arr;'.$sl);
-				fwrite ($fp,$sg.'}'.$sl);
+				$resultCode.=$sg.'public function arr'.ucfirst($functionName).'($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
+				$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+				$resultCode.=$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
+				$resultCode.=$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
+				$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$fTable.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+				$resultCode.=$sg.$sg.'$arr=array();'.$sl;
+				$resultCode.=$sg.$sg.'$rsl=self::db()->query($sql);'.$sl;
+				$resultCode.=$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl;
+				$resultCode.=$sg.$sg.$sg.'switch ($tipo) {'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new '.ucfirst($fTable).'($data->id);'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
+				$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
+				$resultCode.=$sg.$sg.$sg.'}'.$sl;
+				$resultCode.=$sg.$sg.'}'.$sl;
+				$resultCode.=$sg.$sg.'return $arr;'.$sl;
+				$resultCode.=$sg.'}'.$sl;
 			}
 		}
-		//Fin funciones FkTo
-		//Llave de cierre de la clase
-		fwrite ($fp,"}".$sl);
-		fwrite ($fp,"?>".$sl);
-		fclose ($fp);
-		chmod ($file,0777);
+		return $resultCode;
 	}
 /*****************************************************************************/
 /*****************************************************************************/

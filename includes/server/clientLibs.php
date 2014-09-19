@@ -4,8 +4,8 @@
 /******************************************************************************/
 define('MODERNIZR_LATEST',false);//true o false
 
-//define('ANGULAR_JS',false);//false o version
-define('ANGULAR_JS','1.2.14');//false o version
+define('ANGULAR_JS',false);//false o version
+//define('ANGULAR_JS','1.2.14');//false o version
 
 //define('JQUERY',false);//false o version
 define('JQUERY','2.1.0');//false o version (Obligatorio incluirlo, sin el no funciona la app de ejemplo)
@@ -18,8 +18,9 @@ define('JQUERY','2.1.0');//false o version (Obligatorio incluirlo, sin el no fun
 /******************************************************************************/
 /* CSS LIBS *******************************************************************/
 /******************************************************************************/
-define ('GRID_960',false);
+define ('GRID_960',false);//false o true
 	define ('GRID_960_COLS',16);//12 (que incluye el de 16) o 24
+//define ('FONT_AWESOME',false);//false o version
 define ('FONT_AWESOME','4.2.0');//false o version
 /******************************************************************************/
 

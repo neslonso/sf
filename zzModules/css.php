@@ -3,6 +3,7 @@ ob_start();
 ?>
 <?
 try {
+	header('Content-type: text/css; charset=utf-8');
 	session_cache_limiter('public');
 	session_start();
 	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 60*60*24*364));
@@ -70,6 +71,7 @@ try {
 	//echo $cssFile;
 
 	if (file_exists($cssFile)) {
+		$firephp->info($cssFile,'devolviendo CSS cacheado:');
 		echo file_get_contents($cssFile);
 	} else {
 		$cssLibs="/* <css Js Libs> */\n";
@@ -111,8 +113,6 @@ try {
 		$Page=new $page($objUsr);
 		$Page->css();
 	$cssLocal=ob_get_clean();
-	//$scss=new scssc();
-	//$cssLocal=$scss->compile($cssLocal);
 	echo "/*CSS LOCAL*/\n".$cssLocal;
 	/******************************************************************************/
 ?>
