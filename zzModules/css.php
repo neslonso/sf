@@ -1,13 +1,4 @@
 <?
-/*
-TODO: La idea original era que css.php funcionara como js.php, es decir, cargara todos los ficheros necesarios y
-devolviera todo el codigo en un solo bloque, pero no se puede hacer porque todas las rutas relativas de una hoja
-de estilos estan en base a la URL donde reside, y si lo cargamos y lo volcamos esa URL cambia. Con las hojas de
-estilos locales no importa, porque ya ponemos las URLs en funcion de eso, pero con las hojas de estilos externas
-(el tema de jqueryUI, p.e.), se pierden las referencias a imagenes. Para rodear el problema usamos @import, pero
-@import tiene que estar al principio de la hoja de estilos, así que metemos mediante @import no solo las css libs,
-sino tambien el css960 que estaba antes.
-*/
 ob_start();
 ?>
 <?
