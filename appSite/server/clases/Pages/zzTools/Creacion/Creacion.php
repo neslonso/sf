@@ -116,7 +116,7 @@ class Creacion extends Home implements IPage {
 			if (BOOTSTRAP!=false) {
 				switch ($pageType) {
 					case 'CRUD':
-						$this->jsCrud($fp,$class,$stdObjTableInfo,$arrValidators);
+						$this->jsCrud($fp,$page,$class,$stdObjTableInfo,$arrValidators);
 					break;
 					case 'DBdataTable':
 						$this->jsDBdataTable($fp,$page,$class,$stdObjTableInfo,$arrValidators);
@@ -262,7 +262,7 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,'}'.$sl);
 	}
 
-	private function jsCrud($fp,$class,$stdObjTableInfo,$arrValidators) {
+	private function jsCrud($fp,$page,$class,$stdObjTableInfo,$arrValidators) {
 				$sl="\n";
 				$sg="\t";
 
@@ -276,6 +276,11 @@ class Creacion extends Home implements IPage {
 				fwrite ($fp,$sg.$sg.'$(this).datepicker("hide");'.$sl);
 				fwrite ($fp,$sg.'});'.$sl);
 				fwrite ($fp,$sl);
+
+				fwrite ($fp,$sg.'$("#btnAcBorrar").click(function() {'.$sl);
+				fwrite ($fp,$sg.$sg.'Post("MODULE","actions","acClase","'.$page.'","acMetodo","acBorrar","acTipo","stdAssoc",
+					"id",$(this).data("id"));'.$sl);
+				fwrite ($fp,$sg.'});'.$sl);
 
 				fwrite ($fp,$sg.'$("#frm'.ucfirst($class).'").bootstrapValidator({'.$sl);
 				fwrite ($fp,$sg.$sg.'// http://bootstrapvalidator.com/settings/'.$sl);
@@ -535,7 +540,8 @@ class Creacion extends Home implements IPage {
 				}
 			}
 			fwrite ($fp,$code);
-			fwrite ($fp,$sg.$sg.'<input type="submit" class="'.$btnClass.'" />'.$sl);
+			fwrite ($fp,$sg.$sg.'<input id="btnSubmit" type="submit" class="'.$btnClass.'" value="Grabar" />'.$sl);
+			fwrite ($fp,$sg.$sg.'<input id="btnAcBorrar" type="button" class="'.$btnClass.'" value="Borrar" data-id="<?=$id?>" />'.$sl);
 			fwrite ($fp,$sg.'</fieldset>'.$sl);
 			fwrite ($fp,'</form>'.$sl);
 	}
@@ -614,8 +620,9 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.$sg.'echo "<pre>";var_dump($_POST);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'if ($badData) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'	echo $ulProblems;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	$_SESSION["returnInfo"]["title"]="Operación no completada.";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	$_SESSION["returnInfo"]["msg"]="Se encontraron los siguientes problemas con los datos suministrados:".$ulProblems;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	$sriTitle="Operación no completada.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	$sriMsg="Se encontraron los siguientes problemas con los datos suministrados:".$ulProblems;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	addReturnInfo($sriMsg,$sruTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$id=(isset($arrInputData["id"]) && '.ucfirst($class).'::existeId($arrInputData["id"]))?$arrInputData["id"]:NULL;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
@@ -644,8 +651,9 @@ class Creacion extends Home implements IPage {
 		}
 		fwrite ($fp,$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'->grabar();'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$_SESSION["returnInfo"]["title"]="Operación completada.";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$_SESSION["returnInfo"]["msg"]="Datos actualizados correctamente.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$sriTitle="Operación completada.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$sriMsg="Datos actualizados correctamente.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'addReturnInfo($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.'} catch (Exception $e) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("Error durante la actualización de datos. '.ucfirst($class).' no grabado.",0,$e);'.$sl);
@@ -659,14 +667,13 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.$sg.'if ('.ucfirst($class).'::existeId($id)) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'if ($obj'.ucfirst($class).'->borrar()) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$title="Operacion completada";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$msg="'.ucfirst($class).' borrado con exito";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operacion completada";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="'.ucfirst($class).' borrado con exito";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'} else {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$title="Operacion no completada";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$msg="Error al borrar '.ucfirst($class).'";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operacion no completada";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="Error al borrar '.ucfirst($class).'";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$_SESSION["returnInfo"]["title"]=$title;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$_SESSION["returnInfo"]["msg"]=$msg;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'addReturnInfo($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("'.ucfirst($class).' ".$id." no encontrado");'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);

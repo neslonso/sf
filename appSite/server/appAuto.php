@@ -1,7 +1,7 @@
 <?
 define ('ARR_CRON_JOBS', serialize(array(
 	'logEachMinute' => array (
-		'activado' => true,
+		'activado' => false,
 		'minuto' => '*', //(0 - 59)
 		'hora' => '*', //(0 - 23)
 		'diaMes' => '*', //(1 - 31)
@@ -10,7 +10,7 @@ define ('ARR_CRON_JOBS', serialize(array(
 		'comando' => 'error_log("logEachMinute Job");', //argumento para eval
 	),
 	'log5Minutes' => array (
-		'activado' => true,
+		'activado' => false,
 		'minuto' => '0/5', //(0 - 59)
 		'hora' => '*', //(0 - 23)
 		'diaMes' => '*', //(1 - 31)
@@ -19,7 +19,7 @@ define ('ARR_CRON_JOBS', serialize(array(
 		'comando' => 'error_log("log5Minutes Job");', //argumento para eval
 	),
 	'sitemap' => array (
-		'activado' => true,
+		'activado' => false,
 		'minuto' => '20', //(0 - 59)
 		'hora' => '*', //(0 - 23)
 		'diaMes' => '*', //(1 - 31)
