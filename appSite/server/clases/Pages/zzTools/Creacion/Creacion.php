@@ -29,8 +29,6 @@ class Creacion extends Home implements IPage {
 		parent::css();
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
-	public function foto() {
-	}
 	public function content() {
 		$mysqli=cDb::getInstance();
 		$arrStdObjTableInfo=array();
@@ -521,14 +519,31 @@ class Creacion extends Home implements IPage {
 					case "select":
 						$code.=$sg.$sg.$divField.$sl;
 						$code.=$sg.$sg.$sg.'<label for="'.$field.'" accesskey="">'.ucfirst($field).':</label>'.$sl;
-						//$code.=$sg.$sg.$sg.''.$sl;
-						$code.=$sg.$sg.$sg.'<select name="'.$field.'" id="'.$field.'"  class="'.$inputClass.'">'.$sl;
-						foreach ($arrSelectValues as $key => $value) {
-							$value=trim($value, "'");
-							$code.=$sg.$sg.$sg.$sg.'<option value="'.$value.'" <?=(isset($'.$field.'["'.$value.'"]'.'))?$'.$field.'["'.$value.'"]'.':"";?>>'.$value.'</option>'.$sl;
+						switch ($tagType) {
+							case 'enum':
+								//$arrSelectValues trae un elto por option del select y se usa para value y contenido del cada option
+								$code.=$sg.$sg.$sg.'<select name="'.$field.'" id="'.$field.'"  class="'.$inputClass.'">'.$sl;
+								foreach ($arrSelectValues as $key => $value) {
+									$value=trim($value, "'");
+									$code.=$sg.$sg.$sg.$sg.'<option value="'.$value.'" <?=(isset($'.$field.'["'.$value.'"]'.'))?$'.$field.'["'.$value.'"]'.':"";?>>'.$value.'</option>'.$sl;
+								}
+								$code.=$sg.$sg.$sg.'</select>'.$sl;
+							break;
+							case 'dbSelect':
+								//$arrSelectValues trae la sql a ejecutar para obtener los options (debe devuelve dos columnas, value y content)
+								$code.=$sg.$sg.$sg.'<select name="'.$field.'" id="'.$field.'"  class="'.$inputClass.'">'.$sl;
+								$code.="<?".$sl;
+								$code.='$rsl=cDb::gI()->query ("'.$arrSelectValues[0].'");'.$sl;
+								$code.='while ($arrRow=$rsl->fetch_array()) {'.$sl;
+								$code.=$sg.'$value=$arrRow["value"];$content=$arrRow["content"];'.$sl;
+								$code.="?>".$sl;
+								$code.=$sg.$sg.$sg.$sg.'<option value="<?=$value?>" <?=(isset($'.$field.'[$value]'.'))?$'.$field.'[$value]'.':"";?>><?=$content?></option>'.$sl;
+								$code.="<?".$sl;
+								$code.='}'.$sl;
+								$code.="?>".$sl;
+								$code.=$sg.$sg.$sg.'</select>'.$sl;
+							break;
 						}
-						$code.=$sg.$sg.$sg.'</select>'.$sl;
-						//$code.=$sg.$sg.$sg.''.$sl;
 						$code.=$sg.$sg.$divFieldCierre.$sl;
 					break;
 					case "textarea":
@@ -854,7 +869,7 @@ class Creacion extends Home implements IPage {
 					"enum" => array (
 						"property" =>"type",
 						"tag" =>"select",
-						"tagType" =>"select",
+						"tagType" =>"enum",
 						"filterDefinition" =>array ()//Este sera regex y se crea en el momento de tener los valores de cada enum
 					),
 					"date" => array (
@@ -898,6 +913,13 @@ class Creacion extends Home implements IPage {
 						"filterDefinition" =>array ("filter" => "FILTER_VALIDATE_INT", "flags" => "",
 							"options" => array("default" => NULL,"min_range" =>1,"max_range" => PHP_INT_MAX))
 					),
+					"MUL" => array (
+						"property" =>"key",
+						"tag" =>"select",
+						"tagType" =>"dbSelect",
+						"filterDefinition" =>array ("filter" => "FILTER_VALIDATE_INT", "flags" => "",
+							"options" => array("default" => NULL,"min_range" =>1,"max_range" => PHP_INT_MAX))
+					),
 				);
 
 				$mysqli=cDb::getInstance();
@@ -923,6 +945,39 @@ class Creacion extends Home implements IPage {
 
 				$stdObjTableInfo->arrCreateInfo = $rslCreate->fetch_array(MYSQLI_ASSOC);
 
+				/**/
+
+				$stdObjTableInfo->arrFksFrom=array();
+				while ($fkInfo = $stdObjTableInfo->rslFksFrom->fetch_array(MYSQLI_ASSOC)) {
+					$stdObjFkInfo=new stdClass();
+					//$stdObjFkInfo->TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
+					//$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
+
+					$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
+					$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
+					$stdObjFkInfo->REFERENCED_TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
+					$stdObjFkInfo->REFERENCED_COLUMN_NAME=$fkInfo['REFERENCED_COLUMN_NAME'];
+					array_push($stdObjTableInfo->arrFksFrom,$stdObjFkInfo);
+					unset($stdObjFkInfo);
+				}
+				$stdObjTableInfo->rslFksFrom->data_seek(0);
+
+				$stdObjTableInfo->arrFksTo=array();
+				while ($fkInfo = $stdObjTableInfo->rslFksTo->fetch_array(MYSQLI_ASSOC)) {
+					$stdObjFkInfo=new stdClass();
+					//$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
+					//$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
+					$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
+					$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
+					$stdObjFkInfo->REFERENCED_TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
+					$stdObjFkInfo->REFERENCED_COLUMN_NAME=$fkInfo['REFERENCED_COLUMN_NAME'];
+					array_push($stdObjTableInfo->arrFksTo,$stdObjFkInfo);
+					unset($stdObjFkInfo);
+				}
+				$stdObjTableInfo->rslFksTo->data_seek(0);
+
+				/**/
+
 				$stdObjTableInfo->arrStdObjColumnInfo=array();
 				$stdObjTableInfo->arrAttrs=array();
 				while ($columnInfo = $stdObjTableInfo->rslColumns->fetch_array(MYSQLI_ASSOC)) {
@@ -935,36 +990,6 @@ class Creacion extends Home implements IPage {
 					$stdObjColumnInfo->default=$columnInfo['Default'];
 					$stdObjColumnInfo->extra=$columnInfo['Extra'];
 
-
-					/*
-					$tag='input';
-					$tagType="text";
-					//color, date, datetime, datetime-local, month, range, search, tel, time, url, week
-					if(strpos($stdObjColumnInfo->field,"email")!==false) {$tag='input'; $tagType="email";}
-					//if(strpos($type,"int")!==false) {$tag='input'; $tagType="number";}
-					if(strpos($stdObjColumnInfo->type,"varchar")!==false) {$tag='input'; $tagType="text";}
-					if(strpos($stdObjColumnInfo->type,"text")!==false) {$tag='textarea'; $tagType='textarea';}
-					if(strpos($stdObjColumnInfo->type,"tinyint(1)")!==false) {$tag='input'; $tagType="checkbox";}
-					if(strpos($stdObjColumnInfo->type,"enum")!==false) {
-						$tag='select';
-						$tagType='select';
-						//$tagType="select";
-						preg_match('/enum\((.*)\)$/', $stdObjColumnInfo->type, $matches);
-						$arrSelectValues = explode(',', $matches[1]);
-					}
-					if(strpos($stdObjColumnInfo->type,"date")!==false) {$tag='input'; $tagType="date";}
-					if(strpos($stdObjColumnInfo->type,"datetime")!==false) {$tag='input'; $tagType="datetime";}
-					if(strpos($stdObjColumnInfo->type,"timestamp")!==false) {$tag='input'; $tagType="datetime";}
-					if ($stdObjColumnInfo->key=="PRI") {$tag='input'; $tagType="hidden";}
-
-					$stdObjColumnInfo->tag=$tag;
-					$stdObjColumnInfo->tagType=$tagType;
-					if (isset($arrSelectValues)) {
-						$stdObjColumnInfo->arrSelectValues=$arrSelectValues;
-						unset($arrSelectValues);
-					}
-					*/
-
 					$tag='input';
 					$tagType="text";
 					$filterDefinition=array();
@@ -976,18 +1001,47 @@ class Creacion extends Home implements IPage {
 							$filterDefinition=$options["filterDefinition"];
 						}
 						if ($tag=="select") {
-							preg_match('/enum\((.*)\)$/', $stdObjColumnInfo->type, $matches);
-							$arrSelectValues = explode(',', $matches[1]);
-							$strRegEx="";
-							foreach ($arrSelectValues as $value) {
-								$value=trim($value, "'");
-								$strRegEx.=$value."|";
+							$arrSelectValues=array();
+							switch ($strSearchFor) {
+							case "enum":
+								preg_match('/enum\((.*)\)$/', $stdObjColumnInfo->type, $matches);
+								$arrSelectValues = explode(',', $matches[1]);
+								$strRegEx="";
+								foreach ($arrSelectValues as $value) {
+									$value=trim($value, "'");
+									$strRegEx.=$value."|";
+								}
+								$strRegEx=substr($strRegEx, 0,-1);
+								$filterDefinition=array (
+									"filter" => "FILTER_VALIDATE_REGEXP",
+									"flags" => "",
+									"options" => array("regexp" =>"~".$strRegEx."~"));
+							break;
+							//Select con consulta a BD
+							case "MUL":
+								foreach ($stdObjTableInfo->arrFksFrom as $stdObjFkInfo) {
+									if ($stdObjFkInfo->COLUMN_NAME==$stdObjColumnInfo->field) {
+										$campoSelect='';
+										$rslFk=$mysqli->query('SELECT * FROM '.$stdObjFkInfo->REFERENCED_TABLE_NAME.' limit 1');
+										$arrRow=$rslFk->fetch_array(MYSQLI_ASSOC);
+										foreach ($arrRow as $fieldName => $fieldValue) {
+											switch (strtolower($fieldName)) {
+												case 'nombre':
+												case 'descripcion':
+													$campoSelect=$fieldName;
+												break 2;
+											}
+										}
+										if ($campoSelect=="") {$campoSelect=$stdObjFkInfo->REFERENCED_COLUMN_NAME;}
+										$sql='SELECT '.$stdObjFkInfo->REFERENCED_COLUMN_NAME.' as value, '.
+												$campoSelect.' as content '.
+											'FROM '.$stdObjFkInfo->REFERENCED_TABLE_NAME.
+											' ORDER BY '.$stdObjFkInfo->REFERENCED_COLUMN_NAME;
+										$arrSelectValues[]=$sql;
+									}
+								}
+							break;
 							}
-							$strRegEx=substr($strRegEx, 0,-1);
-							$filterDefinition=array (
-								"filter" => "FILTER_VALIDATE_REGEXP",
-								"flags" => "",
-								"options" => array("regexp" =>"~".$strRegEx."~"));
 						}
 					}
 					$stdObjColumnInfo->tag=$tag;
@@ -1007,25 +1061,6 @@ class Creacion extends Home implements IPage {
 				}
 				$stdObjTableInfo->rslColumns->data_seek(0);
 
-				$stdObjTableInfo->arrFksFrom=array();
-				while ($fkInfo = $stdObjTableInfo->rslFksFrom->fetch_array(MYSQLI_ASSOC)) {
-					$stdObjFkInfo=new stdClass();
-					$stdObjFkInfo->TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
-					$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
-					array_push($stdObjTableInfo->arrFksFrom,$stdObjFkInfo);
-					unset($stdObjFkInfo);
-				}
-				$stdObjTableInfo->rslFksFrom->data_seek(0);
-
-				$stdObjTableInfo->arrFksTo=array();
-				while ($fkInfo = $stdObjTableInfo->rslFksTo->fetch_array(MYSQLI_ASSOC)) {
-					$stdObjFkInfo=new stdClass();
-					$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
-					$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
-					array_push($stdObjTableInfo->arrFksTo,$stdObjFkInfo);
-					unset($stdObjFkInfo);
-				}
-				$stdObjTableInfo->rslFksTo->data_seek(0);
 				return $stdObjTableInfo;
 	}
 }
