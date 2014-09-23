@@ -186,17 +186,23 @@
 	.article .body>p,
 	.article .body>.col2{
 		font-family: Verdana;
-		-moz-column-count: 2;
-		-moz-column-gap: 3em;
-		-webkit-column-count: 2;
-		-webkit-column-gap: 3em;
-		column-count: 2;
-		column-gap: 3em;
-		-moz-column-rule: solid #000 1px;
-		-webkit-column-rule: solid #000 1px;
-		column-rule: solid #000 1px;
 		line-height: 1.5em;
 		color: rgb(69,54,37);
+	}
+
+	@media only screen and (min-width: 768px) {
+		.article .body>p,
+		.article .body>.col2{
+			-moz-column-count: 2;
+			-moz-column-gap: 3em;
+			-webkit-column-count: 2;
+			-webkit-column-gap: 3em;
+			column-count: 2;
+			column-gap: 3em;
+			-moz-column-rule: solid #000 1px;
+			-webkit-column-rule: solid #000 1px;
+			column-rule: solid #000 1px;
+		}
 	}
 	.article .body>p:first-child,
 	.article .body>.col2:first-child{
@@ -231,8 +237,17 @@
 		width:150px;
 	}
 	@media only screen and (max-width: 767px) {
+		body {
+			/*display:inline-block;/* Para que no sea mas estrecho que su contenido, esto inpide que encoja todo lo que podría*/
+		}
 		.mainLinks .btn-group-lg .btn {
 			width:100%;
+		}
+		code {
+			white-space: normal;
+		}
+		ul {
+			padding-left: 10px;
 		}
 	}
 	.mainLinks a:link {color: #FFF;text-decoration: none;}
@@ -243,20 +258,24 @@
 	.sobreSiguiente>.btn {
 		border-radius: 0;
 	}
+
+	.skelName {
+		font-weight: bold;
+		white-space: nowrap;
+	}
+	.features {
+		text-align: center;
+	}
+	.features>div {
+		padding: 1em;
+	}
+	.fa-icon-big {
+		cursor: default;
+		color:#c0c0c0;
+		font-size: 7em;
+		text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
+	}
 	/* Quickstart */
-		table.features {
-			width:100%;
-			text-align: center;
-		}
-		table.features td {
-			padding: 1em;
-		}
-		.fa-icon-big {
-			cursor: default;
-			color:#c0c0c0;
-			font-size: 7em;
-			text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
-		}
 	/**/
 	/* Workflow */
 		table.MWconfig {

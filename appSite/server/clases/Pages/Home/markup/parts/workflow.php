@@ -21,7 +21,7 @@
 						<br />
 						En la pestaña <code>Model</code> utilizaremos los siguientes valores:
 					</p>
-					<div class="bs-callout bs-callout-info">
+					<div class="bs-callout bs-callout-info" style="overflow-x:auto;">
 						<h4>Valores pestaña <em>Model</em></h4>
 						<table class="MWconfig"><tr>
 							<td class="option">PK Column Name:</td><td class="value">id</td>
@@ -45,7 +45,7 @@
 						<code>Default Storage Engine</code> elegiremos <code>InnoDB</code>. Para descargar MySQL Workbench ve a
 						<a href="http://dev.mysql.com/downloads/workbench/">Mysql Workbench downloads</a>.<br />
 						Modelar con MySQL Workbench dará como resultado la creación/sincronización del esquema de la aplicación,
-						base donde aplicar la herramienta de creación incorporada en S!nt@x para comenza a crear las primeras
+						base donde aplicar la herramienta de creación incorporada en <span class="skelName">S!nt@x</span> para comenza a crear las primeras
 						páginas.
 					</p>
 				</div>
@@ -60,7 +60,7 @@
 						y no vuelvas a empezar de cero.
 					</p>
 					<p>
-						S!nt@x incorpora una herramienta de creación de Pages, capaz de crear los ficheros que componen una Page y
+						<span class="skelName">S!nt@x</span> incorpora una herramienta de creación de Pages, capaz de crear los ficheros que componen una Page y
 						colocarlos en su lugar, dejando todo listo para comenzar a escribir el código. Está herramienta se encuentra
 						en la URL <a href="./Creacion"><code>./Creacion</code></a> y permite la creación de tres tipos de páginas:
 						Blank, CRUD y DBdataTable.<br />
@@ -125,12 +125,12 @@
 					</div>
 					<p>
 						Los ficheros anexos serán requeridos (vía <code>require</code>) por los diversos metodos de la clase de página,
-						metodos que serán, a su vez, llamados por los diferentes módulos de S!nt@x para preparar y emsamblar los
+						metodos que serán, a su vez, llamados por los diferentes módulos de <span class="skelName">S!nt@x</span> para preparar y emsamblar los
 						tres tipos de codigo a enviar al cliente, HTML, CSS y JS.<br />
 					</p>
 					<div class="bs-callout bs-callout-info">
 						<h4>Comonentes principales</h4>
-						S!nt@x se basa en 7 módulos principales, cada uno de ellos encargado de una tarea concreta:
+						<span class="skelName">S!nt@x</span> se basa en 7 módulos principales, cada uno de ellos encargado de una tarea concreta:
 						<em>actions</em>, <em>api</em>, <em>auto</em>, <em>css</em>, <em>images</em>, <em>js</em> y <em>render</em>
 					</div>
 				</div>
@@ -189,12 +189,12 @@ interface IPage {
 						<strong>head:</strong> El valor de retorno de este método es inyectado al final del contenido de la etiqueta
 						<code><?=htmlspecialchars('<head></head>')?></code>.<br />
 						<strong>js:</strong> Este método es llamado por el modulo <em>js</em> y su valor de retorno incorporado al final,
-						(junto con lás bibliotecas de cliente y plugins) de la recopilación de código javascript realizada por S!nt@x
+						(junto con lás bibliotecas de cliente y plugins) de la recopilación de código javascript realizada por <span class="skelName">S!nt@x</span>
 						con el fin de que solo sea necesaria una petición del cliente para conseguir todo el código javascript necesario
 						para la página en cuestión. Debido a que el código se incorpora al final de la recopilación, es posible utilizar
 						cualqiuer biblioteca de cliente o plugin de los incorporados mediante <code>./includes/server/clientLibs.php</code>.<br />
 						<strong>css:</strong> Este método es llamado por el modulo <em>css</em> y su valor de retorno incorporado al final,
-						(junto con lás bibliotecas de cliente) de la recopilación de código css realizada por S!nt@x
+						(junto con lás bibliotecas de cliente) de la recopilación de código css realizada por <span class="skelName">S!nt@x</span>
 						con el fin de que solo sea necesaria una petición del cliente para conseguir todo el código css necesario
 						para la página en cuestión.<br />
 						<div class="bs-callout bs-callout-warning">

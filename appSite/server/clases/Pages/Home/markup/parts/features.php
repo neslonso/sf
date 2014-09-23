@@ -15,29 +15,30 @@
 						de clases, formularios y datatables enlazados a base de datos; reutilización de JS, CSS y
 						HTML, reescritura de URLs, bibliotecas integradas...
 					</p>
-					<table class="features"><tr>
-						<td>
+					<div class="row features">
+						<div class="col-sm-4">
 							<div><i class="fa fa-book fa-icon-big"></i></div>
 							<div>Modelado<br />MySQL Workbench (id, insert, update)</div>
-						</td>
-						<td>
+						</div>
+						<div class="col-sm-4">
 							<div><i class="fa fa-code fa-icon-big"></i></div>
 							<div>Creación<br />Blank, CRUD, DBdataTable</div>
-						</td>
-						<td>
+						</div>
+						<div class="col-sm-4">
 							<div><i class="fa fa-code-fork fa-icon-big"></i></div>
 							<div>Extensión<br />Reutilización de JS, CSS, HTML</div>
-						</td>
-					</tr><tr>
-						<td>
+						</div>
+					</div>
+					<div class="row features">
+						<div class="col-sm-4">
 							<div><i class="fa fa-cogs fa-icon-big"></i></div>
 							<div>Aplicaciones<br />Front-end, Back-end, código compartido</div>
-						</td>
-						<td>
+						</div>
+						<div class="col-sm-4">
 							<div><i class="fa fa-cloud fa-icon-big"></i></div>
 							<div>Integración<br />Bibliotecas y plugins listos para usar</div>
-						</td>
-						<td>
+						</div>
+						<div class="col-sm-4">
 							<div><i class="fa fa-bolt fa-icon-big"></i></div>
 							<div>Velocidad<br />
 								<span title=" Grade A, Score 96">
@@ -46,8 +47,8 @@
 								<a title="Mobile: Speed 63, User 67 / Desktop: Speed 77"
 									href="https://developers.google.com/speed/pagespeed/insights/">PageSpeed</a> M:63 / D:77
 							</div>
-						</td>
-					</tr></table>
+						</div>
+					</div>
 					<date>Creado: 13 de septiembre, 2014</date>
 				</div>
 			</div>

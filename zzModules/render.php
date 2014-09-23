@@ -102,35 +102,15 @@ try {
 <?
 function markup ($Page) {
 ?>
-<?='<?xml version="1.0" encoding="UTF-8"?>'."\n";?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <?
 /*
 ?>
-<!--<!DOCTYPE HTML>-->
+<!--<!DOCTYPE html>-->
 <!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">-->
 <!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">-->
 <!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
 <?
-*/
-?>
-<?
-/*
-<!--
-Con esto los atributos definidos en !ATTLIST validan perfectamente
-con el validador del w3c, pero todos los navegadores muestran "]>"
-pq parece que piensan que el body empieza en el "]>",
-probablemente pq no reconocen las anidacion de tags.
-Si uso un DTD privado, el validador tampoco lo da por bueno, pq
-solo valida contra sus propios DTDs públicos
-<!DOCTYPE html PUBLIC
-	"-//W3C//DTD XHTML+RDFa 1.0//EN"
-	"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
-	[
-	<!ATTLIST textarea watermark CDATA #IMPLIED>
-	<!ATTLIST input watermark CDATA #IMPLIED>
-	]>
--->
 */
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es"
@@ -144,6 +124,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml"
 -->
 <head>
 <title><?=$Page->title()?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- Page Meta (Class <?=get_class($Page);?>)-->
 <?=$Page->metaTags()?>

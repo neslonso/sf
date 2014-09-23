@@ -15,9 +15,9 @@
 						y edita el fichero de marcado de la página principal para comenzar.
 					</p>
 					<p>
-						Descarga S!nt@x en un paquete zip, dentro encontrarás una estructura de ficheros que debe ir colocada en el
+						Descarga <span class="skelName">S!nt@x</span> en un paquete zip, dentro encontrarás una estructura de ficheros que debe ir colocada en el
 						directorio raiz de tu proyecto. El único requisito es que este directorio raiz sea accesible mediante Apache,
-						el funcionamiento de S!nt@x es independiente de su ruta y no necesita ninguna configuración fuera del directorio
+						el funcionamiento de <span class="skelName">S!nt@x</span> es independiente de su ruta y no necesita ninguna configuración fuera del directorio
 						donde se instale.
 						La página principal de cada aplicación se llama <code>Home</code>, y se encuentra almacenada en el directorio
 						<code><?=RUTA_APP?>server/clases/Pages/Home/</code>. A la página principal le correspoden
@@ -27,16 +27,16 @@
 					<div class="bs-callout bs-callout-danger">
 						<h4>Ruta en .htaccess</h4>
 						<p>
-							El fichero .htaccess del directorio raiz de S!nt@x necesita conocer la ruta donde está instalado, relativa
-							al raiz del servidor web. Si instalas S!nt@x en un directorio diferente del raiz de tu servidor web, será
+							El fichero .htaccess del directorio raiz de <span class="skelName">S!nt@x</span> necesita conocer la ruta donde está instalado, relativa
+							al raiz del servidor web. Si instalas <span class="skelName">S!nt@x</span> en un directorio diferente del raiz de tu servidor web, será
 							necesario que edites el fichero .htaccess y cambies la siguiente línea para que refleje tu configuración actual:
-							<pre>RewriteBase /</pre>
 						</p>
+						<pre>RewriteBase /</pre>
 					</div>
 					<div class="bs-callout bs-callout-info">
 						<h4>Estructura de ficheros</h4>
 						<p>
-							S!nt@x se divide en <code>APPs</code> y cada una de ellas en <code>Pages</code>. Cada <code>Page</code>
+							<span class="skelName">S!nt@x</span> se divide en <code>APPs</code> y cada una de ellas en <code>Pages</code>. Cada <code>Page</code>
 							se compone de uno o varios ficheros y se almacena en un directorio con el mismo nombre que la Page.<br />
 							Cada APP contiene un directorio Pages destinado a contener el directorio de cada Page.
 							Cada Page consiste en al menos un fichero que define una clase PHP. Es recomendable que la clase, el fichero que la
@@ -51,12 +51,12 @@
 				<div class="meta">Conexión a <span>MySQL</span>. La clase <span>mysqliDB</span></div>
 				<div class="body">
 					<p>
-						S!nt@x proporciona clases para la conexión a MySQL, tanto para su uso mediante diversas instancias, como para su uso
+						<span class="skelName">S!nt@x</span> proporciona clases para la conexión a MySQL, tanto para su uso mediante diversas instancias, como para su uso
 						mediante el patrón <strong>Singleton</strong>. Ambos metodos son útiles dependiendo de la naturaleza del proyecto a
 						desarrollar y se encuentran implementados como una jerarquia de clases.
 					</p>
 					<p>
-					S!nt@x proporciona una clase de acceso a datos para MySQL llamada <code>mysqliDB</code>, que extiende a la clase nativa
+					<span class="skelName">S!nt@x</span> proporciona una clase de acceso a datos para MySQL llamada <code>mysqliDB</code>, que extiende a la clase nativa
 					<code>mysqli</code>. A su vez, esta clase es extendida por la clase <code>cDb</code>, que implementa el patron
 					<strong>Singleton</strong>. La implementación <strong>Singleton</strong> de la clase <code>cDb</code> debe ser inicializada
 					antes de su uso, mediante una llamada a su metodo estatico <code>conf</code>. Este metodo tambien puede ser usado para
@@ -65,9 +65,10 @@
 					<div class="bs-callout bs-callout-info">
 						<h4>Conexión a MySQL</h4>
 						<p>
-							Aunque se proporcionan clases para la conexión a MySQL, S!nt@x no realiza ninguna conexión, por lo que es
+							Aunque se proporcionan clases para la conexión a MySQL, <span class="skelName">S!nt@x</span> no realiza ninguna conexión, por lo que es
 							necesario que las APPs realicen sus propias conexiones bien instanciando la clase <code>mysqliDB</code>
 							directamente o bien mediante una llamada al metodo estático <code>conf</code> de la clase <code>cDb</code>
+						</p>
 <pre>
 $db=new mysqliDB ($host, $user, $pass, $db);
 $mysqli_result=$db->query('SELECT * FROM tabla');
@@ -78,7 +79,6 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 	// o usando el alias gI:
 	cDb::gI()->query('SELECT * FROM tabla');
 </pre>
-						</p>
 					</div>
 					<div class="bs-callout bs-callout-info">
 						<h4>New vs singleton</h4>
@@ -99,13 +99,13 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 				<div class="meta"><span>FirePHP, PHPMailer, JqueryUI, Bootstrap, Grid960</span> y plugins</div>
 				<div class="body">
 					<p>
-						S!nt@x incorpora de serie varias bibliotecas PHP, Javascript y CSS, cargando desde sus respectivas CDNs
+						<span class="skelName">S!nt@x</span> incorpora de serie varias bibliotecas PHP, Javascript y CSS, cargando desde sus respectivas CDNs
 						aquellas que disponen de ella. Decide cuales quieres incluir en tu proyecto.
 					</p>
 					<div class="col2">
 						La inclusion o exclusión de bibliotecas de servidor no afectará en gran medida al rendimiento de tu proyecto,
 						(no es necesario enviarlas por la red) especialmente si no se trata de gran cantidad de ellas o si su volumen
-						no es muy muy grande, por lo que S!nt@x simplifica el proceso de elección cargando unas pocas bibliotecas de
+						no es muy muy grande, por lo que <span class="skelName">S!nt@x</span> simplifica el proceso de elección cargando unas pocas bibliotecas de
 						<i>amplio espectro</i>, como PHPMailer. No obstante, la carga de las bibliotecas de servidor se regula a través
 						del fichero <code>./includes/server/serverLibs.php</code>, compuesto unicamente de sentencias requiere.<br />
 
@@ -137,7 +137,7 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 				<div class="meta"><span>Nomenclatura</span>, <span>campos</span>, <span>ficheros</span> y <span>clases</span></div>
 				<div class="body">
 					<p>
-						La metodología de trabajo detrás de S!nt@x (nesWork) se apoya en varias convenciones de nomeclatura de campos
+						La metodología de trabajo detrás de <span class="skelName">S!nt@x</span> (nesWork) se apoya en varias convenciones de nomeclatura de campos
 						de base de datos, clases de acceso a datos, clases de página, constantes, variables y ficheros.
 					</p>
 					<p>
@@ -159,7 +159,7 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 									<li>Nombres de tablas en singular y en minusculas (cliente no clientes)</li>
 									<li>Clave primaria llamada id</li>
 									<li>Claves foraneas id+[nombreTablaDestino]</li>
-									<li>Nombres de tablas relacciones varios a varios [nombreTabla]VARIOS[nombreTabla]</li>
+									<li>Nombres de tablas relacciones varios a varios [tabla]VARIOS[tabla]</li>
 								</ul>
 							</li>
 							<li>Código

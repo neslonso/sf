@@ -28,11 +28,11 @@ function existeReturnInfo () {
 function clearReturnInfo () {
 	unset($_SESSION['returnInfo']);
 }
-function liMsgsReturnInfo () {
+function liMsgsReturnInfo ($class='sriMsg') {
 	$result='';
 	$sri=ensureArrayReturnInfo();
 	foreach ($sri as $arrInfo) {
-		$result.='<li class="sriMsg">'.$arrInfo['msg'].'</li>';
+		$result.='<li class="'.$class.'">'.$arrInfo['msg'].'</li>';
 	}
 	return $result;
 }

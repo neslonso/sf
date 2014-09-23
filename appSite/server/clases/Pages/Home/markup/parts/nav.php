@@ -92,7 +92,7 @@ $dir=RUTA_APP."server/clases/Pages/";
 						<li class="divider"></li>
 						<li>
 							<a href="./?page=codes" tabindex="-1"> Usefull code fragments </a>
-							simplexml_load_file("http://www.lipsum.com/feed/xml?amount=1&what=paras&start=0")->lipsum;
+							simplexml_load_file("http://www.lipsum.com/feed/xml?amount=1&amp;what=paras&amp;start=0")->lipsum;
 							<br />
 							lorempixel
 							<br />
