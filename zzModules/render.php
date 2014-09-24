@@ -129,13 +129,11 @@ xmlns:fb="http://www.facebook.com/2008/fbml"
 <!-- Page Meta (Class <?=get_class($Page);?>)-->
 <?=$Page->metaTags()?>
 <!-- /Page Meta (Class <?=get_class($Page);?>)-->
+<!--Favicon -->
+<?=$Page->favIcon()?>
+<!-- /Favicon -->
 <!--<link rel="stylesheet" href="<?=BASE_URL?><?=FILE_APP?>?MODULE=CSS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>" />-->
 <link rel="stylesheet" href="<?=BASE_URL?>css.php?APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>" />
-<?
-	/*Aqui no usamos require_once porque si el render de la pagina produce una excepción, se va vaciar el buffer
-	y volver a llamar a esta función para mostrar ?page=error y entonces el require_once no require de nuevo los files*/
-	require "./includes/cliente/FavIcon.php";
-?>
 <!--<script type="text/javascript" src="<?=BASE_URL?><?=FILE_APP?>?MODULE=JS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>"></script>-->
 <script type="text/javascript" src="<?=BASE_URL?>js.php?APP=<?=FILE_APP?>&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>"></script>
 <!-- Page Head (Class <?=get_class($Page);?>)-->

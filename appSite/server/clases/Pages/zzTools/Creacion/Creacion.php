@@ -14,9 +14,19 @@ class Creacion extends Home implements IPage {
 		}
 		return $result;
 	}
+
 	public function title() {
 		return parent::title();
 	}
+
+	public function favIcon() {
+		$favIcon='';
+		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
+		$favIcon.=PHP_EOL;
+		$favIcon.='<link rel="icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
+		return $favIcon."\n";
+	}
+
 	public function head() {
 		parent::head();
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/head.php");

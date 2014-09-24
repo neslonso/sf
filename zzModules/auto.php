@@ -19,12 +19,12 @@ try {
 		file_put_contents($tmpFile, $output.PHP_EOL.$job.PHP_EOL);
 		echo exec('crontab '.$tmpFile);
 		//unlink ($tmpFile);
-	} else {
-		echo "cronjob found";
-		echo "<pre>".$jobSearch."</pre>";
+		echo "No cronjob found for APP ".FILE_APP;
+		echo "\n<br />\n";
+		echo "Added job: ".$job;
 	}
 
-	//TODO: Mejora: Quiza habría que comprobar de algun mod si la llamada procede del cron,
+	//TODO: Mejora: Quiza habría que comprobar de algun mod si la llamada procede del cron (quiza mediante useragent curl),
 	//para evitar que se repitan tareas si se llama a auto.
 	if (defined('ARR_CRON_JOBS')) {
 		foreach (unserialize(ARR_CRON_JOBS) as $nombreJob => $arrDatosJob) {

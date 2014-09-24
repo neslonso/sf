@@ -5,6 +5,7 @@ interface IPage {
 	public function accionValida($metodo);
 	public function title();
 	public function metaTags();
+	public function favIcon();
 	public function head();
 	public function js();
 	public function css();
@@ -118,6 +119,14 @@ abstract class Page implements IPage {
 				article,blog,website
 		*/
 		return $metaTags."\n";
+	}
+
+	public function favIcon() {
+		$favIcon='';
+		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="./binaries/imgs/lib/favicon.ico" />';
+		$favIcon.=PHP_EOL;
+		$favIcon.='<link rel="icon" type="image/x-icon" href="./binaries/imgs/lib/favicon.ico" />';
+		return $favIcon."\n";
 	}
 
 	public function head() {
