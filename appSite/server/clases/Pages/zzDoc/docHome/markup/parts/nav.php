@@ -5,7 +5,7 @@
 				<span class="icon-bar"></span><span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="./" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
+			<a class="navbar-brand" href="<?=BASE_URL?>" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
 				<span class="letterpress">
 					S!nt@x<br />
 				</span>
@@ -30,16 +30,17 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">PHP<span class="caret-right"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="./?page=clasesPHP#MysqliDB" tabindex="-1"> MysqliDB/cDb</a></li>
-								<li><a href="./?page=clasesPHP#Fecha" tabindex="-1"> Fecha</a></li>
-								<li><a href="./?page=clasesPHP#fecha" tabindex="-1"> Imagen</a></li>
+								<li><a href="<?=BASE_URL?>clasesPHP#Page" tabindex="-1"> Page</a></li>
+								<li><a href="<?=BASE_URL?>clasesPHP#MysqliDB" tabindex="-1"> MysqliDB/cDb</a></li>
+								<li><a href="<?=BASE_URL?>clasesPHP#Fecha" tabindex="-1"> Fecha</a></li>
+								<li><a href="<?=BASE_URL?>clasesPHP#Imagen" tabindex="-1"> Imagen</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">JS<span class="caret-right"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="./?page=clasesJS#log" tabindex="-1"> Log </a></li>
-								<li><a href="./?page=clasesJS#fecha" tabindex="-1"> Fecha </a></li>
+								<li><a href="<?=BASE_URL?>clasesJS#log" tabindex="-1"> Log </a></li>
+								<li><a href="<?=BASE_URL?>clasesJS#fecha" tabindex="-1"> Fecha </a></li>
 							</ul>
 						</li>
 					</ul>
@@ -63,32 +64,32 @@ $dir=RUTA_APP."server/clases/Pages/";
 				<!-- JS -->
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Js<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="./?page=js#DBdataTable" tabindex="-1"> DBdataTable</a></li>
-						<li><a href="./?page=js#pila" tabindex="-1"> Pila</a></li>
-						<li><a href="./?page=js#raty" tabindex="-1"> Raty</a></li>
+						<li><a href="<?=BASE_URL?>js#DBdataTable" tabindex="-1"> DBdataTable</a></li>
+						<li><a href="<?=BASE_URL?>js#pila" tabindex="-1"> Pila</a></li>
+						<li><a href="<?=BASE_URL?>js#raty" tabindex="-1"> Raty</a></li>
 						<li class="divider"></li>
 					</ul>
 				</li>
 				<!-- CSS -->
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Css<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="./?page=css#ulMenu" tabindex="-1"> .ulMenu</a></li>
-						<li><a href="./?page=css#stdDataTable" tabindex="-1"> .stdDataTable</a></li>
-						<li><a href="./?page=css#cssCheckbox" tabindex="-1"> csscheckbox</a></li>
-						<li><a href="./?page=css#cssCheckbox" tabindex="-1"> yamm 3</a></li>
+						<li><a href="<?=BASE_URL?>css#ulMenu" tabindex="-1"> .ulMenu</a></li>
+						<li><a href="<?=BASE_URL?>css#stdDataTable" tabindex="-1"> .stdDataTable</a></li>
+						<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> csscheckbox</a></li>
+						<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> yamm 3</a></li>
 						<li class="divider"></li>
 					</ul>
 				</li>
 				<!-- Tools -->
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="./?page=creacion" tabindex="-1"> Creación </a></li>
+						<li><a href="<?=BASE_URL?>creacion" tabindex="-1"> Creación </a></li>
 						<li class="divider"></li>
-						<li><a href="./?page=phpinfo" tabindex="-1"> Phpinfo </a></li>
-						<li><a href="./?page=poster" tabindex="-1"> Poster </a></li>
+						<li><a href="<?=BASE_URL?>phpinfo" tabindex="-1"> Phpinfo </a></li>
+						<li><a href="<?=BASE_URL?>poster" tabindex="-1"> Poster </a></li>
 						<li class="divider"></li>
 						<li>
-							<a href="./?page=codes" tabindex="-1"> Usefull code fragments </a>
+							<a href="<?=BASE_URL?>codes" tabindex="-1"> Usefull code fragments </a>
 							simplexml_load_file("http://www.lipsum.com/feed/xml?amount=1&amp;what=paras&amp;start=0")->lipsum;
 							<br />
 							lorempixel

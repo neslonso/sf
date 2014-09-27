@@ -1,5 +1,5 @@
 <?
-class Home extends Error implements IPage {
+class docHome extends Error implements IPage {
 
 	public function __construct (Usuario $objUsr=NULL) {
 		parent::__construct($objUsr);

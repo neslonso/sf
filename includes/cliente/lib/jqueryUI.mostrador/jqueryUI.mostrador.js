@@ -133,12 +133,12 @@ Ejemplo de marcado
 			)
 			.appendTo(content);
 
-			var icono=$('<img class="ui-icon ui-icon-person" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">')
+			var icono=$('<img class="ui-icon ui-icon-person" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">')
 			.prependTo(titulo);
 			var chatBoxCmds=$('<span></span>')
 			.css ({float:'right'})
 			.prependTo(titulo);
-			var cerrar=$('<img class="ui-icon ui-icon-close" alt="cerrar" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">')
+			var cerrar=$('<img class="ui-icon ui-icon-close" alt="cerrar" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">')
 			.click(function(event) {
 				clearInterval(chatBox.getNewMsgsIntervalID);
 				//Guardamos en session que se cerro la chatbox
@@ -379,7 +379,7 @@ Ejemplo de marcado
 			var self = this;
 			var element = this.element;
 			var img=$('<img class="ui-icon ui-icon-clock" alt="'+momento.toStringES()+'" title="'+momento.toStringES()+
-				'" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif" />');
+				'" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif" />');
 			var loader=$('<img class="ui-icon ui-icon-none" style="float:right; padding-right:3px;" src="./binaries/imgs/lib/ajax-loader-mini.gif" />');
 			var divMsg=$('<div style="clear:both; white-space:nowrap;"></div>');
 			var pMsg=$('<p>'+msg+'</p>')
@@ -502,7 +502,7 @@ Ejemplo de marcado
 			})
 			.appendTo(element);
 
-			var titulo=$('<div><img class="ui-icon ui-icon-link" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">Cola de clientes</div>');
+			var titulo=$('<div><img class="ui-icon ui-icon-link" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">Cola de clientes</div>');
 			titulo
 			.addClass('ui-widget-header ' +
 				'ui-corner-tl ' +
@@ -556,7 +556,7 @@ Ejemplo de marcado
 						if (action.data.length) {
 							for (var i=0;i<action.data.length;i++) {
 								var sessionData=action.data[i];
-								var itemCola=$('<li><img class="ui-icon ui-icon-person" alt="Person" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">'+sessionData.id+': '+sessionData.name+' ('+sessionData.newMsgs+') .- '+sessionData.lastSeen+'</li>')
+								var itemCola=$('<li><img class="ui-icon ui-icon-person" alt="Person" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">'+sessionData.id+': '+sessionData.name+' ('+sessionData.newMsgs+') .- '+sessionData.lastSeen+'</li>')
 								.data('idSession',sessionData.id)
 								.data('sessName',sessionData.name)
 								.click(function(event) {
@@ -609,7 +609,7 @@ Ejemplo de marcado
 			var divBocadillo=$([
 				'<div style="font-size:larger; position:relative;">',
 					'<div style="text-align:right; position:absolute; top:-3px; right:0px;">',
-						'<img id="mCLienteCloseBocadillo" class="ui-icon ui-icon-close" style="cursor:pointer;" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">',
+						'<img id="mCLienteCloseBocadillo" class="ui-icon ui-icon-close" style="cursor:pointer;" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">',
 					'</div>',
 					'<div>¿Dudas?...</div>',
 					'<div style="text-align:right; clear:both;">¡consultanos!</div>',
@@ -671,7 +671,7 @@ Ejemplo de marcado
 			.appendTo(element);
 
 			/*
-			var titulo=$('<div><img class="ui-icon ui-icon-link" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">Cola de clientes</div>')
+			var titulo=$('<div><img class="ui-icon ui-icon-link" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">Cola de clientes</div>')
 			.addClass('ui-widget-header ' +
 				'ui-corner-tl ' +
 				'ui-dialog-header'
@@ -802,7 +802,7 @@ Ejemplo de marcado
 							for (var i=0;i<action.data.length;i++) {
 								var sessionData=action.data[i];
 								var arrImgTags
-								var itemCola=$('<li><img class="ui-icon ui-icon-person" alt="Person" src="./admin.php?MODULE=IMAGES&almacen=IMGS_DIR&fichero=lib/spacer.gif">'+sessionData.id+': '+sessionData.name+' ('+sessionData.newMsgs+')</li>')
+								var itemCola=$('<li><img class="ui-icon ui-icon-person" alt="Person" src="./admin.php?MODULE=IMAGES&almacen=BASE_IMGS_DIR&fichero=lib/spacer.gif">'+sessionData.id+': '+sessionData.name+' ('+sessionData.newMsgs+')</li>')
 								.data('idSession',sessionData.id)
 								.data('sessName',sessionData.name)
 								.click(function(event) {

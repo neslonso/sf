@@ -1,5 +1,5 @@
 <?="\n<!-- ".get_class()." -->\n"?>
-<form action="./<?=FILE_APP?>" method="post" enctype="multipart/form-data"
+<form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data"
  	style="background-color: #FFF;" class="sobreAnterior">
 	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
 	<input name="acClase" id="acClase" type="hidden" value="Creacion"/>

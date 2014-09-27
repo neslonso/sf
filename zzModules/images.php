@@ -18,12 +18,12 @@ try {
 			http://lorempixel.com/400/200/sports/1 to get picture no. 1/10 from the sports category
 			http://lorempixel.com/400/200/sports/Dummy-Text...with a custom text on the random Picture
 			*/
-			$ancho=(isset($_GET["ancho"]))?$_GET["ancho"]:640;
-			$alto=(isset($_GET["alto"]))?$_GET["alto"]:480;
-			$categoria=(isset($_GET["fichero"]))?"/".$_GET["fichero"]:"";
-			$url="http://lorempixel.com/".$ancho."/".$alto.$categoria;
-			//$firephp->info($url,"URL: ");
 			try {
+				$ancho=(isset($_GET["ancho"]))?$_GET["ancho"]:640;
+				$alto=(isset($_GET["alto"]))?$_GET["alto"]:480;
+				$categoria=(isset($_GET["fichero"]))?"/".$_GET["fichero"]:"";
+				$url="http://lorempixel.com/".$ancho."/".$alto.$categoria;
+				//$firephp->info($url,"URL: ");
 				$objImg=Imagen::fromString(file_get_contents($url));
 			} catch (Exception $e) {
 				error_log ($e->getMessage());
@@ -51,8 +51,18 @@ try {
 			}
 		break;
 		default:
-			$file=constant($_GET['almacen']).'/'.$_GET['fichero'];
-			$objImg=Imagen::fromFile($file);
+			try {
+				if (defined($_GET['almacen'])) {
+					$file=constant($_GET['almacen']).'/'.$_GET['fichero'];
+				} else {
+					$file=BASE_IMGS_DIR.'/'.$_GET['fichero'];
+				}
+				$objImg=Imagen::fromFile($file);
+			} catch (Exception $e) {
+				error_log(print_r($e,true));
+				$file=BASE_IMGS_DIR.'imgErr.png';
+				$objImg=Imagen::fromFile($file);
+			}
 	}
 
 

@@ -1,5 +1,5 @@
 <?
-class modulos extends Home implements IPage {
+class clasesPHP extends docHome implements IPage {
 	public function __construct(Usuario $objUsr=NULL) {
 		parent::__construct();
 	}

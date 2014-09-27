@@ -417,7 +417,7 @@ class Creacion extends Home implements IPage {
 	private function markupCrud($fp,$page,$class,$stdObjTableInfo,$arrValidators) {
 			$sl="\n";
 			$sg="\t";
-			fwrite ($fp,'<form action="<?=FILE_APP?>" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'" style="width:50%; margin:auto;">'.$sl);
+			fwrite ($fp,'<form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'" style="width:50%; margin:auto;">'.$sl);
 			fwrite ($fp,$sg.'<input name="MODULE" id="MODULE" type="hidden" value="actions"/>'.$sl);
 			fwrite ($fp,$sg.'<input name="acClase" id="acClase" type="hidden" value="'.$page.'"/>'.$sl);
 			fwrite ($fp,$sg.'<input name="acMetodo" id="acMetodo" type="hidden" value="'.'acGrabar'.'"/>'.$sl);
