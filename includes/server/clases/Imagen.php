@@ -1,14 +1,39 @@
 <?
 class Imagen {
+	/**
+	 * La imagen es redimensionanda para producir el tamaño solicitado.
+	 * Si no se especifica una de las dimensiones la imagen se reescala proporcionalmente
+	 */
 	const OUTPUT_MODE_SCALE=	0x1;		//Redimensionamos la imagen mediante la funcion resize, si falta el width o el height se calcula proporcionalmente, si estan los dos produce una imagen de width x height, aunque cambie el aspect ratio
+	/**
+	 * La imagen es redimensionada para que queda en el hueco dado por los parametros ancho y alto,
+	 * esto produce una imagen de ancho*X o de X*alto, dependiendo de la relaccion alto/ancho entre
+	 * la imagen y el tamaño deseado
+	 */
 	const OUTPUT_MODE_FIT=		0x10;		//Redimensionamos la imagen para que queda en el hueco dado por los parametros width y height, esto produce una imagen de width*X o de X*height, dependiendo de la relaccion entre los aspect ratios de la foto y el tamaño deseado
+	/**
+	 * La imagen es redimensionada para que llene el hueco dado por los parametros ancho y alto sin
+	 * perder su relación alto/ancho, esto produce una imagen del tamaño deseado, rellenada con partes
+	 * transparentes para mantener la relación alto/ancho original
+	 */
 	const OUTPUT_MODE_FILL=		0x100;		//Encajamos y rellenamos con partes transparentes la imagen para que llene el hueco dado por los parametros width y height, esto produce una imagen de width x height
+	/**
+	 * Si la relación ancho/alto de la imagen original es mayor que 2, la imagen es rotada 45 grados antes de ser reescalada.
+	 */
 	const OUTPUT_MODE_ROTATE_H=	0x1000;
+	/**
+	 * Si la relación ancho/alto de la imagen original es menor que 0.5, la imagen es rotada -45 grados antes de ser reescalada.
+	 */
 	const OUTPUT_MODE_ROTATE_V=	0x10000;
+	/**
+	 * La imagen se reescala para producir una imagen de ancho*alto manteniendo las proporciones y recortando la parte sobrante
+	 */
 	const OUTPUT_MODE_CROP=		0x100000;	//Redimensionamos la imagen para que llene el hueco dado por los parametros width y height, esto produce una imagen de width x height
+	/**
+	 * Se superpone la imagen un patron de 2*2 pixeles con 3 transparentes y 1 negro
+	 */
 	const OUTPUT_MODE_PUNTEADO=	0x1000000;
 
-	//private $imgPath;//Si la imagen se crea desde un fichero contiene su path
 	private $imgData;//image resource
 	private $width;
 	private $height;

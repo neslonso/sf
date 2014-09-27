@@ -1,6 +1,6 @@
 <?
 mb_internal_encoding("UTF-8");
-//El UTF-8 para la conexion a la db se establece en el constructor de mysqliDB
+//El UTF-8 para la conexion a la db se establece en el constructor de MysqliDB
 
 date_default_timezone_set('Europe/Madrid');
 
@@ -57,6 +57,7 @@ define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);
 
 define('CACHE_DIR','./zCache/');
 define('TMP_UPLOAD_DIR','./zCache/tmpUpload/');
+define('BASE_IMGS_DIR','./binaries/imgs/');
 
 define ('DEBUG_EMAIL','nestor@parqueweb.com');
 
@@ -75,6 +76,9 @@ if (defined('RUTA_APP')) {
 		}
 		if (file_exists(RUTA_APP."server/appAuto.php")) {
 			require_once RUTA_APP."server/appAuto.php";
+		}
+		if (file_exists(RUTA_APP."server/appApi.php")) {
+			require_once RUTA_APP."server/appApi.php";
 		}
 	} else {
 		error_log("/**/");

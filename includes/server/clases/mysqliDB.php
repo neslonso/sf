@@ -1,7 +1,7 @@
 <?
 class DBException extends Exception {}
 
-class cDb extends mysqliDB {
+class cDb extends MysqliDB {
 	private static $host;
 	private static $user;
 	private static $pass;
@@ -31,7 +31,7 @@ class cDb extends mysqliDB {
 	}
 }
 
-class mysqliDB extends mysqli {
+class MysqliDB extends mysqli {
 	public function __construct($host, $user, $pass, $db) {
 		parent::init();
 		/*
@@ -133,7 +133,7 @@ class mysqliDB extends mysqli {
 				$result=$qResult->num_rows;
 				break;
 			case "html_table":
-				$result=mysqliDB::mysqli_result_to_html_table($qResult);
+				$result=MysqliDB::mysqli_result_to_html_table($qResult);
 				break;
 		}
 		$qResult->free();

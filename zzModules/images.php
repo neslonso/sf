@@ -23,7 +23,13 @@ try {
 			$categoria=(isset($_GET["fichero"]))?"/".$_GET["fichero"]:"";
 			$url="http://lorempixel.com/".$ancho."/".$alto.$categoria;
 			//$firephp->info($url,"URL: ");
-			$objImg=Imagen::fromString(file_get_contents($url));
+			try {
+				$objImg=Imagen::fromString(file_get_contents($url));
+			} catch (Exception $e) {
+				error_log ($e->getMessage());
+				$file=BASE_IMGS_DIR.'imgErr.png';
+				$objImg=Imagen::fromFile($file);
+			}
 		break;
 		case "DB";
 			try {
@@ -40,7 +46,7 @@ try {
 				//$objImg->marcaAgua("",1,1,"center");
 			} catch (Exception $e) {
 				error_log(print_r($e,true));
-				$file=IMGS_DIR.'dbNoFoto.png';
+				$file=BASE_IMGS_DIR.'imgErr.png';
 				$objImg=Imagen::fromFile($file);
 			}
 		break;

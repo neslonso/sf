@@ -48,7 +48,7 @@
 				<div class="title">
 					<span>MySQL</span>
 				</div>
-				<div class="meta">Conexión a <span>MySQL</span>. La clase <span>mysqliDB</span></div>
+				<div class="meta">Conexión a <span>MySQL</span>. La clase <span>MysqliDB</span></div>
 				<div class="body">
 					<p>
 						<span class="skelName">S!nt@x</span> proporciona clases para la conexión a MySQL, tanto para su uso mediante diversas instancias, como para su uso
@@ -56,7 +56,7 @@
 						desarrollar y se encuentran implementados como una jerarquia de clases.
 					</p>
 					<p>
-					<span class="skelName">S!nt@x</span> proporciona una clase de acceso a datos para MySQL llamada <code>mysqliDB</code>, que extiende a la clase nativa
+					<span class="skelName">S!nt@x</span> proporciona una clase de acceso a datos para MySQL llamada <code>MysqliDB</code>, que extiende a la clase nativa
 					<code>mysqli</code>. A su vez, esta clase es extendida por la clase <code>cDb</code>, que implementa el patron
 					<strong>Singleton</strong>. La implementación <strong>Singleton</strong> de la clase <code>cDb</code> debe ser inicializada
 					antes de su uso, mediante una llamada a su metodo estatico <code>conf</code>. Este metodo tambien puede ser usado para
@@ -66,11 +66,11 @@
 						<h4>Conexión a MySQL</h4>
 						<p>
 							Aunque se proporcionan clases para la conexión a MySQL, <span class="skelName">S!nt@x</span> no realiza ninguna conexión, por lo que es
-							necesario que las APPs realicen sus propias conexiones bien instanciando la clase <code>mysqliDB</code>
+							necesario que las APPs realicen sus propias conexiones bien instanciando la clase <code>MysqliDB</code>
 							directamente o bien mediante una llamada al metodo estático <code>conf</code> de la clase <code>cDb</code>
 						</p>
 <pre>
-$db=new mysqliDB ($host, $user, $pass, $db);
+$db=new MysqliDB ($host, $user, $pass, $db);
 $mysqli_result=$db->query('SELECT * FROM tabla');
 </pre>
 <pre>
@@ -83,8 +83,8 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 					<div class="bs-callout bs-callout-info">
 						<h4>New vs singleton</h4>
 						<p>
-							Cuando instanciamos la clase <code>mysqliDB</code> se realiza la conexión a MySQL, que durará hasta que
-							la variable que hace referencia a la instancia de <code>mysqliDB</code> sea destruida.
+							Cuando instanciamos la clase <code>MysqliDB</code> se realiza la conexión a MySQL, que durará hasta que
+							la variable que hace referencia a la instancia de <code>MysqliDB</code> sea destruida.
 							Por contra, una vez que <code>cDb::conf</code> ha
 							sido llamado, la clase <code>cDb</code> almacenará una instancia estática de si misma que será devuelta
 							cuando se llame a los metodos <code>getInstance</code> o <code>gI</code>. Cada nueva llamada a
@@ -180,7 +180,7 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 								<ul>
 									<li>
 										El fichero de definición de una clase de página se llamara igual que la clase con la extensión "php"
-										e igual que el directorio que lo contiene, por ejemplo, <code>lsCLientes/</code>, <code>lsClintes.php</code>
+										e igual que el directorio que lo contiene, por ejemplo, <code>lsCLientes/</code>, <code>lsClientes.php</code>
 										y <code>class LsCLientes extends ...</code>
 									</li>
 								</ul>

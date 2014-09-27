@@ -12,9 +12,9 @@ try {
 		throw new Exception("El módulo '".$module."' no se encuentra.", 1);
 	}
 } catch (Exception $e) {
-	$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
+	$infoExc="CATCH RAIZ: Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
 	error_log ($infoExc);
 	header('HTTP/1.1 500 Internal Server Error',true,500);
-	echo ($infoExc);
+	echo ("CATCH RAIZ: ".$e->getMessage());
 }
 ?>

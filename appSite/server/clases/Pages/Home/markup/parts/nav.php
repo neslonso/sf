@@ -13,19 +13,15 @@
 		</div>
 		<div class="navbar-collapse collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<!-- Client -->
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Client<span class="caret"></span></a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Módulos<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-					</ul>
-				</li>
-				<!-- Server -->
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Server<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-					</ul>
-				</li>
-				<!-- Samples -->
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Samples<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#actions">actions</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#api">api</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#auto">auto</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#css">css</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#images">images</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#js">js</a></li>
+						<li class="dropdown"><a href="<?=BASE_URL?>modulos#render">render</a></li>
 					</ul>
 				</li>
 				<!-- Clases -->
@@ -34,8 +30,9 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">PHP<span class="caret-right"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="./?page=clasesPHP#mysqliDB" tabindex="-1"> mysqliDB/cDb</a></li>
-								<li><a href="./?page=clasesPHP#fecha" tabindex="-1"> Fecha</a></li>
+								<li><a href="./?page=clasesPHP#MysqliDB" tabindex="-1"> MysqliDB/cDb</a></li>
+								<li><a href="./?page=clasesPHP#Fecha" tabindex="-1"> Fecha</a></li>
+								<li><a href="./?page=clasesPHP#fecha" tabindex="-1"> Imagen</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">

@@ -19,7 +19,7 @@ ClaseCreadora 1.2
 	* los caracteres convertidos a entidades HTML para que no produzcan problemas.
 /**************************************************************************************************************/
 //Crea un fichero php con el codigo basico que solemos usar para las clases
-//El fichero creado tira de las funciones de mysqliDB.php
+//El fichero creado tira de las funciones de MysqliDB.php
 //Se supone que el primer atributo de arrAtributos es la clave primaria de la tabla
 class Creadora {
 

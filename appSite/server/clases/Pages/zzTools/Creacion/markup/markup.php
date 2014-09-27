@@ -65,7 +65,7 @@ foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 				<div id="divFields<?=$stdObjTableInfo->tableName?>">
 					<span title="<?=$stdObjTableInfo->arrCreateInfo['Create Table']?>">SQL Create Table (tooltip)</span>
 					<h3>COLUMNAS</h3>
-					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslColumns,function ($row,$columnInfo) use ($stdObjTableInfo) {
+					<?=MysqliDB::result_to_html_table($stdObjTableInfo->rslColumns,function ($row,$columnInfo) use ($stdObjTableInfo) {
 					if ($row==0) {
 						return '
 							<th>Excluir (La columna no se incluira en la Page)</th>
@@ -134,15 +134,15 @@ foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 				</div>
 				<div id="divIdx<?=$stdObjTableInfo->tableName?>">
 					<h3>ÍNDICES</h3>
-					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslIdx);?>
+					<?=MysqliDB::result_to_html_table($stdObjTableInfo->rslIdx);?>
 				</div>
 				<div id="divFKs<?=$stdObjTableInfo->tableName?>">
 					<h3>FKs FROM (Tablas a las que hace referencia <?=$stdObjTableInfo->tableName?>)</h3>
-					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksFrom);?>
+					<?=MysqliDB::result_to_html_table($stdObjTableInfo->rslFksFrom);?>
 				</div>
 				<div id="divFKs<?=$stdObjTableInfo->tableName?>">
 					<h3>FKs TO (Tablas que contienen referencias a <?=$stdObjTableInfo->tableName?>)</h3>
-					<?=mysqliDB::result_to_html_table($stdObjTableInfo->rslFksTo);?>
+					<?=MysqliDB::result_to_html_table($stdObjTableInfo->rslFksTo);?>
 				</div>
 			</div>
 <?
