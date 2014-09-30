@@ -1,4 +1,7 @@
 <?
+use Sintax\Core\IPage;
+use Sintax\Core\Usuario;
+
 class docHome extends Error implements IPage {
 
 	public function __construct (Usuario $objUsr=NULL) {
@@ -94,11 +97,6 @@ class docHome extends Error implements IPage {
 			break;
 			case '5':
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/download.php');
-			break;
-			case '6':
-				echo '<div class="titulo"><div>Titulo grande de sección</div></div>';
-			break;
-			case '7':
 			break;
 		}
 	}

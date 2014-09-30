@@ -5,7 +5,7 @@
 				<span class="icon-bar"></span><span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?=BASE_URL?>" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
+			<a class="navbar-brand" href="<?=BASE_URL.get_class($this)?>" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
 				<span class="letterpress">
 					S!nt@x<br />
 				</span>

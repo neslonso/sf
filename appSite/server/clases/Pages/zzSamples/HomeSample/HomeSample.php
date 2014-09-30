@@ -1,4 +1,7 @@
 <?
+use Sintax\Core\IPage;
+use Sintax\Core\Usuario;
+
 class HomeSample extends Error implements IPage {
 
 	public function __construct (Usuario $objUsr=NULL) {

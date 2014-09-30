@@ -3,10 +3,15 @@
 //busca clase en los directorios Logic y Pages de la APP y en appZzSahred/server/clases
 spl_autoload_register(function ($clase) {
 	//error_log("Intentando carga automatica de clase: ".$clase);
+
+	//$clase = end(explode("\\",$clase));//namespaces
+	//error_log("Intentando carga automatica de clase: ".$clase);
+
 	$file=str_replace('//','/',dirname(__FILE__).'/') .'clases/Logic/'.$clase.'.php';
 	if (file_exists($file)) {
 		require_once($file);
 	}
+
 	$file=str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/'.$clase.'/'.$clase.'.php';
 	if (file_exists($file)) {
 		require_once($file);
@@ -39,11 +44,6 @@ spl_autoload_register(function ($clase) {
 /* Logic */
 /**/
 /* Pages */
-	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/Error/Error.php');
-	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/Home/Home.php');
-/**/
-/* Samples */
-	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzSamples/HomeSample/HomeSample.php');
 /**/
 	require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzTools/Creacion/Creacion.php');
 		require_once( str_replace('//','/',dirname(__FILE__).'/') .'clases/Pages/zzTools/Creacion/claseCreadora.mysqliDB.php');

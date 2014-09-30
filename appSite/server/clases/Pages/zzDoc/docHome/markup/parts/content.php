@@ -32,13 +32,3 @@ $this->fragment(4);
 $this->fragment(5);
 ?>
 	</div>
-	<div class="fragment sobreAnterior">
-<?
-$this->fragment(6);
-?>
-	</div>
-	<div class="fragment bajoAnterior">
-<?
-$this->fragment(7);
-?>
-	</div>

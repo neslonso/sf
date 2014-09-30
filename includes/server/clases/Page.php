@@ -1,19 +1,70 @@
 <?
+namespace Sintax\Core;
+
 interface IPage {
+	/**
+	 * Constructor
+	 * @param Sintax\Core\Usuario | NULL $objUsr: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
+	 */
 	public function __construct (Usuario $objUsr=NULL);
+	/**
+	 * Comprueba si está permitido el acceso a la Page
+	 * @return Boolean | String. Es true si el acceso a la página está permitido o el nombre de la clase de página a la que se debe redireccionar en caso contrario
+	 */
 	public function pageValida();
+	/**
+	 * Determina si está permitido el acceso a un metodo de acción concreto.
+	 * @param  String $metodo: nombre del metodo de acción a comprobar
+	 * @return Boolean. Es true si la ejecución del metodo está permitida y false un caso contrario
+	 */
 	public function accionValida($metodo);
+	/**
+	 * Devuelve el contenido de la etiqueta title
+	 * @return String. Contenido de la etiqueta title
+	 */
 	public function title();
+	/**
+	 * Devuelve las etiquetas meta que se desea incluir en la página. Es llamado por el módulo render
+	 * @return String. Etiquetas que se volcarán dentro de la etiqueta head
+	 */
 	public function metaTags();
+	/**
+	 * Devuelve las etiquetas necesarias para incluir el favicon. Es llamado por el módulo render
+	 * @return String. Etiquetas que se volcarán dentro de la etiqueta head
+	 */
 	public function favIcon();
+	/**
+	 * Método para la inserción de contenido personalizado dentro de la etiqueta head. Es llamado por el módulo render
+	 * @return String. Contenido que se volcará dentro de la etiqueta head, en último lugar
+	 */
 	public function head();
+	/**
+	 * Devuelve el código JS correspondiente a la página. Es llamado por el módulo js
+	 * @return String. Código JS.
+	 */
 	public function js();
+	/**
+	 * Devuelve el código CSS correspondiente a la página. Es llamado por el módulo css
+	 * @return String. Código CSS.
+	 */
 	public function css();
+	/**
+	 * Devuelve el marcado (código HTML) correspondiente a la página. Es llamado por el módulo render
+	 * @return String. Marcado de la página (Código HTML), será volcado dentro de la etiqueta body
+	 */
 	public function markup();
 }
 
 abstract class Page implements IPage {
+	/**
+	 * Usuario que accede a la página
+	 * @var Sintax\Core\Usuario | NULL: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
+	 */
 	protected $objUsr;
+	/**
+	 * Array de nombres de clase sustituidos por el metodo pageValida
+	 * @var array
+	 */
 	public $arrSustitucion;
 
 	public function __construct (Usuario $objUsr=NULL) {

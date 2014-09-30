@@ -1,7 +1,8 @@
 <?
+namespace Sintax\Core;
+
 interface IUser {
 	public function __construct ($id="");
-	public function GETnombre();
 	public static function compruebaLogin($user,$pass);
 }
 

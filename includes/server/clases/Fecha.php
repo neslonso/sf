@@ -1,7 +1,16 @@
 <?
 class Fecha {
+	/**
+	 * Fecha en formato unix (segundos desde 01/01/1970)
+	 * @var integer
+	 */
 	private $dateUnix;
-
+	/**
+	 * Crea un objeto fecha a partir de un valor de fecha y una indicación del formato en el que es suministrado el valor
+	 * o, si es llamado sin parametros, crea un objeto representando la fecha actual
+	 * @param string | integer | NULL $date valor de fecha inicial del objeto
+	 * @param string $tipo tipo de valor de fecha suministrado (MySQL | FechaES | FechaEN)
+	 */
 	public function __construct ($date=NULL,$tipo=NULL) {
 		if (is_null($date) && is_null($tipo)) {$date=time();}
 		switch ($tipo) {
@@ -13,17 +22,51 @@ class Fecha {
 			default: $this->dateUnix=$date;break;
 		}
 	}
-
+	/**
+	 * Devuelve la fecha representada como un timestamp de Unix
+	 * @return integer. timestamp de Unix
+	 */
 	public function GETdate () {return $this->dateUnix;}
+	/**
+	 * Establece la fecha representada como un timestamp de Unix
+	 * @param integer $dateUnix timestamp de Unix
+	 */
 	public function SETdate ($dateUnix) {$this->dateUnix=$dateUnix;}
-
+	/**
+	 * Devuelve el año con 4 digitos
+	 * @return integer Año.
+	 */
 	public function GETano () {return date("Y",$this->dateUnix);}
+	/**
+	 * Devuelve el numero de mes con dos digitos
+	 * @return integer Mes (01 - 12).
+	 */
 	public function GETmes () {return date("m",$this->dateUnix);}
+	/**
+	 * Devuelve el numero de día con dos digitos
+	 * @return integer Día (01 - 31).
+	 */
 	public function GETdia () {return date("d",$this->dateUnix);}
+	/**
+	 * Devuelve la hora dos digitos, formato 24 horas
+	 * @return integer Hora (00 - 23).
+	 */
 	public function GEThora () {return date("H",$this->dateUnix);}
+	/**
+	 * Devuelve el minuto con dos digitos
+	 * @return integer Hora (00 - 59).
+	 */
 	public function GETminuto () {return date("i",$this->dateUnix);}
+	/**
+	 * Devuelve el segundo con dos digitos
+	 * @return integer Hora (00 - 59).
+	 */
 	public function GETsegundo () {return date("s",$this->dateUnix);}
-
+	/**
+	 * Crea un objeto fecha a partir de una fecha MySQL (AAAA-MM-DD HH-MM-SS / AAAAMMDDHHMMSS)
+	 * @param  string $date fecha en formato MySQL
+	 * @return object self Instancia de self
+	 */
 	public static function fromMysql ($date) {
 		if (empty($date)) {$date=NULL;}
 		if (!is_null($date)) {
@@ -48,9 +91,15 @@ class Fecha {
 			}
 			$date=mktime ($hora, $minuto, $segundo, $mes, $dia, $anio);
 		}
-		return ($date);
+		//return ($date);
+		return (new self ($date));
 	}
-
+	/**
+	 * Crea un objeto fecha a partir de una fecha en formato español (DD/MM/YYYY HH:MM:SS), con o sin hora.
+	 * Se adminte / o - como separador de fecha y : como separador de hora
+	 * @param  string $date fecha en formato español
+	 * @return object self Instancia de self
+	 */
 	public static function fromFechaES ($date) {
 		//Recibimos una fecha con formato ES (DD/MM/YYYY HH:MM:SS)
 			//Dias, meses, horas, minutos y segundo pueden tener 1 o 2 cifras
@@ -69,9 +118,15 @@ class Fecha {
 			$segundo=(is_numeric($arrPreg[6][0]))?$arrPreg[6][0]:0;
 			$date=mktime ($hora, $minuto, $segundo, $mes, $dia, $anio);
 		}
-		return ($date);
+		//return ($date);
+		return (new self ($date));
 	}
-
+	/**
+	 * Crea un objeto fecha a partir de una fecha en formato inglés (MM/DD/YYYY HH:MM:SS), con o sin hora.
+	 * Se adminte / o - como separador de fecha y : como separador de hora
+	 * @param  string $date fecha en formato inglés
+	 * @return object self Instancia de self
+	 */
 	public static function fromFechaEN ($date) {
 		//Recibimos una fecha con formato EN (MM/DD/YYYY HH:MM:SS)
 			//Dias, meses, horas, minutos y segundo pueden tener 1 o 2 cifras
@@ -90,10 +145,16 @@ class Fecha {
 			$segundo=(is_numeric($arrPreg[6][0]))?$arrPreg[6][0]:0;
 			$date=mktime ($hora, $minuto, $segundo, $mes, $dia, $anio);
 		}
-		return ($date);
+		//return ($date);
+		return (new self ($date));
 	}
-
-
+	/**
+	 * Devuelve la fecha en formato MySQL,
+	 * @param  string $date timestamp de unix a convertir. Si no se especifica se utiliza el contenido en la instancia utilizada para invocar el metodo
+	 * @param  boolean $conSeparadores Indica si se desea obtenre la fecha con separadores (- para la fecha, : para la hora)
+	 * @param  boolean $conHora Indica si se desea incorporar la hora en la fecha devuelta
+	 * @return string timestamp de MySQL
+	 */
 	public function toMysql($date=NULL,$conSeparadores=false,$conHora=true) {
 		if (is_null($date)) {
 			$static = !(isset($this) && get_class($this) == __CLASS__);
@@ -118,7 +179,12 @@ class Fecha {
 		}
 		return ($date);
 	}
-
+	/**
+	 * Devuelve la fecha en formato español,
+	 * @param  string $date timestamp de unix a convertir. Si no se especifica se utiliza el contenido en la instancia utilizada para invocar el metodo
+	 * @param  boolean $conHora Indica si se desea incorporar la hora en la fecha devuelta
+	 * @return string fecha en formato español (DD/MM/AAA HH:MM:SS)
+	 */
 	public function toFechaES($date=NULL, $conHora=true) {
 		if (is_null($date)) {
 			$static = !(isset($this) && get_class($this) == __CLASS__);
@@ -135,8 +201,12 @@ class Fecha {
 		}
 		return ($date);
 	}
-
-	//http://www.w3.org/TR/NOTE-datetime
+	/**
+	 * Devuelve la fecha en formato W3C,
+	 * @param  string $date timestamp de unix a convertir. Si no se especifica se utiliza el contenido en la instancia utilizada para invocar el metodo
+	 * @param  boolean $conHora Indica si se desea incorporar la hora en la fecha devuelta
+	 * @return string fecha en formato W3C (http://www.w3.org/TR/NOTE-datetime)
+	 */
 	public function toW3C($date=NULL, $conHora=true) {
 		if (is_null($date)) {
 			$static = !(isset($this) && get_class($this) == __CLASS__);
@@ -151,8 +221,18 @@ class Fecha {
 		}
 		return ($date);
 	}
-
-	public function toAgo($desdeDate=NULL,$hastaDate=NULL,$precision=-1, $separator=', ', $divisors=NULL) {
+	/**
+	 * Devuelve la diferencia entre las fechas
+	 * @param  integer  $desdeDate timestamp de unix, fecha inicial.
+	 * Si no se especifica se utiliza la fecha contenida en la instancia utilizada para invocar el metodo
+	 * @param  integer  $hastaDate timestamp de unix, fecha final, Si no se especifica se utiliza la fecha actual
+	 * @param  integer $precision Número de partes a devolver, e.g. 3 devuelve '1 Año, 3 Días, 9 Horas' mientras que 2 devuelve '1 Año, 3 Días'.
+	 * El valor -1 hace que se devuelvan todos las partes
+	 * @param  string  $separator caracter de separación entre partes, por amisión se utiliza ', '.
+	 * @return string Diferencia entre las fechas (Hace/Dentro de 1 Año, 2 Meses, 3 días, 9 Horas, 26 segundos)
+	 */
+	public function toAgo($desdeDate=NULL,$hastaDate=NULL,$precision=-1, $separator=', ') {
+		$divisors=NULL;
 		if (is_null($desdeDate)) {
 			$desdeDate=$this->dateUnix;
 		}
@@ -165,7 +245,6 @@ class Fecha {
 		// Return the formatted interval
 		return $particula." ".self::format_interval($segundosDiferencia, $precision, $separator, $divisors);
 	}
-
 	/**
 	* Formats any number of seconds into a readable string
 	*

@@ -59,7 +59,8 @@ try {
 				}
 				$objImg=Imagen::fromFile($file);
 			} catch (Exception $e) {
-				error_log(print_r($e,true));
+				//error_log(print_r($e,true));
+				error_log($e->getMessage());
 				$file=BASE_IMGS_DIR.'imgErr.png';
 				$objImg=Imagen::fromFile($file);
 			}

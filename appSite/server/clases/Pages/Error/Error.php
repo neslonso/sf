@@ -1,4 +1,8 @@
 <?
+use Sintax\Core\IPage;
+use Sintax\Core\Page;
+use Sintax\Core\Usuario;
+
 class Error extends Page implements IPage {
 
 	private $msg;

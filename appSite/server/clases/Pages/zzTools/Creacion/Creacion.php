@@ -1,4 +1,7 @@
 <?
+use Sintax\Core\IPage;
+use Sintax\Core\Usuario;
+
 class Creacion extends Home implements IPage {
 	public function __construct(Usuario $objUsr=NULL) {
 		parent::__construct();
@@ -39,7 +42,7 @@ class Creacion extends Home implements IPage {
 		parent::css();
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
-	public function content() {
+	public function markup() {
 		$mysqli=cDb::getInstance();
 		$arrStdObjTableInfo=array();
 		if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
@@ -160,6 +163,10 @@ class Creacion extends Home implements IPage {
 		$file=$ruta.$page."/".$page.".php";
 		$fp=fopen ($file,"w");
 		fwrite ($fp,"<?".$sl);
+		//fwrite ($fp,'namespace Sintax\Pages;'.$sl);
+		fwrite ($fp,'use Sintax\Core\IPage;'.$sl);
+		fwrite ($fp,'use Sintax\Core\Usuario;'.$sl);
+
 		fwrite ($fp,"class ".$page." extends ".$extends." implements IPage {".$sl);
 			//Inicio __construct
 		fwrite ($fp,$sg.'public function __construct(Usuario $objUsr=NULL) {'.$sl);

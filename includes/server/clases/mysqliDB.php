@@ -2,13 +2,39 @@
 class DBException extends Exception {}
 
 class cDb extends MysqliDB {
-	private static $host;
-	private static $user;
-	private static $pass;
-	private static $db;
-
-	private static $singleton;
-
+	/**
+	 * host de MySQL
+	 * @var string
+	 */
+	private static $host='localhost';
+	/**
+	 * Usuario de acceso a MySQL
+	 * @var string
+	 */
+	private static $user='root';
+	/**
+	 * Contraseña del usuario de acceso a MySQL
+	 * @var string
+	 */
+	private static $pass='';
+	/**
+	 * Nombre del esquema de MySQL
+	 * @var string
+	 */
+	private static $db='';
+	/**
+	 * NULL o instancia de la propia clase, ya conectada a la BD
+	 * @var NULL o instancia de self
+	 */
+	private static $singleton=NULL;
+	/**
+	 * Realiza conexión a la base de datos
+	 * @param string $host host de MySQL
+	 * @param string $user usuario de acceso a MySQL
+	 * @param string $pass contraseña del usuario de acceso a MySQL
+	 * @param string $db nombbre de esquema de MySQL
+	 * @return object: instancia de self
+	 */
 	public static function conf($host, $user, $pass, $db) {
 		self::$host=$host;
 		self::$user=$user;
@@ -19,6 +45,10 @@ class cDb extends MysqliDB {
 		return self::getInstance();
 	}
 
+	/**
+	 * devuelve una referencia a la instancia conectada
+	 * @return object: instancia de self
+	 */
 	public static function getInstance() {
 		if(!self::$singleton instanceof self) {
 			//self::$singleton = new self(self::_DB_HOST_, self::_DB_USER_, self::_DB_PASSWD_, self::_DB_NAME_);
@@ -26,12 +56,23 @@ class cDb extends MysqliDB {
 		}
 		return self::$singleton;
 	}
+	/**
+	 * alias de getInstance
+	 */
 	public static function gI() {
 		return self::getInstance();
 	}
 }
 
 class MysqliDB extends mysqli {
+	/**
+	 * Constructor: Conecta a MySQL y establece el charset a utf8
+	 * @param string $host host de MySQL
+	 * @param string $user usuario de acceso a MySQL
+	 * @param string $pass contraseña del usuario de acceso a MySQL
+	 * @param string $db nombbre de esquema de MySQL
+	 * @throws DBException si no puede conectar o establecer el charset a utf8
+	 */
 	public function __construct($host, $user, $pass, $db) {
 		parent::init();
 		/*
@@ -53,11 +94,20 @@ class MysqliDB extends mysqli {
 			throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
 		}
 	}
+	/**
+	 * Destructor: cierra la conexión a MySQL
+	 * @throws DBException si no se puede cerrar la conexion
+	 */
 	public function __destruct() {
 		if (!parent::close()) {
 			throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
 		}
 	}
+	/**
+	 * Ejecuta una consulta
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return mysqli_result instancia de mysqli_result
+	 */
 	public function query($query) {
 		$localeActual=setlocale(LC_ALL, 0);
 	 	setlocale(LC_ALL,'en_US.utf8');
@@ -76,28 +126,64 @@ class MysqliDB extends mysqli {
 		}
 		return $result;
 	}
-
+	/**
+	 * Recupera un campo
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return string Primer campo del primer registro del resultado la consulta ejecutada
+	 */
 	public function get_var($query) {
 		return $this->get_data($query,"var");
 	}
-
-	public function get_row($query) {
-		return $this->get_data($query,"row");
+	/**
+	 * Recurepra una fila
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return object Primer registro del resultado la consulta ejecutada
+	 */
+	public function get_obj($query) {
+		return $this->get_data($query,"obj");
 	}
-
+	/**
+	 * Recupera un array de campos
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return array Primer campo de cada registro del resultado de la consulta
+	 */
 	public function get_arrVars($query) {
 		return $this->get_data($query,"arrVars");
 	}
-
-	public function get_arrRows($query) {
+	/**
+	 * Recupera un array
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return array Contiene un array por cada registro del resultado la consulta ejecutada
+	 */
+	public function get_arrArrs($query) {
 		return $this->get_data($query,"arrRows");
 	}
-	public function get_results($query) {return $this->get_arrRows($query);}
-
+	/**
+	 * alias de get_arrArrs
+	 */
+	public function get_results($query) {return $this->get_arrArrs($query);}
+	/**
+	 * Recupera un objeto
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return array Contiene un objecto por cada registro del resultado la consulta ejecutada
+	 */
+	public function get_arrObjs($query) {
+		return $this->get_data($query,"arrObjs");
+	}
+	/**
+	 * Recupera el número de registros
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @return integer Número de registros del resultado de la consulta ejecutada
+	 */
 	public function get_num_rows($query) {
 		return $this->get_data($query,"num_rows");
 	}
-
+	/**
+	 * Recupera datos en diversos formatos
+	 * @param  string $query Consulta SQL a ejecutar
+	 * @param  string $tipo  Tipo de resultado deseado (mysqli_result | var | obj | arrVars | arrArrs | arrObjs | num_rows | html_table)
+	 * @return mixed mysqli_result | string | object | array | integer
+	 */
 	private function get_data($query,$tipo="mysqli_result") {
 		$qResult=$this->query($query);
 		switch ($tipo) {
@@ -107,7 +193,7 @@ class MysqliDB extends mysqli {
 				$row=$qResult->fetch_array();
 				$result=$row[0];
 				break;
-			case "row":
+			case "obj":
 				$result=$qResult->fetch_object();
 				break;
 			case "arrVars":
@@ -142,6 +228,13 @@ class MysqliDB extends mysqli {
 
 	/* nextId *****************************************************
 	**************************************************************/
+	/**
+	 * Calcula el siguiente valor para incrementar el campo de la tabla pasados como parametros.
+	 * Si existe la clase contador, se aopya en ella para generar el valor.
+	 * @param  string $tabla tabla para la que se desea generar el valor
+	 * @param  string $campo campo para el que se desea generar el valor
+	 * @return integer Siguiente valor que se puede grabar en el campo
+	 */
 	public function nextId($tabla,$campo) {
 		$maxCampo=$this->get_var ("SELECT max($campo) as maxCampo FROM $tabla");
 		$max=$maxCampo+1;
@@ -173,6 +266,16 @@ class MysqliDB extends mysqli {
 
 	/* mysqli_result_to_html_table ********************************
 	**************************************************************/
+	/**
+	 * Convierte una instancia de mysqli_result en una tabla html
+	 * @param  mysqli_result $mysqli_result instancia de mysqli_result
+	 * @param  function $afterTrCallback funcion a llamar justo despues
+	 * de cada apertura de tr de la tabla. Se le pasan dos parametros,
+	 * número de fila (0 para la fila de encabezados) y un array con
+	 * los datos de la fila (datos de la primera fila para el tr del
+	 * encabezado)
+	 * @return string Marcado html de la tabla
+	 */
 	public static function result_to_html_table ($mysqli_result,$afterTrCallback=NULL) {
 		$result='';
 		$result.='<table border="1" style="width:100%;">';

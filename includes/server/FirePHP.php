@@ -2,7 +2,7 @@
 /*<!--firePHP-->*/
 //http://www.firephp.org/HQ/Use.htm
 require_once('./includes/server/vendor/FirePHPCore-0.3.2/lib/FirePHPCore/FirePHP.class.php');
-$firephp = FirePHP::getInstance(true);
+$fp = $firephp = FirePHP::getInstance(true);
 //$firephp-> *
 
 //require_once('./includes/server/FirePHPCore-0.3.2/lib/FirePHPCore/fb.php');

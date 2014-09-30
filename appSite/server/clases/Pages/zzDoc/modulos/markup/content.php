@@ -276,21 +276,14 @@
 												."</li>";
 											}
 										}
-										/*
-										$constClass=new ConstDoc ("Imagen");
-										$oClass = new ReflectionClass("Imagen");
-										$oMethod= new ReflectionMethod ("Imagen","toString");
-										foreach ($oClass->getConstants() as $key => $value) {
-											$doc=$constClass->getDocComment($key);
-										 	echo "<li>".$key.": ".$doc."</li>";
-										 }
-										 */
 ?>
 									</ul>
+									Si no se especifica se utilizará <code>OUTPUT_MODE_SCALE</code>
 								</li>
 								<li>
 									<code>formato</code>: Cadena de caracteres. Valor que indica el formato en el que se desea la imagen,
-									puede valer <code>gif</code>, <code>jpg</code>, <code>png</code> o <code>wbmp</code>.
+									puede valer <code>gif</code>, <code>jpg</code>, <code>png</code> o <code>wbmp</code>. Si no se especifica
+									se utilizará <code>png</code>
 								</li>
 							</ul>
 						</div>

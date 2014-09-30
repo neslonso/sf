@@ -33,18 +33,56 @@ class Imagen {
 	 * Se superpone la imagen un patron de 2*2 pixeles con 3 transparentes y 1 negro
 	 */
 	const OUTPUT_MODE_PUNTEADO=	0x1000000;
-
-	private $imgData;//image resource
+	/**
+	 * FLip horizontal
+	 */
+	const OUTPUT_MODE_FLIP_H=	0x10000000;
+	/**
+	 * Flip Vertical
+	 */
+	const OUTPUT_MODE_FLIP_V=	0x100000000;
+	/**
+	 * Identificador de recurso de imagende la imagen en tratamiento
+	 * @var resource
+	 */
+	private $imgData;//image
+	/**
+	 * Ancho de la imagen
+	 * @var integer
+	 */
 	private $width;
+	/**
+	 * Alto de la imagen
+	 * @var [type]
+	 */
 	private $height;
-	private $imgType;//unos de las constantes IMAGETYPE_XXX (Ihttp://www.php.net/manual/es/image.constants.php)
-
+	/**
+	 * unas de las constantes IMAGETYPE_XXX (http://www.php.net/manual/es/image.constants.php)
+	 * @var integer
+	 */
+	private $imgType;//una de las constantes IMAGETYPE_XXX (Ihttp://www.php.net/manual/es/image.constants.php)
+	/**
+	 * Contiene información sobre las marcas de agua a aplicar a la imagen.
+	 * Estructura:
+	 *  file: string. ruta de la imagen a usar como marca de agua,
+	 *  mWidth: float. multiplicador de anchura de la marca de agua respecto al tamaño de la imagen. Default 0.5.
+	 *  mHeight: float. multiplicador de altura de la marca de agua respecto al tamaño de la imagen. Default 0.5.
+	 *  position: string. Dos palabras que indican alineación horizontal (left | right | center) y vertical (top | bottom | center)
+	 * @var array
+	 */
 	private $marcasAgua=array();//array
 
 
-	public function __construct () {
-	}
+	/*public function __construct () {}*/
 
+	/**
+	 * Devuelve los datos de la imagen en crudo.
+	 * @param  integer $width ancho de la imagen de salida
+	 * @param  integer $height alto de la imagen de salida
+	 * @param  integer $outputMode combinaciones válidas de las constantes OUTPUT_MODE_*
+	 * @param  string $format formato de salida de la imagen (gif | jpeg | jpg | png | wbmp)
+	 * @return string Datos de la imagen
+	 */
 	public function toString ($width=NULL, $height=NULL, $outputMode=self::OUTPUT_MODE_SCALE, $format="png") {
 		ob_start();
 		$this->output($width,$height,$outputMode,$format,true);
@@ -52,7 +90,16 @@ class Imagen {
 		ob_end_clean();
 		return $result;
 	}
-
+	/**
+	 * Vuelca en lka salida estandar los datos de la imagen
+	 * Devuelve los datos de la imagen en crudo.
+	 * @param  integer $width ancho de la imagen de salida
+	 * @param  integer $height alto de la imagen de salida
+	 * @param  integer $outputMode combinaciones válidas de las constantes OUTPUT_MODE_*
+	 * @param  string $format formato de salida de la imagen (gif | jpeg | jpg | png | wbmp)
+	 * @param  boolean $withoutHeader Si es true solo se vuelcan los datos de la imagen,
+	 *  si es false se añade una cabecera Content-Type acorde al parametro formato
+	 */
 	public function output ($width=NULL, $height=NULL, $outputMode=self::OUTPUT_MODE_SCALE, $format="png",$withoutHeader=false) {
 		$puntear=false;
 		if($outputMode & self::OUTPUT_MODE_ROTATE_H) {
@@ -70,10 +117,20 @@ class Imagen {
 			$puntear=true;
 		}
 
+		if ($outputMode & self::OUTPUT_MODE_FLIP_H) {
+			$this->flip(1);
+		}
+
+		if ($outputMode & self::OUTPUT_MODE_FLIP_V) {
+			$this->flip(2);
+		}
+
 		if (!is_null($width) || !is_null($height)) {
 			$outputMode=$outputMode & (~self::OUTPUT_MODE_ROTATE_H);
 			$outputMode=$outputMode & (~self::OUTPUT_MODE_ROTATE_V);
 			$outputMode=$outputMode & (~self::OUTPUT_MODE_PUNTEADO);
+			$outputMode=$outputMode & (~self::OUTPUT_MODE_FLIP_H);
+			$outputMode=$outputMode & (~self::OUTPUT_MODE_FLIP_V);
 			switch ($outputMode) {
 				case self::OUTPUT_MODE_SCALE:
 					$this->resize($width,$height);
@@ -129,15 +186,22 @@ class Imagen {
 			case "wbmp":imagewbmp($outputData);break;
 		}
 	}
-
+	/**
+	 * Devuelve la anchura en pixeles de la imagen tratado
+	 */
 	function width() {
 		return imagesx($this->imgData);
 	}
-
+	/**
+	 * Devuelve la altura en pixeles de la imagen tratado
+	 */
 	function height() {
 		return imagesy($this->imgData);
 	}
-
+	/**
+	 * Rota la imagen
+	 * @param  float $angle Ángulo de rotación. Número de grados en el sentido contrario de las agujas de reloj que la imagen va a rotar.
+	 */
 	function rotate($angle) {
 		$im    = imagecreatetruecolor($this->width(),$this->height()); // New image
 		$bg    = imagecolorallocatealpha($im, 255,255,255, 127); // Transparent Background
@@ -150,7 +214,11 @@ class Imagen {
 
 		$this->imgData = $im;
 	}
-
+	/**
+	 * Reescala la imagen
+	 * @param  integer $width nueva anchura de la imagen
+	 * @param  integer $height nueva altura de la imagen
+	 */
 	function resize ($width=NULL,$height=NULL) {
 		if (
 			(is_null($width) && is_null($height))
@@ -169,8 +237,13 @@ class Imagen {
 		imagecopyresampled($new_image, $this->imgData, 0, 0, 0, 0, $width, $height, $this->width(), $this->height());
 		$this->imgData = $new_image;
 	}
-
-	//Resize la imagen para que quepa en un hueco de $width*$height respetando proporciones
+	/**
+	 * Reescala la imagen para que quepa en un hueco de $width*$height respetando proporciones, la imagen tendrá el tamaño máximo posible para que queda en el hueco
+	 * @param  integer  $width   anchura del hueco en el que debe caber la imagen
+	 * @param  integer  $height  altura del hueco en el que debe caber la imagen
+	 * @param  boolean $reverse Si es false la funcion hace coincidir la dimensión más grande de la imagen con la más pequeña del tamaño de destino
+	 *  Si es true hace coindicir la dimensión más pequeña de la imagen con la mas grande del tamaño de destino (util para la funcion crop).
+	 */
 	function fit ($width,$height,$reverse=false) {
 		$imgRatio = $this->height()/$this->width();
 		$holderRatio=$height/$width;
@@ -189,8 +262,11 @@ class Imagen {
 			}
 		}
 	}
-
-	//Fit la imagen en $width*$height y rellena lo que sobre con trasnparente para generar una imagen de $width*$height
+	/**
+	 * Fit la imagen en $width*$height y rellena lo que sobre con transparente para generar una imagen de exactamente el mismo tamaño que el hueco
+	 * @param  integer  $width   anchura del hueco que debe rellenar la imagen
+	 * @param  integer  $height  altura del hueco que debe rellenar la imagen
+	 */
 	function fill($width,$height) {
 		$this->fit($width,$height);
 		//Fill
@@ -205,8 +281,11 @@ class Imagen {
 
 		$this->imgData = $new_image;
 	}
-
-	//Resize la imagen (mediante fit reverse) para que llene un hueco de $width*$height respetando proporciones y corta lo que sobre
+	/**
+	 * Reescala la imagen (mediante fit reverse) para que llene un hueco de $width*$height respetando proporciones y corta lo que sobre
+	 * @param  integer  $width   anchura del hueco que debe rellenar la imagen
+	 * @param  integer  $height  altura del hueco que debe rellenar la imagen
+	 */
 	function crop ($width,$height) {
 		$this->fit($width,$height,true);
 		//Crop
@@ -221,7 +300,13 @@ class Imagen {
 
 		$this->imgData = $new_image;
 	}
-
+	/**
+	 * Superpone una imagen sobre la imagen tratada
+	 * @param  string $file ruta de la imagen a superponer
+	 * @param  float  $mWidth multiplicador de anchura de la imagen a superponer respecto al tamaño de la imagen. Default 0.5.
+	 * @param  float  $mHeight multiplicador de altura de la imagen a superponer respecto al tamaño de la imagen. Default 0.5.
+	 * @param  string $position Dos palabras que indican alineación horizontal (left | right | center) y vertical (top | bottom | center)
+	 */
 	public function superponer ($file,$mWidth=0.5,$mHeight=0.5,$position="center bottom") {
 		$objImgMarca=Imagen::fromFile($file);
 		$objImgMarca->fill ($this->width()*$mWidth,$this->height()*$mHeight);
@@ -251,7 +336,13 @@ class Imagen {
 		imagecopy($this->imgData, $objImgMarca->imgData, $xDest, $yDest,
 			0, 0, $objImgMarca->width(), $objImgMarca->height());
 	}
-
+	/**
+	 * Añade una marca de agua al array de amrcas de agua
+	 * @param  string $file ruta de la imagen a superponer
+	 * @param  float  $mWidth multiplicador de anchura de la imagen a superponer respecto al tamaño de la imagen. Default 0.5.
+	 * @param  float  $mHeight multiplicador de altura de la imagen a superponer respecto al tamaño de la imagen. Default 0.5.
+	 * @param  string $position Dos palabras que indican alineación horizontal (left | right | center) y vertical (top | bottom | center)
+	 */
 	public function marcaAgua ($file,$mWidth=0.3,$mHeight=0.3,$position="center bottom") {
 		$arr=array(
 			'file' => $file,
@@ -261,7 +352,10 @@ class Imagen {
 		);
 		array_push($this->marcasAgua, $arr);
 	}
-
+	/**
+	 * Rellena la imagen con un patrón
+	 * @param  resource $tile Identificador de recurso de imagen de la imagen patrón
+	 */
 	public function fillPattern($tile) {
 		if (!imagesettile($this->imgData, $tile)) {
 			throw new Exception("imagesettile error", 1);
@@ -270,8 +364,47 @@ class Imagen {
 		imagefilledrectangle ($this->imgData, 0, 0, $this->width(), $this->height(), IMG_COLOR_TILED);
 		//$this->imgData=$tile;
 	}
+	/**
+	 * Voltea la imagen
+	 * @param  integer $mode sentido del volteo. 1:vertical, 2:Horizontal, 3:Ambos
+	 */
+	function flip ($mode) {
+		$imgsrc=$this->imgData;
+		$width=imagesx ($imgsrc);
+		$height=imagesy ($imgsrc);
+		$src_x=0;
+		$src_y=0;
+		$src_width=$width;
+		$src_height=$height;
+
+		switch ($mode) {
+			case '1': //vertical
+				$src_y=$height -1;
+				$src_height=-$height;
+			break;
+			case '2': //horizontal
+				$src_x=$width -1;
+				$src_width=-$width;
+			break;
+			case '3': //both
+				$src_x=$width -1;
+				$src_y=$height -1;
+				$src_width=-$width;
+				$src_height=-$height;
+			break;
+		}
+		$imgdest=imagecreatetruecolor ($width,$height);
+		if ( imagecopyresampled ( $imgdest, $imgsrc, 0, 0, $src_x, $src_y , $width, $height, $src_width, $src_height ) ) {
+			$this->imgData=$imgdest;
+		}
+	}
 
 /* Estaticas ******************************************************************/
+	/**
+	 * Crea una instancia de la clase a partir de un fichero
+	 * @param  string $path ruta del fichero
+	 * @return Imagen Instancia de la clase Imagen
+	 */
 	public static function fromFile ($path) {
 		$objImg=new Imagen();
 
@@ -299,13 +432,20 @@ class Imagen {
 
 		return $objImg;
 	}
-
+	/**
+	 * Crea una instancia de la clase a partir de los datos en crudo de la imagen
+	 * @param  string $data datos de la imagen
+	 * @return Imagen Instancia de la clase Imagen
+	 */
 	public static function fromString ($data) {
 		$objImg=new Imagen();
 		$objImg->imgData=imagecreatefromstring($data);
 		return $objImg;
 	}
-
+	/**
+	 * Crea un patrón de 2*2 pixeles, con la esquina superior izquierda negra y el resto transparente
+	 * @return resource identificador de recurso de imagen
+	 */
 	public static function pattern4x1 () {
 		$tile = imagecreatetruecolor(2, 2);
 		imagealphablending($tile, true);
