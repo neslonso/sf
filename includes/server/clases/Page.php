@@ -4,9 +4,9 @@ namespace Sintax\Core;
 interface IPage {
 	/**
 	 * Constructor
-	 * @param Sintax\Core\Usuario | NULL $objUsr: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
+	 * @param Sintax\Core\User | NULL $objUsr: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
 	 */
-	public function __construct (Usuario $objUsr=NULL);
+	public function __construct (User $objUsr=NULL);
 	/**
 	 * Comprueba si está permitido el acceso a la Page
 	 * @return Boolean | String. Es true si el acceso a la página está permitido o el nombre de la clase de página a la que se debe redireccionar en caso contrario
@@ -58,7 +58,7 @@ interface IPage {
 abstract class Page implements IPage {
 	/**
 	 * Usuario que accede a la página
-	 * @var Sintax\Core\Usuario | NULL: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
+	 * @var Sintax\Core\User | NULL: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
 	 */
 	protected $objUsr;
 	/**
@@ -67,17 +67,26 @@ abstract class Page implements IPage {
 	 */
 	public $arrSustitucion;
 
-	public function __construct (Usuario $objUsr=NULL) {
+	public function __construct (User $objUsr=NULL) {
 		$this->objUsr=$objUsr;
 	}
 
 	public function pageValida() {
 		//throw new Exception('El metodo pageValida debe ser implementado en la clase '.get_class($this));
-		return true;
+		if ($this->objUsr instanceof IUser) {
+			return $this->objUsr->pagePermitida($this);
+		} else {
+			return true;
+		}
 	}
 
 	public function accionValida($metodo) {
-		throw new Exception('El metodo accionValida debe ser implementado en la clase '.get_class($this));
+		//throw new Exception('El metodo accionValida debe ser implementado en la clase '.get_class($this));
+		if ($this->objUsr instanceof IUser) {
+			return $this->objUsr->accionPermitida($this,$metodo);
+		} else {
+			return true;
+		}
 	}
 
 	public function title() {

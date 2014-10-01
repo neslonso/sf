@@ -5,7 +5,7 @@
 				<span class="icon-bar"></span><span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?=BASE_URL.get_class($this)?>" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
+			<a class="navbar-brand" href="<?=BASE_URL?>docHome" data-toggle="tooltip" data-placement="bottom" title="PHP from artisans to artisans">
 				<span class="letterpress">
 					S!nt@x<br />
 				</span>
@@ -45,6 +45,30 @@
 						</li>
 					</ul>
 				</li>
+				<!-- Plugins -->
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Plugins<span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">JS<span class="caret-right"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="<?=BASE_URL?>js#DBdataTable" tabindex="-1"> DBdataTable</a></li>
+								<li><a href="<?=BASE_URL?>js#pila" tabindex="-1"> Pila</a></li>
+								<li><a href="<?=BASE_URL?>js#raty" tabindex="-1"> Raty</a></li>
+								<li class="divider"></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">CSS<span class="caret-right"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="<?=BASE_URL?>css#ulMenu" tabindex="-1"> .ulMenu</a></li>
+								<li><a href="<?=BASE_URL?>css#stdDataTable" tabindex="-1"> .stdDataTable</a></li>
+								<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> csscheckbox</a></li>
+								<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> yamm 3</a></li>
+								<li class="divider"></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
 <?
 $dir=RUTA_APP."server/clases/Pages/";
 ?>
@@ -59,25 +83,6 @@ $dir=RUTA_APP."server/clases/Pages/";
 								</div>
 							</div>
 						</li>
-					</ul>
-				</li>
-				<!-- JS -->
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Js<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="<?=BASE_URL?>js#DBdataTable" tabindex="-1"> DBdataTable</a></li>
-						<li><a href="<?=BASE_URL?>js#pila" tabindex="-1"> Pila</a></li>
-						<li><a href="<?=BASE_URL?>js#raty" tabindex="-1"> Raty</a></li>
-						<li class="divider"></li>
-					</ul>
-				</li>
-				<!-- CSS -->
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Css<span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="<?=BASE_URL?>css#ulMenu" tabindex="-1"> .ulMenu</a></li>
-						<li><a href="<?=BASE_URL?>css#stdDataTable" tabindex="-1"> .stdDataTable</a></li>
-						<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> csscheckbox</a></li>
-						<li><a href="<?=BASE_URL?>css#cssCheckbox" tabindex="-1"> yamm 3</a></li>
-						<li class="divider"></li>
 					</ul>
 				</li>
 				<!-- Tools -->

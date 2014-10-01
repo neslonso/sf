@@ -3,8 +3,7 @@
 //busca clase en los directorios Logic y Pages de la APP y en appZzSahred/server/clases
 spl_autoload_register(function ($clase) {
 	//error_log("Intentando carga automatica de clase: ".$clase);
-
-	//$clase = end(explode("\\",$clase));//namespaces
+	$clase = end(explode("\\",$clase));//namespaces
 	//error_log("Intentando carga automatica de clase: ".$clase);
 
 	$file=str_replace('//','/',dirname(__FILE__).'/') .'clases/Logic/'.$clase.'.php';

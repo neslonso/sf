@@ -137,7 +137,7 @@ cDb::getInstance()->query('SELECT * FROM tabla');
 				<div class="meta"><span>Nomenclatura</span>, <span>campos</span>, <span>ficheros</span> y <span>clases</span></div>
 				<div class="body">
 					<p>
-						La metodología de trabajo detrás de <span class="skelName">S!nt@x</span> (nesWork) se apoya en varias convenciones de nomeclatura de campos
+						La metodología de trabajo detrás de <span class="skelName">S!nt@x</span> se apoya en varias convenciones de nomeclatura de campos
 						de base de datos, clases de acceso a datos, clases de página, constantes, variables y ficheros.
 					</p>
 					<p>

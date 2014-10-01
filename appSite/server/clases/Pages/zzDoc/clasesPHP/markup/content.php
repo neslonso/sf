@@ -7,18 +7,51 @@
 				<div class="article">
 					<div class="title">
 						<a name="Page"></a>
-						<strong class="embossed">Page</strong>
-						<span>Clase abstracta de página</span>
+						<strong class="embossed">IPage / Page</strong>
+						<span>Interfaz de página y clase abstracta de página</span>
 					</div>
 					<div class="meta">Raiz de la jerarquia<span></span></div>
 					<div class="body">
 						<p>
-							La clase <code>Page</code> es la raiz de la jerarquia de las clases de página,
-							de ella descienden todas las clases que formarán las páginas de cada aplicación y
-							sobreescribirán los metodos que necesiten para realizar sus tareas.
+							La clase <code>Page</code>, que implementa la interfaz <code>IPage</code>,
+							es la raiz de la jerarquia de las clases de página, de ella descienden todas
+							las clases que formarán las páginas de cada aplicación y sobreescribirán los
+							metodos que	necesiten para realizar sus tareas.
 						</p>
 						<div class="col2">
+							<?=$this->ulClass('./includes/server/clases/Page.php','IPage')?>
 							<?=$this->ulClass('./includes/server/clases/Page.php','Page')?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+<div class="fragment bajoAnterior">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8">
+				<div class="article">
+					<div class="title">
+						<a name="User"></a>
+						<strong class="embossed">IUser / User</strong>
+						<span>Interfaz de usuario y clase abstracta de usuario</span>
+					</div>
+					<div class="meta">Raiz de la jerarquia<span></span></div>
+					<div class="body">
+						<p>
+							La clase <code>User</code>, que implementa la interfaz <code>IUser</code>,
+							es la raiz de la jerarquia de las clases de usuario, de ella descienden todas
+							las clases que representarán a los diversos tipos de usuarios que acceden
+							a la aplicación y deben implementar las funciones que definen el nivel de acceso
+							de cada tipo de usuario.
+						</p>
+						<div class="col2">
+							<?=$this->ulClass('./includes/server/clases/User.php','IUser')?>
+							<?=$this->ulClass('./includes/server/clases/User.php','User')?>
 						</div>
 					</div>
 				</div>

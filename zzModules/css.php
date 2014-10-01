@@ -10,12 +10,12 @@ try {
 
 	$page=(isset($_GET['page']))?$_GET['page']:'Home';
 
-	$objUsr=NULL;
+	$objUsr=new Sintax\Core\AnonymousUser();
 	if (isset($_SESSION['usuario'])) {
 		//$objUsr=$_SESSION['usuario'];
 		$usrClass=get_class($_SESSION['usuario']);
 		if ($usrClass!="__PHP_Incomplete_Class") {
-			$objUsr=new $usrClass($_SESSION['usuario']->GETid());
+			$objUsr=$_SESSION['usuario'];
 		}
 	}
 

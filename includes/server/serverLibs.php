@@ -7,6 +7,7 @@ require_once "./includes/server/clases/Fecha.php";
 require_once "./includes/server/clases/Cadena.php";
 require_once "./includes/server/clases/Imagen.php";
 
+require_once "./includes/server/clases/User.php";
 require_once "./includes/server/clases/Page.php";
 
 require_once "./includes/server/vendor/PHPMailer_v5.1/class.phpmailer.php";

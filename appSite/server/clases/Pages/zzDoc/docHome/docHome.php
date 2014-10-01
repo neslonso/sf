@@ -1,18 +1,21 @@
 <?
+namespace Sintax\Pages;
 use Sintax\Core\IPage;
-use Sintax\Core\Usuario;
+use Sintax\Core\User;
 
 class docHome extends Error implements IPage {
 
-	public function __construct (Usuario $objUsr=NULL) {
+	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}
 
 	public function pageValida () {
+		//return $this->objUsr->pagePermitida($this);
 		$result=true;
 		return $result;
 	}
 	public function accionValida($metodo) {
+		//return $this->objUsr->accionPermitida($this,$metodo);
 		switch ($metodo) {
 			case "acPackCode": $result=true;break;
 			default: $result=false;

@@ -1,15 +1,18 @@
 <?
+namespace Sintax\Pages;
 use Sintax\Core\IPage;
-use Sintax\Core\Usuario;
+use Sintax\Core\User;
 
 class Creacion extends Home implements IPage {
-	public function __construct(Usuario $objUsr=NULL) {
-		parent::__construct();
+	public function __construct(User $objUsr=NULL) {
+		parent::__construct($objUsr);
 	}
 	public function pageValida () {
-		return parent::pageValida();
+		return $this->objUsr->pagePermitida($this);
+		//return parent::pageValida();
 	}
 	public function accionValida($metodo) {
+		//return $this->objUsr->accionPermitida($this,$metodo);
 		switch ($metodo) {
 			case "CrearPagina": $result=true;break;
 			case "CrearClases": $result=true;break;
@@ -163,23 +166,26 @@ class Creacion extends Home implements IPage {
 		$file=$ruta.$page."/".$page.".php";
 		$fp=fopen ($file,"w");
 		fwrite ($fp,"<?".$sl);
-		//fwrite ($fp,'namespace Sintax\Pages;'.$sl);
+		fwrite ($fp,'namespace Sintax\Pages;'.$sl);
 		fwrite ($fp,'use Sintax\Core\IPage;'.$sl);
-		fwrite ($fp,'use Sintax\Core\Usuario;'.$sl);
+		fwrite ($fp,'use Sintax\Core\User;'.$sl);
 
 		fwrite ($fp,"class ".$page." extends ".$extends." implements IPage {".$sl);
 			//Inicio __construct
-		fwrite ($fp,$sg.'public function __construct(Usuario $objUsr=NULL) {'.$sl);
-		fwrite ($fp,$sg.$sg.'parent::__construct();'.$sl);
+		fwrite ($fp,$sg.'public function __construct(User $objUsr=NULL) {'.$sl);
+		fwrite ($fp,$sg.$sg.'parent::__construct($objUsr);'.$sl);
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin __construct
 			//Inicio pageValida
 		fwrite ($fp,$sg.'public function pageValida () {'.$sl);
-		fwrite ($fp,$sg.$sg.'return parent::pageValida();'.$sl);
+		fwrite ($fp,$sg.$sg.'return $this->objUsr->pagePermitida($this);'.$sl);
+		//fwrite ($fp,$sg.$sg.'return parent::pageValida();'.$sl);
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin pageValida
 			//Inicio accionValida
 		fwrite ($fp,$sg.'public function accionValida($metodo) {'.$sl);
+		fwrite ($fp,$sg.$sg.'return $this->objUsr->accionPermitida($this,$metodo);'.$sl);
+		/*
 		fwrite ($fp,$sg.$sg.'switch ($metodo) {'.$sl);
 		if ($class!="") {
 			switch ($pageType) {
@@ -195,6 +201,7 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.$sg.'default: $result=false;'.$sl);
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.'return $result;'.$sl);
+		*/
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin accionValida
 			//Inicio title

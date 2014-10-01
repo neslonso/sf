@@ -1,19 +1,18 @@
 <?
+namespace Sintax\Pages;
 use Sintax\Core\IPage;
-use Sintax\Core\Usuario;
+use Sintax\Core\User;
 
 class clasesPHP extends docHome implements IPage {
-	public function __construct(Usuario $objUsr=NULL) {
-		parent::__construct();
+	public function __construct(User $objUsr=NULL) {
+		parent::__construct($objUsr);
 	}
 	public function pageValida () {
-		return parent::pageValida();
+		return $this->objUsr->pagePermitida($this);
+		//return parent::pageValida();
 	}
 	public function accionValida($metodo) {
-		switch ($metodo) {
-			default: $result=false;
-		}
-		return $result;
+		return $this->objUsr->accionPermitida($this,$metodo);
 	}
 	public function title() {
 		return parent::title();
@@ -41,12 +40,13 @@ class clasesPHP extends docHome implements IPage {
 	 * Analiza un fichero fuente PHP y extrae documentación
 	 * @param  string $file: ruta del fichero a analizar
 	 * @param  string $class: Nombre de la clase/interfaz/namespace de la que se desea extraer información o * para todas las del fichero
-	 * @param  boolean $own: defauilt true. indica si se desea restringir la información a la clase indicada o extraer información tambien de las clases ascendientes
+	 * @param  boolean $own: default true. indica si se desea restringir la información a la clase indicada o extraer información tambien de las clases ascendientes
+ 	 * @param  boolean $docComments: default true. indica si se desea extraer los comentarios de cada elemento
 	 * @return string Fragmento de HTML con marcado de descripción del código examinado
 	 */
-	private function ulClass ($file,$class="*",$own=true) {
+	public static function ulClass ($file,$class="*",$own=true,$docComments=true) {
 		$result='';
-		$broker = new TokenReflection\Broker(new TokenReflection\Broker\Backend\Memory());
+		$broker = new \TokenReflection\Broker(new \TokenReflection\Broker\Backend\Memory());
 		$broker->processFile($file);
 		$arrClases=array();
 		foreach ($broker->getClasses() as $fullClassName => $objReflectionClass) {
@@ -71,10 +71,12 @@ class clasesPHP extends docHome implements IPage {
 				$result.="<h5>Constantes</h5>";
 				$result.='<ul>';
 				foreach ($arrConstantes as $objReflectionConstant) {
-					$objReflectionAnnotation=new TokenReflection\ReflectionAnnotation($objReflectionConstant,$objReflectionConstant->getDocComment());
-					$result.="<li>".$objReflectionConstant->getShortName().": ".
-						$objReflectionAnnotation->getAnnotation(' short_description')
-					."</li>";
+					$dc='';
+					if ($docComments) {
+						$objReflectionAnnotation=new \TokenReflection\ReflectionAnnotation($objReflectionConstant,$objReflectionConstant->getDocComment());
+						$dc=$objReflectionAnnotation->getAnnotation(' short_description');
+					}
+					$result.="<li>".$objReflectionConstant->getShortName().": ".$dc."</li>";
 				}
 				$result.='</ul>';
 			}
@@ -86,10 +88,12 @@ class clasesPHP extends docHome implements IPage {
 				foreach ($arrPropiedades as $objReflectionProperty) {
 					$short_description=$arrAnnotations='';
 					try {
-						$objReflectionAnnotation=new TokenReflection\ReflectionAnnotation($objReflectionProperty,$objReflectionProperty->getDocComment());
-						$short_description=$objReflectionAnnotation->getAnnotation(' short_description');
-						$arrAnnotations=$objReflectionAnnotation->getAnnotations();
-						unset($arrAnnotations[' short_description']);
+						if ($docComments) {
+							$objReflectionAnnotation=new \TokenReflection\ReflectionAnnotation($objReflectionProperty,$objReflectionProperty->getDocComment());
+							$short_description=$objReflectionAnnotation->getAnnotation(' short_description');
+							$arrAnnotations=$objReflectionAnnotation->getAnnotations();
+							unset($arrAnnotations[' short_description']);
+						}
 					} catch (Exception $e) {
 						error_log('No se pudieron conseguir anotaciones para la propiedad: '.$objReflectionProperty->getPrettyName());
 					}
@@ -126,10 +130,12 @@ class clasesPHP extends docHome implements IPage {
 					//$short_description=$arrAnnotations=$arrParam=$arrReturn='';
 					$short_description=$arrAnnotations='';
 					try {
-						$objReflectionAnnotation=new TokenReflection\ReflectionAnnotation($objReflectionMethod,$objReflectionMethod->getDocComment());
-						$short_description=$objReflectionAnnotation->getAnnotation(' short_description');
-						$arrAnnotations=$objReflectionAnnotation->getAnnotations();
-						unset($arrAnnotations[' short_description']);
+						if ($docComments) {
+							$objReflectionAnnotation=new \TokenReflection\ReflectionAnnotation($objReflectionMethod,$objReflectionMethod->getDocComment());
+							$short_description=$objReflectionAnnotation->getAnnotation(' short_description');
+							$arrAnnotations=$objReflectionAnnotation->getAnnotations();
+							unset($arrAnnotations[' short_description']);
+						}
 						//$arrParam=$objReflectionAnnotation->getAnnotation('param');
 						//$arrReturn=$objReflectionAnnotation->getAnnotation('return');
 					} catch (Exception $e) {

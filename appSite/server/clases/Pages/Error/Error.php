@@ -1,13 +1,14 @@
 <?
+namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\Page;
-use Sintax\Core\Usuario;
+use Sintax\Core\User;
 
 class Error extends Page implements IPage {
 
 	private $msg;
 
-	public function __construct (Usuario $objUsr=NULL) {
+	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
 		$this->msg="Descripcion no especificada.";
 	}

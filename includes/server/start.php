@@ -11,6 +11,7 @@ date_default_timezone_set('Europe/Madrid');
 /**/
 
 define ('SKEL_VERSION','1.0.0');
+define ('PAGES_NAMESPACE','Sintax\\Pages\\');
 
 define ('IPS_DEV', serialize(array(
 	//'81.35.169.245',//León Carbajal

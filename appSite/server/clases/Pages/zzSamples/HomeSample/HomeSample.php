@@ -1,22 +1,21 @@
 <?
+namespace Sintax\Pages;
 use Sintax\Core\IPage;
-use Sintax\Core\Usuario;
+use Sintax\Core\User;
 
 class HomeSample extends Error implements IPage {
 
-	public function __construct (Usuario $objUsr=NULL) {
+	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}
 
 	public function pageValida () {
+		//return $this->objUsr->pagePermitida($this);
 		$result=true;
 		return $result;
 	}
 	public function accionValida($metodo) {
-		switch ($metodo) {
-			default: $result=false;
-		}
-		return $result;
+		return $this->objUsr->accionPermitida($this,$metodo);
 	}
 
 	public function title() {

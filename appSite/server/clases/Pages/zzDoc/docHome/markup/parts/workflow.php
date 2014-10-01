@@ -149,18 +149,8 @@
 					</p>
 					<div class="bs-callout bs-callout-info">
 						<h4>Intefaz <em>IPage</em></h4>
-<pre>
-interface IPage {
-	public function __construct (Usuario $objUsr=NULL);
-	public function pageValida();
-	public function accionValida($metodo);
-	public function title();
-	public function metaTags();
-	public function head();
-	public function js();
-	public function css();
-	public function markup();
-}
+<pre style="white-space: pre-wrap;">
+<?=Sintax\Pages\clasesPHP::ulClass('./includes/server/clases/Page.php','IPage',true,false)?>
 </pre>
 					</div>
 					<div class="col2">
@@ -180,8 +170,8 @@ interface IPage {
 							requisitos de validez, por lo que es recomendable devolver <code>parent::pageValida()</code>
 						</div>
 						<strong>accionValida:</strong> Este método recibe el nombre de un <em>metodo de acción</em> y debe
-						devolver <code>true</code> o <code>false</code> en función de si la ejecución de la acción está
-						permitida o no.<br />
+						devolver <code>true</code> o un <code>string</code> indicando el mensaje para el usuario en función
+						de si la ejecución de la acción está permitida o no.<br />
 						<strong>title:</strong> Devuelve el contenido de la etiqueta <code><?=htmlspecialchars('<title></title>')?></code>.<br />
 						<strong>metaTags:</strong> El valor de retorno de este método es inyectado al principio del contenido de la etiqueta
 						<code><?=htmlspecialchars('<head></head>')?></code>. Su tarea es generar las etiquetas

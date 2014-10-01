@@ -39,12 +39,12 @@ try {
 	unset ($_POST['acTipo']);
 	unset ($_POST['acReturnURI']);
 
-	$objUsr=NULL;
+	$objUsr=new Sintax\Core\AnonymousUser();
 	if (isset($_SESSION['usuario'])) {
 		//$objUsr=$_SESSION['usuario'];
 		$usrClass=get_class($_SESSION['usuario']);
 		if ($usrClass!="__PHP_Incomplete_Class") {
-			$objUsr=new $usrClass($_SESSION['usuario']->GETid());
+			$objUsr=$_SESSION['usuario'];
 		}
 	}
 ?>
@@ -97,7 +97,7 @@ try {
 
 			$accionValida=$obj->accionValida($acMetodo);
 
-			if ($accionValida) {
+			if ($accionValida===true) {
 				$phpSentence="";
 				switch ($acTipo) {
 					case "std"://Los parametros vienen por POST, se pasan al metodo uno por uno y despues se redirige el navegador
@@ -183,7 +183,7 @@ try {
 				}
 			} else {
 				$result="operación no permitida. (ERROR_NO_VALIDA)";
-				$msg='operación no permitida.';
+				$msg='operación no permitida.<br />'.$accionValida;
 				$title='No es posbile realizar la operación.';
 				addReturnInfo($msg,$title);
 				throw new Exception($result);

@@ -12,23 +12,23 @@ try {
 
 
 	$page=(isset($_GET['page']))?$_GET['page']:'Home';
+	$page='Sintax\\Pages\\'.$page;
 
-	$objUsr=NULL;
+	$objUsr=new Sintax\Core\AnonymousUser();
 	if (isset($_SESSION['usuario'])) {
 		//$objUsr=$_SESSION['usuario'];
 		$usrClass=get_class($_SESSION['usuario']);
 		if ($usrClass!="__PHP_Incomplete_Class") {
-			$objUsr=new $usrClass($_SESSION['usuario']->GETid());
+			$objUsr=$_SESSION['usuario'];
 		}
 	}
 
 	logPageData('Creación de página');
-
 	if (class_exists($page)) {
 		do {
 			$arrSustitucion=(isset($_SESSION['arrSustitucion']))?$_SESSION['arrSustitucion']:array();
 			$Page=new $page($objUsr);
-			$page=$Page->pageValida($objUsr);
+			$page=$Page->pageValida();
 			if (class_exists($page)) {//pageValida devuelve una clase existente, hacemos la sustitucion
 				$url=(count($arrSustitucion))?BASE_DIR.FILE_APP.'?page='.get_class($Page):$_SERVER['REQUEST_URI'];
 				array_push($arrSustitucion,array('page' => get_class($Page), 'url' => $url));
@@ -48,14 +48,6 @@ try {
 	}
 	$firephp->groupend();
 
-	/*
-	if (!$Page->permiso($_SESSION['usr'])) {
-		$_SESSION['modalMsg']='Acceso denegado';
-		unset ($Page);
-		$Page=new Home();
-	}
-	*/
-
 	markup ($Page);
 
 	logPageData('Finalización de página');
@@ -69,13 +61,13 @@ try {
 	$firephp->info($e->getTrace(),"trace");
 
 	try {
-		$Page=new Error($objUsr);
+		$Page=new Sintax\Pages\Error($objUsr);
 		$Page->setMsg($e->getMessage());
 		ob_clean();//limpiamos el buffer para eliminar lo que se haya podido meter antes de saltar la excepción
 		markup($Page);
 	} catch (Exception $ee) {//Excepción durante la representación del error usando la clase de página Error
 		try {
-			$Page=new Error();
+			$Page=new Sintax\Pages\Error();
 			$msg='Error recuperable durante el tratamiento de otro error recuperable.<ul><li>'.$ee->getMessage().'</li><li>'.$e->getMessage().'</li></ul>';
 			$Page->setMsg($msg);
 			ob_clean();
