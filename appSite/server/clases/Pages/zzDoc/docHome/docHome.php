@@ -85,7 +85,7 @@ class docHome extends Error implements IPage {
 					"(\.htaccess|LICENSE|README\.md|crossdomain\.xml|humans\.txt|robots\.txt)",
 					"/"
 				);
-				$arrSintaxFiles=self::path2array("./",implode('',$excludingRexEx));
+				$arrSintaxFiles=Filesystem::path2array("./",implode('',$excludingRexEx));
 				$excludingRexEx=array (
 					"/",
 					preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Logic\/.*",
@@ -95,7 +95,7 @@ class docHome extends Error implements IPage {
 					"/"
 				);
 
-				$arrAppFiles=self::path2array("./appSite/",implode('',$excludingRexEx));
+				$arrAppFiles=Filesystem::path2array("./appSite/",implode('',$excludingRexEx));
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/structure.php');
 			break;
 			case '5':
@@ -152,110 +152,6 @@ class docHome extends Error implements IPage {
 <?
 	}
 
-	public static function path2array($path,$excludingRegEx='/^$/',$maxDepth=999,$nodesAsSplFileInfo=false) {
-		//$path='./binaries/';
-		$path=realpath($path)."/";
-		$result=$arrDirs=$arrFiles=array();
-		$arrFilenames = scandir($path);
-		foreach($arrFilenames as $filename) {
-			if ($filename=="." || $filename=="..") {continue;}
-			$fileFullPath=$path.$filename;
-			$exclude=false;
-			if (preg_match($excludingRegEx, $fileFullPath)===1) {
-				$exclude=true;
-			}
-			if ($exclude) {continue;}
-			if ($nodesAsSplFileInfo) {
-				$objSplFileInfo=new SplFileInfo ($fileFullPath);
-				$isDir=$objSplFileInfo->isDir();
-			} else {
-				$isDir=is_dir($fileFullPath);
-			}
-
-			if ($isDir) {
-				$newPath=$fileFullPath;
-				$newDepth=$maxDepth-1;
-				if ($newDepth>0) {
-					$children=self::path2array($newPath,$excludingRegEx,$newDepth);
-					if ($nodesAsSplFileInfo) {
-						$objSplFileInfo->children=$children;
-						$arrDirs[$fileFullPath."/"]=$objSplFileInfo;
-					} else {
-						$arrDirs[$fileFullPath."/"]=$children;
-					}
-					unset ($children);
-				} else {
-					if ($nodesAsSplFileInfo) {
-						$arrDirs[$fileFullPath."/"]=$objSplFileInfo;
-					} else {
-						$arrDirs[$fileFullPath."/"]=$filename."/";
-					}
-				}
-			} else {
-				if ($nodesAsSplFileInfo) {
-					$arrFiles[$fileFullPath]=$objSplFileInfo;
-				} else {
-					$arrFiles[$fileFullPath]=$filename;
-				}
-			}
-		}
-		$result=$arrDirs+$arrFiles;
-		return $result;
-	}
-
-	public static function array2list($array, $cssClass='ulFiles', $recursiveCall=false) {
-		$ulStyle='';
-		if ($recursiveCall) {$ulStyle.='display:none;';}
-		$result='<ul class="'.$cssClass.'" style="'.$ulStyle.'">';
-		foreach ($array as $key => $value) {
-			$nameForList=basename($key);
-			if (is_array($value)) {
-				$liStyle="cursor:pointer;";
-				$liContent='<i class="fa fa-folder-o"></i> '.$nameForList.self::array2list($value,$cssClass,true);
-				$liClick='
-					$(this).children(\'ul\').toggle();
-					$(this).children(\'i\').toggleClass(\'fa-folder-o\');
-					$(this).children(\'i\').toggleClass(\'fa-folder-open-o\');
-					arguments[0].stopPropagation();
-				';
-			} else {
-				$liStyle="cursor:default;";
-				$liContent='<i class="fa fa-file-code-o"></i> '.$nameForList;
-				$liClick='';
-			}
-			$result.='<li style="'.$liStyle.'" onclick="'.$liClick.'">'. $liContent.'</li>';
-		}
-		$result.="</ul>";
-		return $result;
-	}
-
-	public static function array2zip($array,$destino,$zip=NULL) {
-		if (is_null($zip)) {
-			if (!extension_loaded('zip')) {
-				return false;
-			}
-			$zip=new ZipArchive();
-			if (!$zip->open($destino,ZIPARCHIVE::OVERWRITE)) {
-				return false;
-			}
-		}
-		$scriptDir=dirname($_SERVER['SCRIPT_FILENAME']).'/';
-		foreach ($array as $key => $value) {
-			$fileToZip=str_replace($scriptDir, '', $key);
-			if (is_array($value)) {
-				$zip->addEmptyDir($fileToZip);
-				$zip=self::array2zip($value,$destino,$zip);
-			} else {
-				$zip->addFile($fileToZip);
-			}
-		}
-		if (is_null($zip)) {
-			return $zip->close();
-		} else {
-			return $zip;
-		}
-	}
-
 	public function acPackCode ($type='noVendorCode') {
 		$dir='./zCache/tmpUpload/';
 		$arrFilesOrFalse=glob($dir."Sintax*");
@@ -292,9 +188,9 @@ class docHome extends Error implements IPage {
 				"/"
 			);
 		}
-		$arr=self::path2array("./",implode('',$excludingRexEx));
+		$arr=Filesystem::path2array("./",implode('',$excludingRexEx));
 		$file=$dir.'Sintax.'.SKEL_VERSION.'.zip';
-		self::array2zip($arr,$file);
+		Filesystem::array2zip($arr,$file);
 
 		ob_clean();//limpiamos el buffer antes de mandar el fichero, no queremos nada más que el fichero
 		header ("Content-Disposition: attachment; filename=".basename($file)."\n\n");

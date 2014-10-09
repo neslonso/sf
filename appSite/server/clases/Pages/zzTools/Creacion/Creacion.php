@@ -2,9 +2,10 @@
 namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\User;
+use Sintax\Core\ReturnInfo;
 
 class Creacion extends Home implements IPage {
-	public function __construct(User $objUsr=NULL) {
+	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
 	}
 	public function pageValida () {
@@ -46,7 +47,7 @@ class Creacion extends Home implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
-		$mysqli=cDb::getInstance();
+		$mysqli=\cDb::getInstance();
 		$arrStdObjTableInfo=array();
 		if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
 			while ($table = $result->fetch_array()) {
@@ -169,10 +170,11 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,'namespace Sintax\Pages;'.$sl);
 		fwrite ($fp,'use Sintax\Core\IPage;'.$sl);
 		fwrite ($fp,'use Sintax\Core\User;'.$sl);
+		fwrite ($fp,'use Sintax\Core\ReturnInfo;'.$sl);
 
 		fwrite ($fp,"class ".$page." extends ".$extends." implements IPage {".$sl);
 			//Inicio __construct
-		fwrite ($fp,$sg.'public function __construct(User $objUsr=NULL) {'.$sl);
+		fwrite ($fp,$sg.'public function __construct(User $objUsr) {'.$sl);
 		fwrite ($fp,$sg.$sg.'parent::__construct($objUsr);'.$sl);
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin __construct
@@ -649,19 +651,23 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.$sg.'$arrInputData=filter_input_array(INPUT_POST,$args);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$badData=false;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$ulProblems="<ul>";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'foreach ($arrInputData as $key => $value) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	if ($value===false) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'		$badData=true;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'		$ulProblems.="<li>".$key." no es válido.</li>";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	}'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'if (is_array($arrInputData)) {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'foreach ($arrInputData as $key => $value) {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'	if ($value===false) {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'		$badData=true;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'		$ulProblems.="<li>".$key." no es válido.</li>";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'	}'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	$badData=true;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'echo "<pre style=\"float:right;\">";var_dump($arrInputData);echo "</pre>";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'echo "<pre>";var_dump($_POST);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'//echo "<pre style=\"float:right;\">";var_dump($arrInputData);echo "</pre>";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'//echo "<pre>";var_dump($_POST);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'if ($badData) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	echo $ulProblems;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	//echo $ulProblems;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'	$sriTitle="Operación no completada.";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'	$sriMsg="Se encontraron los siguientes problemas con los datos suministrados:".$ulProblems;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'	addReturnInfo($sriMsg,$sruTitle);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'	ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$id=(isset($arrInputData["id"]) && '.ucfirst($class).'::existeId($arrInputData["id"]))?$arrInputData["id"]:NULL;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
@@ -689,11 +695,16 @@ class Creacion extends Home implements IPage {
 			}
 		}
 		fwrite ($fp,$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'->grabar();'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$sriTitle="Operación completada.";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$sriMsg="Datos actualizados correctamente.";'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'addReturnInfo($sriMsg,$sriTitle);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$result=$obj'.ucfirst($class).'->grabar();'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'if ($result) {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operación completada.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="Datos actualizados correctamente.";'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'} else {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'	throw new ActionException("Error durante la grabación en BD. '.ucfirst($class).' no grabado.");'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
+		//fwrite ($fp,$sg.$sg.$sg.'return $result;'.$sl);
 		fwrite ($fp,$sg.$sg.'} catch (Exception $e) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("Error durante la actualización de datos. '.ucfirst($class).' no grabado.",0,$e);'.$sl);
 		fwrite ($fp,$sg.$sg.'}'.$sl);
@@ -712,7 +723,7 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operacion no completada";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="Error al borrar '.ucfirst($class).'";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'addReturnInfo($sriMsg,$sriTitle);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("'.ucfirst($class).' ".$id." no encontrado");'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
@@ -839,7 +850,7 @@ class Creacion extends Home implements IPage {
 		$ruta=RUTA_APP."server/clases/Logic/";
 		$stdObjTableInfo=$this->getTableInfo($class);
 		if (!file_exists($ruta.ucfirst($stdObjTableInfo->tableName).".php")) {
-			$objCreadora=new Creadora (
+			$objCreadora=new \Creadora (
 				$ruta,
 				ucfirst($stdObjTableInfo->tableName),
 				$stdObjTableInfo->arrAttrs,
@@ -854,11 +865,11 @@ class Creacion extends Home implements IPage {
 			$msg.="<h3>Atributos</h3><pre>".print_r ($stdObjTableInfo->arrAttrs,true)."</pre>";
 			$msg.="<h3>FKs</h3><pre>".print_r ($stdObjTableInfo->arrFksTo,true)."</pre>";
 			$msg.="<hr /><hr /><hr />";
-			addReturnInfo($msg,$title);
+			ReturnInfo::add($msg,$title);
 		} else {
 			$title='Clase '.$class.' NO re-creada';
 			$msg='La clase ya existe.';
-			addReturnInfo($msg,$title);
+			ReturnInfo::add($msg,$title);
 		}
 	}
 
@@ -946,8 +957,8 @@ class Creacion extends Home implements IPage {
 					),
 				);
 
-				$mysqli=cDb::getInstance();
-				$stdObjTableInfo=new stdClass();
+				$mysqli=\cDb::getInstance();
+				$stdObjTableInfo=new \stdClass();
 				$stdObjTableInfo->tableName=$DBtable;
 
 				$rslCreate = $mysqli->query("SHOW CREATE TABLE ".$stdObjTableInfo->tableName);
@@ -973,7 +984,7 @@ class Creacion extends Home implements IPage {
 
 				$stdObjTableInfo->arrFksFrom=array();
 				while ($fkInfo = $stdObjTableInfo->rslFksFrom->fetch_array(MYSQLI_ASSOC)) {
-					$stdObjFkInfo=new stdClass();
+					$stdObjFkInfo=new \stdClass();
 					//$stdObjFkInfo->TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
 					//$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
 
@@ -988,7 +999,7 @@ class Creacion extends Home implements IPage {
 
 				$stdObjTableInfo->arrFksTo=array();
 				while ($fkInfo = $stdObjTableInfo->rslFksTo->fetch_array(MYSQLI_ASSOC)) {
-					$stdObjFkInfo=new stdClass();
+					$stdObjFkInfo=new \stdClass();
 					//$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
 					//$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
 					$stdObjFkInfo->TABLE_NAME=$fkInfo['TABLE_NAME'];
@@ -1006,7 +1017,7 @@ class Creacion extends Home implements IPage {
 				$stdObjTableInfo->arrAttrs=array();
 				while ($columnInfo = $stdObjTableInfo->rslColumns->fetch_array(MYSQLI_ASSOC)) {
 					if (in_array($columnInfo['Field'], $arrExcluidos)) {continue;}
-					$stdObjColumnInfo=new stdClass();
+					$stdObjColumnInfo=new \stdClass();
 					$stdObjColumnInfo->field=$columnInfo['Field'];
 					$stdObjColumnInfo->type=$columnInfo['Type'];
 					$stdObjColumnInfo->null=($columnInfo['Null']=='NO')?false:true;

@@ -9,10 +9,7 @@ date_default_timezone_set('Europe/Madrid');
 //setlocale(LC_ALL,'es_ES');
 
 /**/
-
 define ('SKEL_VERSION','1.0.0');
-define ('PAGES_NAMESPACE','Sintax\\Pages\\');
-
 define ('IPS_DEV', serialize(array(
 	//'81.35.169.245',//León Carbajal
 	'91.117.107.217',//Coruña oficna
@@ -21,6 +18,17 @@ define ('IPS_DEV', serialize(array(
 	'88.20.93.57',//León Carbajal 20140812
 	'88.20.86.157',//León Carbajal 20140908
 )));
+define ('MODULES', serialize(array(
+	'actions' => './zzModules/actions.php',
+	'api' => './zzModules/api.php',
+	'auto' => './zzModules/auto.php',
+	'css' => './zzModules/css.php',
+	'images' => './zzModules/images.php',
+	'js' => './zzModules/js.php',
+	'render' => './zzModules/render.php',
+	'phpunit' => './zzModules/phpunit.php',
+)));
+
 require_once "./includes/server/FirePHP.php";
 
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
@@ -40,16 +48,6 @@ if (isset($arrApps[basename($_SERVER['SCRIPT_NAME'])])) {
 } else {
 	throw new Exception("No sde encontró APP para el punto de entrada: ".basename($_SERVER['SCRIPT_NAME']),1);
 }
-
-define ('MODULES', serialize(array(
-	'actions' => './zzModules/actions.php',
-	'api' => './zzModules/api.php',
-	'auto' => './zzModules/auto.php',
-	'css' => './zzModules/css.php',
-	'images' => './zzModules/images.php',
-	'js' => './zzModules/js.php',
-	'render' => './zzModules/render.php',
-)));
 
 define('PROTOCOL',((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))?'https':'http'));
 define('BASE_DOMAIN',(substr($_SERVER['HTTP_HOST'],0,4)=="www.")?substr($_SERVER['HTTP_HOST'],4):$_SERVER['HTTP_HOST']);

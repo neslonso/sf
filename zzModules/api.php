@@ -3,6 +3,7 @@ ob_start();
 ?>
 <?
 $uniqueId=uniqid("api.");
+error_log ('');
 error_log ('----------------------');
 error_log ('/********************/');
 error_log ('LLAMADA A API.PHP: '.$uniqueId);
@@ -57,6 +58,7 @@ try {
 error_log ("FIN LLAMADA A API.PHP: ".$uniqueId);
 error_log ('/********************/');
 error_log ('----------------------');
+error_log ('');
 ?>
 <?
 class ApiException extends Exception {}

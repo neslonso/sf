@@ -1,4 +1,6 @@
 <?
+$tInicial=microtime(true);
+$module='';
 try {
 	require_once "./includes/server/start.php";
 	$module=(isset($_REQUEST['MODULE']))?strtolower($_REQUEST['MODULE']):"render";
@@ -17,4 +19,6 @@ try {
 	header('HTTP/1.1 500 Internal Server Error',true,500);
 	echo ("CATCH RAIZ: ".$e->getMessage());
 }
+$tTotal=microtime(true)-$tInicial;
+error_log (basename(__FILE__)."?".$module." ejecutado en: ".round($tTotal,3)." segundos.");
 ?>

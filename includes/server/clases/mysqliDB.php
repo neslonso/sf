@@ -251,7 +251,7 @@ class MysqliDB extends mysqli {
 			UNIQUE INDEX `tablaCampo` (`tabla` ASC, `campo` ASC))
 			*/
 			$sqlContador="SELECT * FROM contador WHERE tabla='".$tabla."' AND campo='".$campo."'";
-			$dataContador=$this->get_row($sqlContador);
+			$dataContador=$this->get_obj($sqlContador);
 			if ($dataContador) {
 				$contador = new Contador($dataContador->id);
 				if ($contador->GETvalor()>$maxCampo) {

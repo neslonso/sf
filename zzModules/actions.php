@@ -31,6 +31,7 @@ try {
 
 	$result="";
 	$acClase=$_POST['acClase'];
+	$acClase="Sintax\\Pages\\".$_POST['acClase'];
 	$acMetodo=$_POST['acMetodo'];
 	$acTipo=(isset($_POST['acTipo']))?$_POST['acTipo']:"std";
 	$acReturnURI=(isset($_POST['acReturnURI']))?$_POST['acReturnURI']:"./";
@@ -185,21 +186,21 @@ try {
 				$result="operación no permitida. (ERROR_NO_VALIDA)";
 				$msg='operación no permitida.<br />'.$accionValida;
 				$title='No es posbile realizar la operación.';
-				addReturnInfo($msg,$title);
+				ReturnInfo::add($msg,$title);
 				throw new Exception($result);
 			}
 		} else {
 			$result="accion no encontrada (ERROR_NO_METODO)";
 			$msg='No se encontró la acción "'.$acMetodo.'".';
 			$title='No es posbile realizar la operación.';
-			addReturnInfo($msg,$title);
+			ReturnInfo::add($msg,$title);
 			throw new Exception($result);
 		}
 	} else {
 		$result="clase no encontrada (ERROR_NO_CLASE)";
 		$msg='No se encontró la clase "'.$acClase.'".';
 		$title='No es posbile realizar la operación.';
-		addReturnInfo($msg,$title);
+		ReturnInfo::add($msg,$title);
 		throw new Exception($result);
 	}
 
@@ -248,16 +249,16 @@ try {
 		case "std":
 		case "stdAssoc":
 			if (get_class($e)=="ActionException") {//Excepción lanzada voluntariamente
-				if (!existeReturnInfo()) {
+				if (!ReturnInfo::existe()) {
 					$msg=$e->getMessage();
 					$title="La operacion no ha sido completada";
-					addReturnInfo($msg,$title);
+					ReturnInfo::add($msg,$title);
 				}
 				$location=$acReturnURI;
 			} else {//Excepcion no controlada
 				$msg=$infoExc;
 				$title="Situación de excepción no controlada";
-				addReturnInfo($msg,$title);
+				ReturnInfo::add($msg,$title);
 				$location=BASE_DIR.FILE_APP."?page=error";
 			}
 			error_log('redireccionando a ('.$location.')');
@@ -270,7 +271,7 @@ try {
 			break;
 		case "ajax":
 		case "ajaxAssoc":
-			clearReturnInfo();
+			ReturnInfo::clear();
 			if (get_class($e)=="ActionException") {//Excepción lanzada voluntariamente
 				$actionData->exito=true;
 				$actionData->data='';

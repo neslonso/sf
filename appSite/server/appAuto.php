@@ -18,6 +18,15 @@ define ('ARR_CRON_JOBS', serialize(array(
 		'diaSemana' => '*',
 		'comando' => 'error_log("log5Minutes Job");',
 	),
+	'logHour' => array (
+		'activado' => true,
+		'minuto' => '0',
+		'hora' => '*',
+		'diaMes' => '*',
+		'mes' => '*',
+		'diaSemana' => '*',
+		'comando' => 'error_log("Son las ".date ("H:i:s"));',
+	),
 	'sitemap' => array (
 		'activado' => false,
 		'minuto' => '20',

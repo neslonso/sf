@@ -3,7 +3,7 @@
 $(document).ready(function() {
 <?
 	/* BLOQUE PARA MOSTRAR returnInfo SI EXISTE ***************************/
-	$sri=ensureArrayReturnInfo();
+	$sri=\Sintax\Core\ReturnInfo::ensureArray();
 	if (count($sri)>0) {
 		foreach ($sri as $arrInfo) {
 			$title=(isset($arrInfo['title']))?$arrInfo['title']:'';
@@ -14,7 +14,7 @@ $(document).ready(function() {
 			echo $llamadaJsMuestraMsgModal;
 		}
 	}
-	clearReturnInfo();
+	\Sintax\Core\ReturnInfo::clear();
 ?>
 });
 </script>

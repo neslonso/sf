@@ -6,7 +6,7 @@ interface IPage {
 	 * Constructor
 	 * @param Sintax\Core\User | NULL $objUsr: instancia de la clase Sintax\Core\Usuario que representa al usuario que accede a la página o NULL si es un acceso no identificado
 	 */
-	public function __construct (User $objUsr=NULL);
+	public function __construct (User $objUsr);
 	/**
 	 * Comprueba si está permitido el acceso a la Page
 	 * @return Boolean | String. Es true si el acceso a la página está permitido o el nombre de la clase de página a la que se debe redireccionar en caso contrario

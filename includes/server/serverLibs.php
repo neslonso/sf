@@ -1,4 +1,6 @@
 <?
+define('PHP_UNIT',true);//true o false
+
 require_once "./includes/server/lib/misc.php";//biblioteca de funciones varias
 require_once "./includes/server/lib/returnInfo.php";//biblioteca de funciones para tratar $_SESSION['returnInfo']
 
@@ -6,6 +8,7 @@ require_once "./includes/server/clases/MysqliDB.php";
 require_once "./includes/server/clases/Fecha.php";
 require_once "./includes/server/clases/Cadena.php";
 require_once "./includes/server/clases/Imagen.php";
+require_once "./includes/server/clases/Filesystem.php";
 
 require_once "./includes/server/clases/User.php";
 require_once "./includes/server/clases/Page.php";
@@ -19,14 +22,10 @@ require_once "./includes/server/vendor/cron-expression-1.0.3/src/Cron/FieldInter
 foreach (glob("./includes/server/vendor/cron-expression-1.0.3/src/Cron/*.php") as $filename) {require_once $filename;}
 
 //PHP Token Reflection: https://github.com/Andrewsville/PHP-Token-Reflection
-//error_log(get_include_path());
 set_include_path(
 	realpath(__DIR__ . '/vendor/PHP-Token-Reflection-1.4.0') . PATH_SEPARATOR . // Library
 	get_include_path()
 );
-//error_log("/***/");
-//error_log(get_include_path());
-
 spl_autoload_register(function($className) {
 	$file = strtr($className, '\\_', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR) . '.php';
 	//error_log($file);
@@ -34,4 +33,28 @@ spl_autoload_register(function($className) {
 		@include_once $file;
 	}
 });
+//PHPUnit: https://phpunit.de/  & https://github.com/sebastianbergmann/phpunit
+if (PHP_UNIT) {
+	$fileList=Filesystem::pharSearch ('./includes/server/vendor/phpunit.phar',"/.*\.php/");
+	spl_autoload_register(function($className) use (&$fileList) {
+		//static $sg='';
+		//static $sgLen=2;
+		//$sg.='  ';
+		//error_log($sg."Intentando autoload: ".$className);
+		$className = @end(explode("\\",$className));//namespaces, genera: PHP Strict Standards:  Only variables should be passed by reference, pq end recibe el resultado de explode por referencia
+		$regEx='/.*(interface|class) '.$className.'\b/';
+		foreach ($fileList as $key => $path) {
+			$contents=file_get_contents($path);
+			if (preg_match($regEx, $contents)===1) {
+				//error_log($sg."+ ".$className." encontrada en: ".basename($path));
+				require_once ($path);
+				//unset ($fileList[$key]);
+				//error_log(count($fileList));
+				break;
+			}
+		}
+		//error_log($sg."Fin autoload: ".$className);
+		//$sg=substr($sg, 0,-$sgLen);
+	});
+}
 ?>

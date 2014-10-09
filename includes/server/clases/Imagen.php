@@ -101,6 +101,7 @@ class Imagen {
 	 *  si es false se añade una cabecera Content-Type acorde al parametro formato
 	 */
 	public function output ($width=NULL, $height=NULL, $outputMode=self::OUTPUT_MODE_SCALE, $format="png",$withoutHeader=false) {
+		$this->ensureAlpha();
 		$puntear=false;
 		if($outputMode & self::OUTPUT_MODE_ROTATE_H) {
 			if ($this->width()/$this->height()>2) {
@@ -283,14 +284,34 @@ class Imagen {
 	}
 	/**
 	 * Reescala la imagen (mediante fit reverse) para que llene un hueco de $width*$height respetando proporciones y corta lo que sobre
-	 * @param  integer  $width   anchura del hueco que debe rellenar la imagen
-	 * @param  integer  $height  altura del hueco que debe rellenar la imagen
+	 * @param  integer $width anchura del hueco que debe rellenar la imagen
+	 * @param  integer $height altura del hueco que debe rellenar la imagen
+	 * @param  string $position Dos palabras que indican alineación horizontal (left | right | center) y vertical (top | bottom | center)
 	 */
-	function crop ($width,$height) {
+	function crop ($width,$height,$position="center center") {
 		$this->fit($width,$height,true);
-		//Crop
-		$src_x=($this->width()-$width)/2;
-		$src_y=($this->height()-$height)/2;
+
+		$arrPos=explode(' ', $position);
+		switch (count($arrPos)) {
+			case '1':
+				$hPos=$arrPos[0];$vPos=$arrPos[0];break;
+			case '2':
+				$hPos=$arrPos[0];$vPos=$arrPos[1];break;
+			default:
+				$hPos="center";$vPos="center";
+		}
+		switch ($hPos) {
+			case 'left':$src_x=0;break;
+			case 'right':$src_x=$this->width()-$width;break;
+			default://center
+				$src_x=$this->width()/2-$width/2;
+		}
+		switch ($vPos) {
+			case 'top':$src_y=0;break;
+			case 'bottom':$src_y=$this->height()-$height;break;
+			default://center
+				$src_y=$this->height()/2-$height/2;
+		}
 
 		$new_image = imagecreatetruecolor($width, $height);
 		$col=imagecolorallocatealpha($new_image,0,0,0,127);
@@ -398,6 +419,17 @@ class Imagen {
 			$this->imgData=$imgdest;
 		}
 	}
+	/**
+	 * Copia la imagen original a otra con canal alpha
+	 */
+	private function ensureAlpha() {
+		$new_image = imagecreatetruecolor($this->width(), $this->height());
+		$col=imagecolorallocatealpha($new_image,0,0,0,127);
+		imagefill($new_image, 0, 0, $col);
+		imagecopy($new_image, $this->imgData, 0, 0, 0, 0, $this->width(), $this->height());
+		$this->imgData=$new_image;
+	}
+
 
 /* Estaticas ******************************************************************/
 	/**

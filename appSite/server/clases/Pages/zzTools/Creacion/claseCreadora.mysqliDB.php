@@ -2,15 +2,18 @@
 /*
 Néstor
 neslonso@gmail.com
-ClaseCreadora 1.2
-20110110
+ClaseCreadora 2.0
+20110110 - 20141009
 
 /* History
+/* v 2.0 (20141009)
+	* Remodelada para su integración en S!nt@x
+	* Estrcuturada en varias metodos
+
 /* v 1.3 (20140807)
 	* Añadido $arrFksTo para la generación de funciones que devuelven arr de elementos de otras clases que referencian a la clase (e.g. Categoria->arrProdcutos())
 	* Añadidas funciones borrar y noReferenciado a la clase
-	* Añadido $arrFksFrom para la generación de funciones que devuelven objs de elementos de aotras clases a las que hace referencia esta (e.g. Producto->objCategoria())
-
+	* Añadido $arrFksFrom para la generación de funciones que devuelven objs de elementos de a otras clases a las que hace referencia esta (e.g. Producto->objCategoria())
 /* v 1.2 (20120502)
 	* Añadidos los parametros segundo y tercero a htmlentities en la funcion cargarId para que maneje bien las conversiones UTF-8: ENT_QUOTES y "UTF-8"
 /* v 1.1 (20120403)
@@ -22,7 +25,6 @@ ClaseCreadora 1.2
 //El fichero creado tira de las funciones de MysqliDB.php
 //Se supone que el primer atributo de arrAtributos es la clave primaria de la tabla
 class Creadora {
-
 	private $ruta;
 	private $nombreClase;
 	private $arrAtributos;
@@ -137,7 +139,7 @@ class Creadora {
 		$resultCode.=$sg."public function cargarId (\$id) {".$sl;
 		$resultCode.=$sg.$sg."\$result=false;".$sl;
 		$resultCode.=$sg.$sg."\$sql=\"SELECT * FROM ".$nombreTabla." WHERE id='\".self::db()->real_escape_string(\$id).\"'\";".$sl;
-		$resultCode.=$sg.$sg."\$data=self::db()->get_row(\$sql);".$sl;
+		$resultCode.=$sg.$sg."\$data=self::db()->get_obj(\$sql);".$sl;
 		$resultCode.=$sg.$sg."if (\$data) {".$sl;
 		foreach ($arrAtributos as $nombreAtributo => $sqlData) {
 			//$resultCode.=$sg.$sg.$sg."\$this->".$nombreAtributo."=htmlentities(\$data->".$nombreAtributo.",ENT_QUOTES,\"UTF-8\");".$sl;
@@ -306,7 +308,7 @@ class Creadora {
 		$resultCode='';
 		$resultCode.=$sg.'public static function existeId($id) {'.$sl;
 		$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$nombreTabla.' WHERE id=\'".self::db()->real_escape_string($id)."\'";'.$sl;
-		$resultCode.=$sg.$sg.'$data=self::db()->get_row($sql);'.$sl;
+		$resultCode.=$sg.$sg.'$data=self::db()->get_obj($sql);'.$sl;
 		$resultCode.=$sg.$sg.'if ($data) {$result=true;} else {$result=false;}'.$sl;
 		$resultCode.=$sg.$sg.'return $result;'.$sl;
 		$resultCode.=$sg."}".$sl;
@@ -403,7 +405,7 @@ class Creadora {
 
 		$arrTables=array();
 		foreach ($arrFksFrom as $objFkInfo) {
-			$fTable=$objFkInfo->TABLE_NAME;
+			$fTable=$objFkInfo->REFERENCED_TABLE_NAME;
 			$fField=$objFkInfo->COLUMN_NAME;
 			if (!array_key_exists($fTable, $arrTables)) {
 				$arrTables[$fTable]=$fTable;
@@ -417,7 +419,7 @@ class Creadora {
 			}
 		}
 		foreach ($arrFksFrom as $objFkInfo) {
-			$fTable=$objFkInfo->TABLE_NAME;
+			$fTable=$objFkInfo->REFERENCED_TABLE_NAME;
 			$fField=$objFkInfo->COLUMN_NAME;
 			$functionName=$fTable;
 			if (is_array($arrTables[$fTable])) {

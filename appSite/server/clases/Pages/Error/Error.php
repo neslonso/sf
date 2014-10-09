@@ -3,6 +3,7 @@ namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\Page;
 use Sintax\Core\User;
+use Sintax\Core\ReturnInfo;
 
 class Error extends Page implements IPage {
 
@@ -36,8 +37,8 @@ class Error extends Page implements IPage {
 	public function markup() {
 		try {
 			if ($this->msg=="") {
-				if (liMsgsReturnInfo()!="") {
-					$this->setMsg('<ul class="sriMsgs">'.liMsgsReturnInfo().'</ul>');
+				if (ReturnInfo::msgsToLis()!="") {
+					$this->setMsg('<ul class="sriMsgs">'.ReturnInfo::msgsToLis().'</ul>');
 				} else {
 					if (!in_array($_SERVER['REMOTE_ADDR'],unserialize(IPS_DEV))) {
 						$this->setMsg('Error no especificado, use IPS_DEV');
