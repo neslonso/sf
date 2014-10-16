@@ -49,9 +49,7 @@ class composer extends Home implements IPage {
 		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install --dry-run', $descriptorspec, $pipes);
 		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install', $descriptorspec, $pipes);
 		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install --optimize-autoloader', $descriptorspec, $pipes);
-		error_log('ante_proc_open');
 		$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar update', $descriptorspec, $pipes);
-		error_log('tras_proc_open');
 		$stdout = stream_get_contents($pipes[1]);
 		fclose($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
