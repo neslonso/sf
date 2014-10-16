@@ -31,6 +31,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">PHP<span class="caret-right"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="<?=BASE_URL?>clasesPHP#Page" tabindex="-1"> Page</a></li>
+								<li><a href="<?=BASE_URL?>clasesPHP#User" tabindex="-1"> User</a></li>
 								<li><a href="<?=BASE_URL?>clasesPHP#MysqliDB" tabindex="-1"> MysqliDB/cDb</a></li>
 								<li><a href="<?=BASE_URL?>clasesPHP#Fecha" tabindex="-1"> Fecha</a></li>
 								<li><a href="<?=BASE_URL?>clasesPHP#Imagen" tabindex="-1"> Imagen</a></li>

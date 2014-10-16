@@ -28,9 +28,9 @@ class Creacion extends Home implements IPage {
 
 	public function favIcon() {
 		$favIcon='';
-		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
+		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="'.SKEL_ROOT_DIR.'./binaries/imgs/tools.favicon.ico" />';
 		$favIcon.=PHP_EOL;
-		$favIcon.='<link rel="icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
+		$favIcon.='<link rel="icon" type="image/x-icon" href="'.SKEL_ROOT_DIR.'./binaries/imgs/tools.favicon.ico" />';
 		return $favIcon."\n";
 	}
 
@@ -814,7 +814,7 @@ class Creacion extends Home implements IPage {
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.'});'.$sl);
 		fwrite ($fp,$sg.'$'.$class.'Table.bind("rowClick", function (evt, idRow) {'.$sl);
-		fwrite ($fp,$sg.$sg.'//window.location="./<?=FILE_APP?>?page=crud'.ucfirst($class).'&id="+idRow;'.$sl);
+		fwrite ($fp,$sg.$sg.'//window.location="<?=FILE_APP?>?page=crud'.ucfirst($class).'&id="+idRow;'.$sl);
 		fwrite ($fp,$sg.'});'.$sl);
 		fwrite ($fp,'});'.$sl);
 	}

@@ -22,7 +22,7 @@ try {
 
 	/* Js Libs ********************************************************************/
 	$strFilesModTime=getlastmod();//Fecha de modificacion de este fichero
-	$strFilesModTime.=filemtime("./includes/server/start.php");
+	$strFilesModTime.=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
 	ob_start();
 		foreach ($ARR_CLIENT_LIBS as $libPath) {
 			$strFilesModTime.=filemtime($libPath);
@@ -53,6 +53,9 @@ try {
 		$jsLibs="// Js Libs \n";
 		$firephp->group('Carga de SRCs JS', array('Collapsed' => true, 'Color' => '#FF9933'));
 		foreach ($srcs as $src) {
+			if (substr($src, 0,2)=='./') {
+				$src=realpath(SKEL_ROOT_DIR.$src);
+			}
 			$firephp->info($src,'Intentando file_get_contents:');
 			try {
 				$fileContent=file_get_contents($src)."\n\n";

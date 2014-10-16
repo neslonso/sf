@@ -10,6 +10,21 @@ date_default_timezone_set('Europe/Madrid');
 
 /**/
 define ('SKEL_VERSION','1.0.0');
+define('PROTOCOL',((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))?'https':'http'));
+define('BASE_DOMAIN',(substr($_SERVER['HTTP_HOST'],0,4)=="www.")?substr($_SERVER['HTTP_HOST'],4):$_SERVER['HTTP_HOST']);
+define('BASE_DIR',dirname($_SERVER['SCRIPT_NAME']).'/');//Tiene que terminar en / obligatoriamente
+define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);
+
+define('CACHE_DIR',SKEL_ROOT_DIR.'zCache/');
+define('TMP_UPLOAD_DIR',SKEL_ROOT_DIR.'zCache/tmpUpload/');
+define('BASE_IMGS_DIR',SKEL_ROOT_DIR.'binaries/imgs/');
+
+define ('DEBUG_EMAIL','nestor@parqueweb.com');
+
+/* No implementado
+define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consideran validos los datos de lastAction
+/**/
+
 define ('IPS_DEV', serialize(array(
 	//'81.35.169.245',//León Carbajal
 	'91.117.107.217',//Coruña oficna
@@ -19,23 +34,23 @@ define ('IPS_DEV', serialize(array(
 	'88.20.86.157',//León Carbajal 20140908
 )));
 define ('MODULES', serialize(array(
-	'actions' => './zzModules/actions.php',
-	'api' => './zzModules/api.php',
-	'auto' => './zzModules/auto.php',
-	'css' => './zzModules/css.php',
-	'images' => './zzModules/images.php',
-	'js' => './zzModules/js.php',
-	'render' => './zzModules/render.php',
-	'phpunit' => './zzModules/phpunit.php',
+	'actions' => SKEL_ROOT_DIR.'zzModules/actions.php',
+	'api' => SKEL_ROOT_DIR.'zzModules/api.php',
+	'auto' => SKEL_ROOT_DIR.'zzModules/auto.php',
+	'css' => SKEL_ROOT_DIR.'zzModules/css.php',
+	'images' => SKEL_ROOT_DIR.'zzModules/images.php',
+	'js' => SKEL_ROOT_DIR.'zzModules/js.php',
+	'render' => SKEL_ROOT_DIR.'zzModules/render.php',
+	'phpunit' => SKEL_ROOT_DIR.'zzModules/phpunit.php',
 )));
 
-require_once "./includes/server/FirePHP.php";
+require_once SKEL_ROOT_DIR."/includes/server/FirePHP.php";
 
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
 	'index.php' => array(
-		'FILE_APP' => 'index.php',
-		'RUTA_APP' => './appSite/',
+		'FILE_APP' => BASE_DIR.'index.php',
+		'RUTA_APP' => SKEL_ROOT_DIR.'appSite/',
 		'NOMBRE_APP' => 'Sitio web',
 	),
 )));
@@ -49,23 +64,8 @@ if (isset($arrApps[basename($_SERVER['SCRIPT_NAME'])])) {
 	throw new Exception("No sde encontró APP para el punto de entrada: ".basename($_SERVER['SCRIPT_NAME']),1);
 }
 
-define('PROTOCOL',((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))?'https':'http'));
-define('BASE_DOMAIN',(substr($_SERVER['HTTP_HOST'],0,4)=="www.")?substr($_SERVER['HTTP_HOST'],4):$_SERVER['HTTP_HOST']);
-define('BASE_DIR',dirname($_SERVER['SCRIPT_NAME']).'/');//Tiene que terminar en / obligatoriamente
-define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);
-
-define('CACHE_DIR','./zCache/');
-define('TMP_UPLOAD_DIR','./zCache/tmpUpload/');
-define('BASE_IMGS_DIR','./binaries/imgs/');
-
-define ('DEBUG_EMAIL','nestor@parqueweb.com');
-
-/* No implementado
-define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consideran validos los datos de lastAction
-/**/
-
-require_once "./includes/server/clientLibs.php";
-require_once "./includes/server/serverLibs.php";
+require_once SKEL_ROOT_DIR."includes/server/clientLibs.php";
+require_once SKEL_ROOT_DIR."includes/server/serverLibs.php";
 
 if (defined('RUTA_APP')) {
 	if (file_exists(RUTA_APP."server/appDefines.php")) {

@@ -25,16 +25,16 @@ try {
 	ob_start();
 		if (GRID_960) {
 			echo "/*<CSS 960>*/\n";
-			$reset='./includes/cliente/vendor/960-Grid-System-master/code/css/min/reset.css';
+			$reset=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/reset.css';
 			//echo "@import url('".$reset."');"."\n";
 			echo file_get_contents($reset);
-			$text='./includes/cliente/vendor/960-Grid-System-master/code/css/min/text.css';
+			$text=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/text.css';
 			//echo "@import url('".$text."');"."\n";
 			echo file_get_contents($text);
 			if (GRID_960_COLS==12 || GRID_960_COLS==16) {
-				$grid960='./includes/cliente/vendor/960-Grid-System-master/code/css/min/960.css';
+				$grid960=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/960.css';
 			} else {
-				$grid960='./includes/cliente/vendor/960-Grid-System-master/code/css/min/960_24_col.css';
+				$grid960=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/960_24_col.css';
 			}
 			//echo "@import url('".$grid960."');"."\n";
 			echo file_get_contents($grid960);
@@ -45,7 +45,7 @@ try {
 <?
 	/* css Js Libs ********************************************************************/
 	$cssFile=getlastmod();//Fecha de modificacion de este fichero
-	$cssFile.=filemtime("./includes/server/start.php");
+	$cssFile.=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
 	ob_start();
 		foreach ($ARR_CLIENT_LIBS as $libPath) {
 			$cssFile.=filemtime($libPath);
@@ -77,6 +77,9 @@ try {
 		$cssLibs="/* <css Js Libs> */\n";
 		$firephp->group('Carga de HREFs CSS', array('Collapsed' => true, 'Color' => '#FF9933'));
 		foreach ($hrefs as $href) {
+			if (substr($href, 0,2)=='./') {
+				$href=realpath(SKEL_ROOT_DIR.$href);
+			}
 			$firephp->info($href,'Cargando HREF y reescribiendo URLs css:');
 			try {
 				$fileContent=file_get_contents($href)."\n\n";
@@ -107,7 +110,7 @@ try {
 <?
 	/* css local ******************************************************************/
 	ob_start();
-		require "./includes/cliente/base.css";
+		require SKEL_ROOT_DIR."includes/cliente/base.css";
 		require RUTA_APP."cliente/appCss.php";
 
 		$Page=new $page($objUsr);

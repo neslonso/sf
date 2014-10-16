@@ -85,7 +85,7 @@ class docHome extends Error implements IPage {
 					"(\.htaccess|LICENSE|README\.md|crossdomain\.xml|humans\.txt|robots\.txt)",
 					"/"
 				);
-				$arrSintaxFiles=Filesystem::path2array("./",implode('',$excludingRexEx));
+				$arrSintaxFiles=\Filesystem::path2array(SKEL_ROOT_DIR."./",implode('',$excludingRexEx));
 				$excludingRexEx=array (
 					"/",
 					preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Logic\/.*",
@@ -95,7 +95,7 @@ class docHome extends Error implements IPage {
 					"/"
 				);
 
-				$arrAppFiles=Filesystem::path2array("./appSite/",implode('',$excludingRexEx));
+				$arrAppFiles=\Filesystem::path2array(SKEL_ROOT_DIR."./appSite/",implode('',$excludingRexEx));
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/structure.php');
 			break;
 			case '5':
@@ -114,7 +114,7 @@ class docHome extends Error implements IPage {
 			if (is_dir($dir.$filename)) {
 				if (file_exists($dir.$filename."/".$filename.".php")) {
 ?>
-										<li><a href="<?=FILE_APP?>?page=<?=$filename?>"><?=$filename?></a></li>
+										<li><a href="<?=BASE_URL?><?=FILE_APP?>?page=<?=$filename?>"><?=$filename?></a></li>
 <?
 				} else {
 					$subdir=$dir.$filename."/";
@@ -130,7 +130,7 @@ class docHome extends Error implements IPage {
 							if (file_exists($subdir.$filenameSubdir."/".$filenameSubdir.".php")) {
 
 ?>
-												<li><a href="<?=FILE_APP?>?page=<?=$filenameSubdir?>"><?=$filenameSubdir?></a></li>
+												<li><a href="<?=BASE_URL?><?=FILE_APP?>?page=<?=$filenameSubdir?>"><?=$filenameSubdir?></a></li>
 <?
 							}else {
 ?>
@@ -153,7 +153,7 @@ class docHome extends Error implements IPage {
 	}
 
 	public function acPackCode ($type='noVendorCode') {
-		$dir='./zCache/tmpUpload/';
+		$dir=SKEL_ROOT_DIR.'./zCache/tmpUpload/';
 		$arrFilesOrFalse=glob($dir."Sintax*");
 		if ($arrFilesOrFalse) {
 			foreach ($arrFilesOrFalse as $file) {
@@ -188,9 +188,9 @@ class docHome extends Error implements IPage {
 				"/"
 			);
 		}
-		$arr=Filesystem::path2array("./",implode('',$excludingRexEx));
+		$arr=\Filesystem::path2array(SKEL_ROOT_DIR."./",implode('',$excludingRexEx));
 		$file=$dir.'Sintax.'.SKEL_VERSION.'.zip';
-		Filesystem::array2zip($arr,$file);
+		\Filesystem::array2zip($arr,$file);
 
 		ob_clean();//limpiamos el buffer antes de mandar el fichero, no queremos nada más que el fichero
 		header ("Content-Disposition: attachment; filename=".basename($file)."\n\n");

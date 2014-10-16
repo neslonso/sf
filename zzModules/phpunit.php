@@ -36,8 +36,10 @@ if (class_exists($test)) {
 	$suite = new PHPUnit_Framework_TestSuite($test);
 	$arguments=array();
 	//$arguments['coverageHtml']=1; //<- Necesita Xdebug, el php de nx614 no lo tiene.
+
 	$arguments['verbose']=true;
 	$arguments['debug']=true;
+
 	//$arguments['testdoxHTMLFile']=TMP_UPLOAD_DIR.'phpunit.testdoxHTMLFile.html';
 	//$arguments['testdoxTextFile']=TMP_UPLOAD_DIR.'phpunit.testdoxHTMLFile.txt';
 	$buffer='';
@@ -54,7 +56,7 @@ if (class_exists($test)) {
 		$include[] = $line;
 	}
 	$buffer=implode("\n", $include);
-	echo "<h1>Ejecutando PHPUnit para el test: <code>".$test."</code></h1>";
+	echo "<h1>Ejecutando PHPUnit para el testCase: <code>".$test."</code></h1>";
 	echo "<pre>".$buffer."</pre>";
 } else {
 	throw new Exception("No se encontró la clase de test: ".$test, 1);

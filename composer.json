@@ -1,0 +1,11 @@
+{
+	"config": {
+		"vendor-dir": "includes/server/vendor/composer",
+		"cache-dir": "zCache/composer",
+		"home": "."
+	},
+	"require-dev": {
+		"phploc/phploc": "*"
+		"sebastian/phpcpd": "*"
+	}
+}

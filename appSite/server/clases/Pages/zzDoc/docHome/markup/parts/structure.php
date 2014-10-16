@@ -18,7 +18,7 @@
 					</p>
 					<div class="bs-callout bs-callout-info">
 						<h4><span class="skelName">S!nt@x</span></h4>
-<pre><?=self::array2list($arrSintaxFiles);?></pre>
+<pre><?=\Filesystem::array2list($arrSintaxFiles);?></pre>
 					</div>
 					<div class="col2">
 						Espcial mención merece el directorio <code>appZzShared/</code>, que contiene el código de cliente
@@ -41,7 +41,7 @@
 					</p>
 					<div class="bs-callout bs-callout-info">
 						<h4>Esqueleto de aplicación</h4>
-<pre><?=self::array2list($arrAppFiles);?></pre>
+<pre><?=\Filesystem::array2list($arrAppFiles);?></pre>
 					</div>
 				</div>
 				<!---->

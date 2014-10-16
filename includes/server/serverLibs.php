@@ -1,25 +1,25 @@
 <?
 define('PHP_UNIT',true);//true o false
 
-require_once "./includes/server/lib/misc.php";//biblioteca de funciones varias
-require_once "./includes/server/lib/returnInfo.php";//biblioteca de funciones para tratar $_SESSION['returnInfo']
+require_once SKEL_ROOT_DIR."includes/server/lib/misc.php";//biblioteca de funciones varias
+require_once SKEL_ROOT_DIR."includes/server/lib/returnInfo.php";//biblioteca de funciones para tratar $_SESSION['returnInfo']
 
-require_once "./includes/server/clases/MysqliDB.php";
-require_once "./includes/server/clases/Fecha.php";
-require_once "./includes/server/clases/Cadena.php";
-require_once "./includes/server/clases/Imagen.php";
-require_once "./includes/server/clases/Filesystem.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/MysqliDB.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/Fecha.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/Cadena.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/Imagen.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/Filesystem.php";
 
-require_once "./includes/server/clases/User.php";
-require_once "./includes/server/clases/Page.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/User.php";
+require_once SKEL_ROOT_DIR."includes/server/clases/Page.php";
 
-require_once "./includes/server/vendor/PHPMailer_v5.1/class.phpmailer.php";
-require_once "./includes/server/vendor/blueimp-jQuery-File-Upload/UploadHandler.php";
-require_once "./includes/server/vendor/jsmin-1.1.1.php";
+require_once SKEL_ROOT_DIR."includes/server/vendor/PHPMailer_v5.1/class.phpmailer.php";
+require_once SKEL_ROOT_DIR."includes/server/vendor/blueimp-jQuery-File-Upload/UploadHandler.php";
+require_once SKEL_ROOT_DIR."includes/server/vendor/jsmin-1.1.1.php";
 
 //CronExpression: https://github.com/mtdowling/cron-expression
-require_once "./includes/server/vendor/cron-expression-1.0.3/src/Cron/FieldInterface.php";
-foreach (glob("./includes/server/vendor/cron-expression-1.0.3/src/Cron/*.php") as $filename) {require_once $filename;}
+require_once SKEL_ROOT_DIR."includes/server/vendor/cron-expression-1.0.3/src/Cron/FieldInterface.php";
+foreach (glob(SKEL_ROOT_DIR."includes/server/vendor/cron-expression-1.0.3/src/Cron/*.php") as $filename) {require_once $filename;}
 
 //PHP Token Reflection: https://github.com/Andrewsville/PHP-Token-Reflection
 set_include_path(
@@ -35,7 +35,7 @@ spl_autoload_register(function($className) {
 });
 //PHPUnit: https://phpunit.de/  & https://github.com/sebastianbergmann/phpunit
 if (PHP_UNIT) {
-	$fileList=Filesystem::pharSearch ('./includes/server/vendor/phpunit.phar',"/.*\.php/");
+	$fileList=Filesystem::pharSearch (SKEL_ROOT_DIR.'includes/server/vendor/phpunit.phar',"/.*\.php/");
 	spl_autoload_register(function($className) use (&$fileList) {
 		//static $sg='';
 		//static $sgLen=2;
@@ -57,4 +57,6 @@ if (PHP_UNIT) {
 		//$sg=substr($sg, 0,-$sgLen);
 	});
 }
+// Composer:
+require 'phar://'.realpath(SKEL_ROOT_DIR.'includes/server/vendor/composer.phar').'/vendor/autoload.php'; // require composer dependencies
 ?>

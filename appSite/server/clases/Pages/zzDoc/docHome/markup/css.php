@@ -81,7 +81,7 @@
 		opacity: 0.3;
 		z-index: -1;
 		background-size: cover;
-		background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=php.jpeg&ancho=600&alto=150&formato=jpg);
+		background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=php.jpeg&ancho=600&alto=150&formato=jpg);
 	}
 
 	.content {
@@ -133,13 +133,13 @@
 		}
 		.fragment:nth-child(n):after {
 			/*background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=600&formato=jpg);*/
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.01.jpg&ancho=600&alto=600&formato=jpg);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.01.jpg&ancho=600&alto=600&formato=jpg);
 		}
 		.fragment:nth-child(2n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.02.jpg&ancho=600&alto=600&formato=jpg);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.02.jpg&ancho=600&alto=600&formato=jpg);
 		}
 		.fragment:nth-child(3n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.03.jpg&ancho=600&alto=600&formato=jpg);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=APP_IMGS_DIR&fichero=abstractBackground.03.jpg&ancho=600&alto=600&formato=jpg);
 		}
 	/**/
 	.fragment .titulo {

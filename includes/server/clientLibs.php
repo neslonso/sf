@@ -25,23 +25,23 @@ define ('FONT_AWESOME','4.2.0');//false o version
 /******************************************************************************/
 
 $ARR_CLIENT_LIBS=array();
-	if (MODERNIZR_LATEST!=false) {array_push($ARR_CLIENT_LIBS,"./includes/cliente/modernizr.php");}
-	if (ANGULAR_JS!=false) {array_push($ARR_CLIENT_LIBS,"./includes/cliente/angularJS.php");}
+	if (MODERNIZR_LATEST!=false) {array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/modernizr.php");}
+	if (ANGULAR_JS!=false) {array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/angularJS.php");}
 	if (JQUERY!=false) {
-		array_push($ARR_CLIENT_LIBS,"./includes/cliente/jquery.php");
-		array_push($ARR_CLIENT_LIBS,"./includes/cliente/jqueryPlugins.php");
+		array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/jquery.php");
+		array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/jqueryPlugins.php");
 		if (JQUERY_UI!=false) {
-			array_push($ARR_CLIENT_LIBS,"./includes/cliente/jqueryUI.php");
-			array_push($ARR_CLIENT_LIBS,"./includes/cliente/jqueryUIplugins.php");
+			array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/jqueryUI.php");
+			array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/jqueryUIplugins.php");
 		}
 		if (BOOTSTRAP!=false) {
-			array_push($ARR_CLIENT_LIBS,"./includes/cliente/bootstrap.php");
-			array_push($ARR_CLIENT_LIBS,"./includes/cliente/bootstrapPlugins.php");
+			array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/bootstrap.php");
+			array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/bootstrapPlugins.php");
 		}
 	}
 	if (FONT_AWESOME!=false) {
-		array_push($ARR_CLIENT_LIBS,"./includes/cliente/fontAwesome.php");
+		array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/fontAwesome.php");
 	}
-	array_push($ARR_CLIENT_LIBS,"./includes/cliente/clasesJS.php");
+	array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/clasesJS.php");
 /******************************************************************************/
 ?>

@@ -259,7 +259,7 @@
 </div>
 -->
 <div class="foto">
-	<img src="./<?=FILE_APP?>?MODULE=IMAGES&amp;almacen=LOREMPIXEL&amp;ancho=600&amp;alto=100" alt="" style="width:100%;" />
+	<img src="<?=FILE_APP?>?MODULE=IMAGES&amp;almacen=LOREMPIXEL&amp;ancho=600&amp;alto=100" alt="" style="width:100%;" />
 </div>
 <div class="content">
 	<div class="fragment sobreAnterior">

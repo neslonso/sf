@@ -1,4 +1,7 @@
 <?
+use Sintax\Core\ReturnInfo;
+?>
+<?
 $tInicial=microtime(true);
 ob_start();
 ?>

@@ -19,8 +19,8 @@
 							metodos que	necesiten para realizar sus tareas.
 						</p>
 						<div class="col2">
-							<?=$this->ulClass('./includes/server/clases/Page.php','IPage')?>
-							<?=$this->ulClass('./includes/server/clases/Page.php','Page')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/Page.php','IPage')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/Page.php','Page')?>
 						</div>
 					</div>
 				</div>
@@ -50,8 +50,8 @@
 							de cada tipo de usuario.
 						</p>
 						<div class="col2">
-							<?=$this->ulClass('./includes/server/clases/User.php','IUser')?>
-							<?=$this->ulClass('./includes/server/clases/User.php','User')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/User.php','IUser')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/User.php','User')?>
 						</div>
 					</div>
 				</div>
@@ -78,8 +78,8 @@
 							métodos para realizar el acceso a <em>MySQL</em>.
 						</p>
 						<div class="col2">
-							<?=$this->ulClass('./includes/server/clases/MysqliDB.php','MysqliDB')?>
-							<?=$this->ulClass('./includes/server/clases/MysqliDB.php','cDb')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/MysqliDB.php','MysqliDB')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/MysqliDB.php','cDb')?>
 						</div>
 					</div>
 				</div>
@@ -105,7 +105,7 @@
 							La clase <code>Fecha</code> proporciona métodos para el trabajo con fechas.
 						</p>
 						<div class="col2">
-							<?=$this->ulClass('./includes/server/clases/Fecha.php','*')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/Fecha.php','*')?>
 						</div>
 					</div>
 				</div>
@@ -131,7 +131,7 @@
 							La clase <code>Imagen</code> proporciona metodos para el tratamiento de imagenes.
 						</p>
 						<div class="col2">
-							<?=$this->ulClass('./includes/server/clases/Imagen.php','*')?>
+							<?=$this->ulClass(SKEL_ROOT_DIR.'./includes/server/clases/Imagen.php','*')?>
 						</div>
 					</div>
 				</div>

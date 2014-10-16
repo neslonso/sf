@@ -150,7 +150,7 @@
 					<div class="bs-callout bs-callout-info">
 						<h4>Intefaz <em>IPage</em></h4>
 <pre style="white-space: pre-wrap;">
-<?=Sintax\Pages\clasesPHP::ulClass('./includes/server/clases/Page.php','IPage',true,false)?>
+<?=Sintax\Pages\clasesPHP::ulClass(SKEL_ROOT_DIR.'./includes/server/clases/Page.php','IPage',true,false)?>
 </pre>
 					</div>
 					<div class="col2">

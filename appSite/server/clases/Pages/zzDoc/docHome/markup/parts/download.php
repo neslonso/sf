@@ -11,7 +11,7 @@
 				<div class="meta"><span>Happy coding! ;-)</span></div>
 				<div class="body">
 					<p>
-
+						<a href="https://github.com/neslonso/Sintax">Fork me on github</a>
 					</p>
 					<ul>
 						<li>

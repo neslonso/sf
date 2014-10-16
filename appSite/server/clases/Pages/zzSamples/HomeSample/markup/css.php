@@ -108,13 +108,13 @@
 			background-attachment: fixed;
 		}
 		.fragment:nth-child(n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=200&alto=200);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=200&alto=200);
 		}
 		.fragment:nth-child(2n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=400&alto=400);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=400&alto=400);
 		}
 		.fragment:nth-child(3n):after {
-			background-image: url(./<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=600);
+			background-image: url(<?=FILE_APP?>?MODULE=IMAGES&almacen=LOREMPIXEL&ancho=600&alto=600);
 		}
 	/**/
 	.fragment .titulo {
