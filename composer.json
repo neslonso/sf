@@ -1,11 +1,14 @@
 {
 	"config": {
-		"vendor-dir": "includes/server/vendor/composer",
+		"vendor-dir": "includes/server/vendor/composerVendor",
 		"cache-dir": "zCache/composer",
 		"home": "."
 	},
 	"require-dev": {
-		"phploc/phploc": "*"
-		"sebastian/phpcpd": "*"
+		"phpunit/phpunit": "4.3.*",
+		"phploc/phploc": "*",
+		"sebastian/phpcpd": "*",
+		"sebastian/phpdcd": "*",
+		"mtdowling/cron-expression": "1.0.*"
 	}
 }
