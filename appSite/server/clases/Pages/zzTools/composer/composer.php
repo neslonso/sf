@@ -38,18 +38,50 @@ class composer extends Home implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
+		$pkgs=(isset($_GET['pkgs']))?$_GET['pkgs']:'';
+		$cCmd['install']=$cCmd['update']=$cCmd['require']=$cCmd['remove']=$cCmd['search']=$cCmd['show']='';
+
+		if (isset($_GET['cCmd'])) {
+			$cCmd[$_GET['cCmd']]='checked="checked"';
+		} else {
+			$cCmd['search']='checked="checked"';
+		}
+
+		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
+	}
+
+	public function acExec ($args) {
+		$pkgs=$args['pkgs'];
+		$cCmd=$args['cCmd'];
+		$dryRun=($args['dryRun']==1)?'--dry-run':'';
+		//$dryRun='--dry-run';
+		$opts='--no-interaction ';
+		switch ($cCmd) {
+			case "install":$cCmd='install';$opts.='--optimize-autoloader --update-with-dependencies'.$dryRun;break;
+			case "update":$opts.=' '.$dryRun;break;
+			break;
+			case "require":
+			case "remove":
+				$opts.='--update-with-dependencies ';break;
+			case "search":
+			case "show":
+				if ($pkgs=='') {
+					throw new ActionException('Debe introducir el paquete.', 1);
+				}
+			break;
+			default:
+				throw new ActionException('Comando "'.htmlspecialchars($cCmd).'" no válido o no implementado', 1);
+			break;
+		}
 		putenv('COMPOSER_HOME=' . SKEL_ROOT_DIR);
 		$descriptorspec = array(
-			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			//0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
 			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
 			2 => array("pipe", "w"),  // stderr is a pipe that the child will write to
 		);
-		//$process = proc_open('php', $descriptorspec, $pipes, $cwd, $env);
-		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar', $descriptorspec, $pipes);
-		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install --dry-run', $descriptorspec, $pipes);
-		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install', $descriptorspec, $pipes);
-		//$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install --optimize-autoloader', $descriptorspec, $pipes);
-		$process = proc_open('php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar update', $descriptorspec, $pipes);
+		$cmd='php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar '.$cCmd.' '.$pkgs.' '.$opts;
+		echo "<h2>Ejecutando: ".$cmd."</h2>";
+		$process = proc_open($cmd, $descriptorspec, $pipes);
 		$stdout = stream_get_contents($pipes[1]);
 		fclose($pipes[1]);
 		$stderr = stream_get_contents($pipes[2]);
@@ -59,7 +91,7 @@ class composer extends Home implements IPage {
 		echo "<pre>".$stdout."</pre>";
 		echo "<h3>STDERR</h3>";
 		echo "<pre>".$stderr."</pre>";
-
+		/**/
 
 		/*if (is_resource($process)) {
 			// $pipes now looks like this:
@@ -79,7 +111,6 @@ class composer extends Home implements IPage {
 
 			echo "command returned $return_value\n";
 		}*/
-		//require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
 	}
 }
 ?>

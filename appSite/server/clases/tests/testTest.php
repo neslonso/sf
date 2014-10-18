@@ -2,6 +2,9 @@
 namespace Sintax\Tests;
 use Sintax\Core\ReturnInfo;
 
+/**
+ * @coversDefaultClass Sintax\Core\ReturnInfo
+ */
 class testTest extends \PHPUnit_Framework_TestCase {
 	protected $backupGlobals = FALSE;//PHPUnit hace copia de seguridad de las variables globales y las restaura al acabar cada test, esto es para que no lo haga
 
@@ -9,7 +12,7 @@ class testTest extends \PHPUnit_Framework_TestCase {
 	public function tearDown() {parent::tearDown();}
 
 	/**
-	 * @covers ::ReturnInfo::clear
+	 * @covers ::clear
 	 */
 	public function testClearReturnInfo () {
 		ReturnInfo::clear();
@@ -17,7 +20,7 @@ class testTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers ::ReturnInfo::add
+	 * @covers ::add
 	 */
 	public function testAddReturnInfo () {
 		ReturnInfo::add('mensaje de prueba','Titulo de prueba');
@@ -28,7 +31,7 @@ class testTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers ::ReturnInfo::msgsToLis
+	 * @covers ::msgsToLis
 	 * @depends testAddReturnInfo
 	 */
 	public function testLiMsgsReturnInfo ($returnInfo) {

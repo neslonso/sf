@@ -1,7 +1,6 @@
 <?
 /*<!--firePHP-->*/
 //http://www.firephp.org/HQ/Use.htm
-require_once SKEL_ROOT_DIR.'/includes/server/vendor/FirePHPCore-0.3.2/lib/FirePHPCore/FirePHP.class.php';
 $fp = $firephp = FirePHP::getInstance(true);
 //$firephp-> *
 

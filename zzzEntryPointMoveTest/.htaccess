@@ -12,7 +12,7 @@ SSLOptions +StdEnvVars
 	</IfModule>
 
 	RewriteEngine on
-	RewriteBase /proys/00.skel/zzzCertTest
+	RewriteBase /proys/00.skel/zzzEntryPointMoveTest
 
 	# Force HTTPS ##################################################################
 	RewriteCond %{HTTPS} off
@@ -28,7 +28,7 @@ SSLOptions +StdEnvVars
 	# Barra (/) al final
 		RewriteCond %{REQUEST_FILENAME} !-d
 		RewriteCond %{REQUEST_FILENAME} !-f
-			#RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
+			RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
 			#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
 	#Reescritura: URLs de paginas (con [page]/[keys]/[id] (keys e id optativas, id necesita keys) (OJO! Necesita la regla anterior de poner / al final)
 		#http://.../[page]/[tantos/directorios/como/queramos/para/keywords/pero/al/menos/uno/si/usamos/id]/[idNumerica]/[el/resto/se/transporta/a/"./"/]

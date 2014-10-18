@@ -1,3 +1,4 @@
+*.TMP
 .DS_Store
 Thumbs.db
 sftp-config.json
@@ -5,3 +6,4 @@ aaReferences/
 zzWorkspace/
 *prueba*/
 appSite/server/clases/Logic/*.php
+sharedDefines.php

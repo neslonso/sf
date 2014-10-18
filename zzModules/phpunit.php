@@ -35,7 +35,7 @@ if (class_exists($test)) {
 	*/
 	$suite = new PHPUnit_Framework_TestSuite($test);
 	$arguments=array();
-	//$arguments['coverageHtml']=1; //<- Necesita Xdebug, el php de nx614 no lo tiene.
+	$arguments['coverageHtml']=1; //<- Necesita Xdebug, el php de nx614 no lo tiene.
 
 	$arguments['verbose']=true;
 	$arguments['debug']=true;
