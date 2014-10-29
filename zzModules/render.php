@@ -10,8 +10,8 @@ try {
 		print_r($GLOBALS,true)."\n\n\n--\n\n\n".print_r($_SESSION,true));
 	*/
 
-
-	$page=(isset($_GET['page']))?$_GET['page']:'Home';
+	$pageHome=(defined(PAGE_HOME_APP))?PAGE_HOME_APP:'Home';
+	$page=(isset($_GET['page']))?$_GET['page']:$pageHome;
 	$page='Sintax\\Pages\\'.$page;
 
 	$objUsr=new Sintax\Core\AnonymousUser();

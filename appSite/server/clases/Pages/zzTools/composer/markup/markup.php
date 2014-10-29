@@ -18,9 +18,9 @@
 	Paquete: <input type="text" name="pkgs" value="<?=$pkgs?>"><br />
 	(vendor/package1:version vendor/package2:version ...) (phpunit/phpunit:4.3.* mysql/autobackup:dev-master)
 	<br />
-	Dry run:
+	Dry run (ejecución simulada):
 	<input type="hidden" name="dryRun" value="0" />
-	<input type="checkbox" name="dryRun" value="1" checked="checked" />
+	<input type="checkbox" name="dryRun" value="1" />
 	<br />
 	<input type="submit" value="Ejecutar composer" />
 </form>
