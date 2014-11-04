@@ -8,7 +8,6 @@ ob_start();
 //modo
 //formato
 try {
-	$db=cDb::getInstance();
 	switch ($_GET["almacen"]) {
 		case "LOREMPIXEL":
 			/*
@@ -33,8 +32,9 @@ try {
 		break;
 		case "DB";
 			try {
+				$db=cDb::getInstance();
 				list($tabla,$campoId,$valorId,$campoData)=explode($_GET["fichero"],'.');
-				$sql="SELECT ".$campoId.", ".$campoData." FROM ".$tabla." WHERE id='".$GLOBALS['db']->real_Escape_String($valorId)."'";
+				$sql="SELECT ".$campoId.", ".$campoData." FROM ".$tabla." WHERE id='".$db->real_Escape_String($valorId)."'";
 				//$GLOBALS['firephp']->info($sql);
 				$rslSet=$db->query($sql);
 				if ($rslSet->num_rows>0) {
@@ -53,9 +53,9 @@ try {
 		default:
 			try {
 				if (defined($_GET['almacen'])) {
-					$file=constant($_GET['almacen']).'/'.$_GET['fichero'];
+					$file=constant($_GET['almacen']).$_GET['fichero'];
 				} else {
-					$file=BASE_IMGS_DIR.'/'.$_GET['fichero'];
+					$file=BASE_IMGS_DIR.$_GET['fichero'];
 				}
 				$objImg=Imagen::fromFile($file);
 			} catch (Exception $e) {

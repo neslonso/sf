@@ -57,8 +57,8 @@ class composer extends Home implements IPage {
 		//$dryRun='--dry-run';
 		$opts='--no-interaction ';
 		switch ($cCmd) {
-			case "install":$cCmd='install';$opts.='--optimize-autoloader --update-with-dependencies'.$dryRun;break;
-			case "update":$opts.=' '.$dryRun;break;
+			case "install":$opts.='--optimize-autoloader '.$dryRun;break;
+			case "update":$opts.='--update-with-dependencies '.$dryRun;break;
 			break;
 			case "require":
 			case "remove":

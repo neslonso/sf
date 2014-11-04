@@ -3,6 +3,11 @@ $tInicial=microtime(true);
 ?>
 <?
 define ('SKEL_ROOT_DIR',__DIR__.'/'.'../');
+define ('SKEL_ROOT_URL',
+	(dirname($_SERVER['SCRIPT_NAME'])=='/')?
+		dirname($_SERVER['SCRIPT_NAME']).'./':
+		dirname($_SERVER['SCRIPT_NAME']).'/'.'./'
+);
 $module='';
 try {
 	require_once SKEL_ROOT_DIR."/includes/server/start.php";

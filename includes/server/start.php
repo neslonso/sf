@@ -12,7 +12,11 @@ date_default_timezone_set('Europe/Madrid');
 define ('SKEL_VERSION','1.0.0');
 define('PROTOCOL',((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']))?'https':'http'));
 define('BASE_DOMAIN',(substr($_SERVER['HTTP_HOST'],0,4)=="www.")?substr($_SERVER['HTTP_HOST'],4):$_SERVER['HTTP_HOST']);
-define('BASE_DIR',dirname($_SERVER['SCRIPT_NAME']).'/');//Tiene que terminar en / obligatoriamente
+define('BASE_DIR',
+	(dirname($_SERVER['SCRIPT_NAME'])=='/')?
+		dirname($_SERVER['SCRIPT_NAME']):
+		dirname($_SERVER['SCRIPT_NAME']).'/'
+);//Tiene que terminar en / obligatoriamente
 define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);//URL hasta el directorio del punto de entrada
 
 define('CACHE_DIR',SKEL_ROOT_DIR.'zCache/');
@@ -28,11 +32,8 @@ define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consider
 define ('IPS_DEV', serialize(array(
 	//'81.35.169.245',//León Carbajal
 	'91.117.107.217',//Coruña oficna
-	'79.151.164.17',//León Carbajal 20140804
-	'88.20.245.217',//León Carbajal 20140811
-	'88.20.93.57',//León Carbajal 20140812
-	'88.20.86.157',//León Carbajal 20140908
 	'81.32.175.148',//León Carbajal 20141017
+	'47.62.0.156',//Diego Madrid
 )));
 define ('MODULES', serialize(array(
 	'actions' => SKEL_ROOT_DIR.'zzModules/actions.php',
@@ -65,7 +66,7 @@ if (isset($arrApps[basename($_SERVER['SCRIPT_NAME'])])) {
 
 require_once SKEL_ROOT_DIR."includes/server/clientLibs.php";
 require_once SKEL_ROOT_DIR."includes/server/serverLibs.php";
-require_once SKEL_ROOT_DIR."/includes/server/FirePHP.php";
+require_once SKEL_ROOT_DIR."includes/server/FirePHP.php";
 
 if (defined('RUTA_APP')) {
 	if (file_exists(RUTA_APP."server/appDefines.php")) {
@@ -98,5 +99,4 @@ if (defined('RUTA_APP')) {
 	//throw new Exception("RUTA_APP no definida. La App a utilizar debe estar asociada al nombre del script (index.php, admin.php...) o ser suministrada en el parametro APP ");
 	throw new Exception("RUTA_APP no definida. SCRIPT_NAME: ".$_SERVER['SCRIPT_NAME']." :-: Basename: ".basename($_SERVER['SCRIPT_NAME']));
 }
-cDb::conf(_DB_HOST_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 ?>

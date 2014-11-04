@@ -36,6 +36,7 @@ class clasesPHP extends docHome implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/content.php");
 	}
 
+	/*TODO: Organizacion: ulClass debería estar en otro sitio, posiblemente en una clase dedicada a documentar código*/
 	/**
 	 * Analiza un fichero fuente PHP y extrae documentación
 	 * @param  string $file: ruta del fichero a analizar

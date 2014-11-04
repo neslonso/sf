@@ -15,6 +15,8 @@ define('JQUERY','2.1.0');//false o version (Obligatorio incluirlo, sin el no fun
 	//define('BOOTSTRAP',false);//false o version
 	define('BOOTSTRAP','3.1.1');//false o version
 		define('BOOTSWATCH_THEME',false);//false para tema por defecto o nombre del tema -> bootswatch.com
+
+define('POLYMER',false);//true o false
 /******************************************************************************/
 /* CSS LIBS *******************************************************************/
 /******************************************************************************/
@@ -39,6 +41,8 @@ $ARR_CLIENT_LIBS=array();
 			array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/bootstrapPlugins.php");
 		}
 	}
+	if (POLYMER!=false) {array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/polymer.php");}
+
 	if (FONT_AWESOME!=false) {
 		array_push($ARR_CLIENT_LIBS,SKEL_ROOT_DIR."includes/cliente/fontAwesome.php");
 	}

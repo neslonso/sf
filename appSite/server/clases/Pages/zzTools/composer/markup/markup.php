@@ -1,5 +1,6 @@
 <?="\n<!-- ".get_class()." -->\n"?>
 <h1>Composer</h1>
+<a href="https://packagist.org/">https://packagist.org/</a>
 <hr />
 <form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data">
 	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
