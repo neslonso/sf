@@ -3,14 +3,13 @@ namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\User;
 
-class Home extends Error implements IPage {
+class poster extends Error implements IPage {
 	public function __construct(User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}
 	public function pageValida () {
-		//return $this->objUsr->pagePermitida($this);
-		//return "docHome";
-		return true;
+		return $this->objUsr->pagePermitida($this);
+		//return parent::pageValida();
 	}
 	public function accionValida($metodo) {
 		return $this->objUsr->accionPermitida($this,$metodo);
@@ -35,8 +34,6 @@ class Home extends Error implements IPage {
 	}
 	public function markup() {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
-		echo '<h1>Página intencionadamente vacía</h1>';
-		echo '<a href="'.BASE_URL.'docHome">Ver documentación (zzDoc/docHome)</a>';
 	}
 }
 ?>

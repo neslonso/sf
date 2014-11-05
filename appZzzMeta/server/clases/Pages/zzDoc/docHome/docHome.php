@@ -82,20 +82,22 @@ class docHome extends Error implements IPage {
 					//excluimos tambien las direcorios de APPs
 					preg_quote(BASE_DIR,'/')."app(?!Zz)(.*)", "|",
 					//excluimos ficheros varios
-					"(\.htaccess|LICENSE|README\.md|crossdomain\.xml|humans\.txt|robots\.txt)",
+					"(\.htaccess|LICENSE|README\.md|crossdomain\.xml|humans\.txt|robots\.txt|.*\.lock)", "|",
+					//carpeta de code coverage de phpunit
+					"(1)",
 					"/"
 				);
 				$arrSintaxFiles=\Filesystem::path2array(SKEL_ROOT_DIR."./",implode('',$excludingRexEx));
 				$excludingRexEx=array (
 					"/",
-					preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Logic\/.*",
-					"|",preg_quote(BASE_DIR."appSite/",'/')."server\/clases\/Pages\/(?!Home|Error)",
+					preg_quote(RUTA_APP,'/')."server\/clases\/Logic\/.*",
+					"|",preg_quote(RUTA_APP,'/')."server\/clases\/Pages\/(?!Home|Error)",
 					"|","markup\/parts",
 					"|",".htaccess",
 					"/"
 				);
 
-				$arrAppFiles=\Filesystem::path2array(SKEL_ROOT_DIR."./appSite/",implode('',$excludingRexEx));
+				$arrAppFiles=\Filesystem::path2array(RUTA_APP,implode('',$excludingRexEx));
 				require( str_replace('//','/',dirname(__FILE__).'/') .'markup/parts/structure.php');
 			break;
 			case '5':

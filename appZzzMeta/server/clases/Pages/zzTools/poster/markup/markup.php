@@ -59,7 +59,7 @@
 	<body>
 		Action: <input type="text" id="action"><br />
 
-		<input type="text" name="name" placeholder="name" value="APP" /> : <input type="text" name="value" placeholder="value" value="appSite" /><br />
+		<input type="text" name="name" placeholder="name" value="APP" /> : <input type="text" name="value" placeholder="value" value="appZzzMeta" /><br />
 		<input type="text" name="name" placeholder="name" value="acClase" /> : <input type="text" name="value" placeholder="value" value="" /><br />
 		<input type="text" name="name" placeholder="name" value="acMetodo" /> : <input type="text" name="value" placeholder="value" value="" /><br />
 		<input type="text" name="name" placeholder="name" value="acTipo" /> : <input type="text" name="value" placeholder="value" value="stdAssoc" /><br />

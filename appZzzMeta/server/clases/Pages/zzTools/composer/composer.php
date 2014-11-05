@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class composer extends Home implements IPage {
+class composer extends Error implements IPage {
 	public function __construct(User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}

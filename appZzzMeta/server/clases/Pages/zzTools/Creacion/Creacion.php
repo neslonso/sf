@@ -4,7 +4,7 @@ use Sintax\Core\IPage;
 use Sintax\Core\User;
 use Sintax\Core\ReturnInfo;
 
-class Creacion extends Home implements IPage {
+class Creacion extends Error implements IPage {
 	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
 	}

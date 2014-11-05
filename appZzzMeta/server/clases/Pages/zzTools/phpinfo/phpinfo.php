@@ -3,7 +3,7 @@ namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\User;
 
-class poster extends Home implements IPage {
+class phpinfo extends Error implements IPage {
 	public function __construct(User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}

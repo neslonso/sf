@@ -10,7 +10,7 @@ try {
 		print_r($GLOBALS,true)."\n\n\n--\n\n\n".print_r($_SESSION,true));
 	*/
 
-	$pageHome=(defined(PAGE_HOME_APP))?PAGE_HOME_APP:'Home';
+	$pageHome=(defined('PAGE_HOME_APP'))?PAGE_HOME_APP:'Home';
 	$page=(isset($_GET['page']))?$_GET['page']:$pageHome;
 	$page='Sintax\\Pages\\'.$page;
 
@@ -55,7 +55,7 @@ try {
 } catch (Exception $e) {//Excepcion durante la representación de la página
 	$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
 	error_log ($infoExc);
-	error_log ("TRACE: ".$e->getTraceAsString());
+	//error_log ("TRACE: ".$e->getTraceAsString());
 	$firephp->info($infoExc);
 	$firephp->info($e->getTraceAsString(),"traceAsString");
 	$firephp->info($e->getTrace(),"trace");
@@ -76,7 +76,7 @@ try {
 			$msg='Error no recuperable durante el tratamiento de un error recuperable.';
 			$infoExc="Excepcion de tipo: ".get_class($eee).". Mensaje: ".$eee->getMessage()." en fichero ".$eee->getFile()." en linea ".$eee->getLine();
 			error_log ($infoExc);
-			error_log ("TRACE: ".$eee->getTraceAsString());
+			//error_log ("TRACE: ".$eee->getTraceAsString());
 			$firephp->group($msg, array('Collapsed' => false, 'Color' => '#FF6600'));
 			$firephp->info($infoExc);
 			$firephp->info($eee->getTraceAsString(),"traceAsString");

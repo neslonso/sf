@@ -3,13 +3,12 @@ namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\User;
 
-class phpinfo extends Home implements IPage {
+class Empty extends Error implements IPage {
 	public function __construct(User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}
 	public function pageValida () {
 		return $this->objUsr->pagePermitida($this);
-		//return parent::pageValida();
 	}
 	public function accionValida($metodo) {
 		return $this->objUsr->accionPermitida($this,$metodo);

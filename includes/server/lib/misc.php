@@ -51,11 +51,17 @@ function arrFormFromArrPost ($arrPost, $nonTextFields=NULL, $checkboxCheckedValu
 
 function logPageData($titulo="Grupo logPageData") {
 	$GLOBALS['firephp']->group($titulo, array('Collapsed' => true, 'Color' => '#FF9933'));
-	$GLOBALS['firephp']->group('_SESSION, page y usr', array('Collapsed' => true, 'Color' => '#3399FF'));
-	$GLOBALS['firephp']->info($_SESSION,"SESSION");
-	//$GLOBALS['firephp->info(htmlspecialchars($_SERVER['HTTP_REFERER']),'_SERVER[HTTP_REFERER]');//hace fallar al validador del w3c
-	$GLOBALS['firephp']->info($GLOBALS['page'],'clase de página ($page)');
-	$GLOBALS['firephp']->info($GLOBALS['objUsr'],'$objUsr');
+		$GLOBALS['firephp']->group('_SESSION, page y usr', array('Collapsed' => true, 'Color' => '#3399FF'));
+			$GLOBALS['firephp']->info($_SESSION,"SESSION");
+			//$GLOBALS['firephp->info(htmlspecialchars($_SERVER['HTTP_REFERER']),'_SERVER[HTTP_REFERER]');//hace fallar al validador del w3c
+			$GLOBALS['firephp']->info($GLOBALS['page'],'clase de página ($page)');
+			$GLOBALS['firephp']->info($GLOBALS['objUsr'],'$objUsr');
+		$GLOBALS['firephp']->groupend();
+			$GLOBALS['firephp']->group('_GET, POST, FILES', array('Collapsed' => true, 'Color' => '#3399FF'));
+			$GLOBALS['firephp']->info($_GET,"GET");
+			$GLOBALS['firephp']->info($_POST,"POST");
+			$GLOBALS['firephp']->info($_FILES,"FILES");
+		$GLOBALS['firephp']->groupend();
 	$GLOBALS['firephp']->groupend();
 }
 

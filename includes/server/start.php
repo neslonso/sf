@@ -50,7 +50,7 @@ define ('MODULES', serialize(array(
 define ('APPS', serialize(array(
 	'index.php' => array(
 		'FILE_APP' => 'index.php',
-		'RUTA_APP' => SKEL_ROOT_DIR.'appSite/',
+		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sitio web',
 	),
 )));
@@ -84,7 +84,6 @@ if (defined('RUTA_APP')) {
 		error_log("/**/");
 		error_log("/*".__FILE__.":".__LINE__."*/");
 		error_log("URI: ".$_SERVER['REQUEST_URI']);
-		error_log("GLOBALS['app']: ".$GLOBALS['app']);
 		error_log("RUTA_APP: ".RUTA_APP);
 		error_log("/**/");
 		error_log("/**/");

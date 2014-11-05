@@ -5,5 +5,5 @@ sftp-config.json
 aaReferences/
 zzWorkspace/
 *prueba*/
-appSite/server/clases/Logic/*.php
+appZzzMeta/server/clases/Logic/*.php
 sharedDefines.php
