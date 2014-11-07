@@ -15,7 +15,8 @@ class Creacion extends Error implements IPage {
 	public function accionValida($metodo) {
 		//return $this->objUsr->accionPermitida($this,$metodo);
 		switch ($metodo) {
-			case "CrearPagina": $result=true;break;
+			case "acCrearAppSkel": $result=true;break;
+			case "acCrearPagina": $result=true;break;
 			case "CrearClases": $result=true;break;
 			default: $result=false;
 		}
@@ -28,9 +29,9 @@ class Creacion extends Error implements IPage {
 
 	public function favIcon() {
 		$favIcon='';
-		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="'.SKEL_ROOT_DIR.'./binaries/imgs/tools.favicon.ico" />';
+		$favIcon.='<link rel="shortcut icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
 		$favIcon.=PHP_EOL;
-		$favIcon.='<link rel="icon" type="image/x-icon" href="'.SKEL_ROOT_DIR.'./binaries/imgs/tools.favicon.ico" />';
+		$favIcon.='<link rel="icon" type="image/x-icon" href="./binaries/imgs/tools.favicon.ico" />';
 		return $favIcon."\n";
 	}
 
@@ -47,6 +48,7 @@ class Creacion extends Error implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
+		\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
 		$mysqli=\cDb::getInstance();
 		$arrStdObjTableInfo=array();
 		if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
@@ -61,8 +63,75 @@ class Creacion extends Error implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
 	}
 
-	public function CrearPagina() {
-		$ruta=$_POST['ruta'];
+	public function acCrearAppSkel($args) {
+		$file=SKEL_ROOT_DIR.$args['fileApp'];
+		$path=SKEL_ROOT_DIR.$args['rutaApp'];
+		if (file_exists($file)) {
+			throw new ActionException('El punto de entrada "'.realpath($file).'" ya existe.', 1);
+		}
+		if (file_exists($path)) {
+			throw new ActionException('La carpeta de la app "'.realpath($path).'" ya existe.', 1);
+		}
+
+		$mode=0755;
+		mkdir($path,$mode,true);
+		if (!is_dir($path)) {
+			throw new ActionException('No se pudo crear "'.$path.'"', 1);
+		}
+		$htaccessDest=dirname($file)."/.htaccess";
+		if (!file_exists($file)) {
+			if (!file_exists(dirname($file))) {
+				mkdir(dirname($file),$mode,true);
+			}
+			copy(APP_IMGS_DIR.'../creacionApp/fileApp.php', $file);
+		} else {
+			throw new Exception("El punto de entrada '".$file."' ya existe", 1);
+		}
+		if (!file_exists($htaccessDest)) {
+			copy(APP_IMGS_DIR.'../creacionApp/.htaccess', $htaccessDest);
+		} else {
+			ReturnInfo::add("No se ha realizado la copia de htaccess a '".$htaccessDest."'","htaccess ya existe");
+		}
+
+		try {
+			\Filesystem::copyDir(APP_IMGS_DIR.'../creacionApp/appSkel/',$path);
+		} catch (Exception $e) {
+			throw new Exception('Error durante copia de appSkel a "'.$path.'"', 1,$e);
+		}
+		ReturnInfo::add("
+		<ul>
+			<li>File: ".$file."</li>
+			<li>Ruta: ".$path."</li>
+			<li>.htaccess: ".$htaccessDest."</li>
+			<li>Definición de APP:
+<pre>
+'".basename($file)."' => array(
+	'FILE_APP' => '".basename($file)."',
+	'RUTA_APP' => SKEL_ROOT_DIR.'".str_replace(SKEL_ROOT_DIR,'',$path)."/',
+	'NOMBRE_APP' => 'Sitio web',
+),
+</pre>
+			</li>
+			<li>Definición SKEL_ROOT_DIR (".str_replace($_SERVER['DOCUMENT_ROOT'],'',$file)."):
+<pre>
+define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'<em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>').'/');
+</pre>
+			</li>
+			<li>Definición RewriteBase (.htacces): RewriteBase ".str_replace($_SERVER['DOCUMENT_ROOT'],'',dirname($file))."</li>
+			<li>Cambios en RewriteRule (.htacces):
+<pre>
+#Si la url tenía idNumerica
+RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ $4 [L] -> RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ <em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>$4 [L]
+#Si no tenía id númerica
+RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>$2 [L]
+</pre>
+			</li>
+		</ul>",
+		'Skeleto creado con exito');
+	}
+
+	public function acCrearPagina() {
+		$ruta=SKEL_ROOT_DIR.$_POST['ruta'];
 		$page=$_POST['page'];
 		$extends=$_POST['extends'];
 		$markupFunc=$_POST['markupFunc'];

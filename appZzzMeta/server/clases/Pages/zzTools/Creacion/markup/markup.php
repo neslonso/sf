@@ -1,16 +1,47 @@
 <?="\n<!-- ".get_class()." -->\n"?>
+<a href="./prueba">enlace de prueba</a>
+<img src="./binaries/imgs/imgErr.png" />
 <form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data"
  	style="background-color: #FFF;" class="sobreAnterior">
 	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
 	<input name="acClase" id="acClase" type="hidden" value="Creacion"/>
-	<input name="acMetodo" id="acMetodo" type="hidden" value="CrearPagina"/>
+	<input name="acMetodo" id="acMetodo" type="hidden" value="acCrearAppSkel"/>
+	<input name="acTipo" id="acTipo" type="hidden" value="stdAssoc"/>
+	<input name="acReturnURI" id="acReturnURI" type="hidden" value="<?=$_SERVER['REQUEST_URI']?>"/>
+
+	<fieldset>
+		<legend>Creación de App Skel</legend>
+		<label for="fileApp">Punto de entrada:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="fileApp" id="fileApp" value="index.php" /> (Fichero mediante le que se accede a la app, debe ser un fichero php que no exista)<br />
+		<label for="rutaApp">Ruta:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="rutaApp" id="rutaApp" value="" /> (Ruta donde crear el skeleto de app. Debe ser un directorio que no exista)<br />
+		<input type="submit" />
+	</fieldset>
+</form>
+<form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data"
+ 	style="background-color: #FFF;" class="sobreAnterior">
+	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
+	<input name="acClase" id="acClase" type="hidden" value="Creacion"/>
+	<input name="acMetodo" id="acMetodo" type="hidden" value="acCrearPagina"/>
 	<input name="acTipo" id="acTipo" type="hidden" value="stdAssoc"/>
 	<input name="acReturnURI" id="acReturnURI" type="hidden" value="<?=$_SERVER['REQUEST_URI']?>"/>
 
 	<fieldset>
 		<legend>Creación de Page Class</legend>
-
-		<label for="ruta">Ruta:</label> <input type="text" name="ruta" id="ruta" value="<?=RUTA_APP?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
+		<label for="app">App:</label>
+		<select name="app" id="app" onchange="
+			document.getElementById('ruta').value=this.value;
+		">
+<?
+foreach (unserialize(APPS) as $entryPoint => $arrAppConstants) {
+	$selected=($entryPoint==FILE_APP)?'selected="selected"':'';
+	$value=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/Pages/';
+	$name=$entryPoint.' ('.$arrAppConstants['NOMBRE_APP'].')';
+?>
+			<option <?=$selected?> value="<?=$value?>"><?=$name?></option>
+<?
+}
+?>
+		</select> (app donde crear la page, apoyo para rellenar el campo "Ruta", no tiene otros efectos)<br />
+		<label for="ruta">Ruta:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="ruta" id="ruta" value="<?=str_replace(SKEL_ROOT_DIR, '', RUTA_APP)?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
 		<label for="page">Nombre:</label> <input type="text" name="page" id="page" value="" /> (Nombre para la Page,  corresponde al valor del parametro GET 'page' para acceder a ella)<br />
 		<label for="extends">Extends:</label> <input type="text" name="extends" id="extends" value="Home" /> (Page a la que extiende, se usará para herencias de css, js y marcado)<br />
 		<label for="markupFunc">MarkupFunc:</label> <input type="text" name="markupFunc" id="markupFunc" value="cuerpo" /> (Función de marcado, puede usarse para sobreescribir parte del marcado de la Page base y reutilizar el resto)<br />
@@ -54,7 +85,7 @@ foreach ($arrStdObjTableInfo as $stdObjTableInfo) {
 <?
 }
 ?>
-			</select> (Tabla de la BD en la que se basa la Page, tambien se creará en '<?=RUTA_APP?>server/clases/Logic/' la clase de lógica (Clase Logic o Clase ORM) asociada si no existe)
+			</select> (Tabla de la BD en la que se basa la Page, tambien se creará en 'RUTA_APP/server/clases/Logic/' la clase de lógica (Clase Logic o Clase ORM) asociada <strong>si no existe</strong>)
 		</div>
 		<div id="divTables">
 <?

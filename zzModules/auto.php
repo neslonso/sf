@@ -24,8 +24,8 @@ try {
 		echo "Added job: ".$job;
 	}
 
-	//TODO: Mejora: Quiza habría que comprobar de algun mod si la llamada procede del cron (quiza mediante useragent curl),
-	//para evitar que se repitan tareas si se llama a auto.
+	//TODO: Mejora: Quiza habría que comprobar de algun modop si la llamada procede del cron (quiza mediante useragent curl),
+	//para evitar que se repitan tareas si se llama a auto manualmente.
 	if (defined('ARR_CRON_JOBS')) {
 		foreach (unserialize(ARR_CRON_JOBS) as $nombreJob => $arrDatosJob) {
 			if ($arrDatosJob['activado']) {

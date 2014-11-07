@@ -16,7 +16,7 @@ define('BASE_DIR',
 	(dirname($_SERVER['SCRIPT_NAME'])=='/')?
 		dirname($_SERVER['SCRIPT_NAME']):
 		dirname($_SERVER['SCRIPT_NAME']).'/'
-);//Tiene que terminar en / obligatoriamente
+);//Directorio del punto de entrada. Tiene que terminar en / obligatoriamente
 define('BASE_URL',PROTOCOL.'://'.BASE_DOMAIN.BASE_DIR);//URL hasta el directorio del punto de entrada
 
 define('CACHE_DIR',SKEL_ROOT_DIR.'zCache/');
@@ -49,9 +49,14 @@ define ('MODULES', serialize(array(
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
 	'index.php' => array(
-		'FILE_APP' => 'index.php',
+		'FILE_APP' => 'index.php',//siempre igual que la key
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sitio web',
+	),
+	'admin.php' => array(
+		'FILE_APP' => 'admin.php',//siempre igual que la key
+		'RUTA_APP' => SKEL_ROOT_DIR.'appAdmin/',
+		'NOMBRE_APP' => 'App de prueba',
 	),
 )));
 //Definimos todas las constantes de la aplicacion correspondiente al punto de entrada

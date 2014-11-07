@@ -122,7 +122,7 @@ class docHome extends Error implements IPage {
 					$subdir=$dir.$filename."/";
 ?>
 										<li>
-											Carpeta de Pages (<?=$subdir?>):
+											Carpeta de Pages (<?=basename($subdir)?>):
 											<ul>
 <?
 					$arrFilenamesSubdir = scandir($subdir);

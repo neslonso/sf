@@ -10,7 +10,9 @@
 		"mtdowling/cron-expression": "1.0.*",
 		"phpmailer/phpmailer": "5.2.9",
 		"firephp/firephp-core": "~0.4",
+		"phpunit/phpunit": "~4.3",
 		"phploc/phploc": "~2.0",
+		"phpoffice/phpexcel": "~1.8",
 		"sebastian/phpcpd": "~2.0"
 	}
 }

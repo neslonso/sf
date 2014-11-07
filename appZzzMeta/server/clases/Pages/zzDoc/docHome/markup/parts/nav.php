@@ -79,7 +79,7 @@ $dir=RUTA_APP."server/clases/Pages/";
 							<!-- Content container to add padding -->
 							<div class="yamm-content">
 								<div class="row">
-									Pages de la aplicación (<?=$dir?>):
+									Pages de la aplicación (<?=str_replace($_SERVER['DOCUMENT_ROOT'].BASE_DIR, '', $dir);?>):
 									<?$this->ulPages($dir)?>
 								</div>
 							</div>

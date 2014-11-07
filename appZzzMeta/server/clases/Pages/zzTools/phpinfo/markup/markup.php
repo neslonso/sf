@@ -17,7 +17,7 @@ echo "Usuario bajo el que corre el script (whoami): ".exec('whoami');
 ?>
 <hr />
 <?
-/* PHP 5.4.0
+/* PHP 5.4.0 para usarlas en fastcgi
 echo "Lista de cabeceras de request(var_dump(apache_request_headers())): ";
 var_dump(apache_request_headers());
 echo "Lista de cabeceras de response (var_dump(apache_request_headers())): ";

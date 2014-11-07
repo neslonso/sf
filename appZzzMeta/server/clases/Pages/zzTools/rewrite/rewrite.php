@@ -3,7 +3,7 @@ namespace Sintax\Pages;
 use Sintax\Core\IPage;
 use Sintax\Core\User;
 
-class poster extends Error implements IPage {
+class rewrite extends Error implements IPage {
 	public function __construct(User $objUsr=NULL) {
 		parent::__construct($objUsr);
 	}
@@ -32,7 +32,27 @@ class poster extends Error implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
-		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
+		//require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
+		$requestHeaders=array();
+		foreach ($_SERVER as $key => $value) {
+			if (strpos($key, 'HTTP_') === 0) {
+				$requestHeaders[$key]=$value;
+				/*
+				$chunks = explode('_', $key);
+				$header = '';
+				for ($i = 1; $y = sizeof($chunks) - 1, $i < $y; $i++) {
+					$header .= ucfirst(strtolower($chunks[$i])).'-';
+				}
+				$header .= ucfirst(strtolower($chunks[$i])).': '.$value;
+				echo $header.'<br>';
+				*/
+			}
+		}
+		echo "<pre>".
+			"ENV: <br />".print_r($_ENV,true)."<hr />".
+			"requestHeaders: <br />".print_r($requestHeaders,true)."<hr />".
+			"SERVER: <br />".print_r($_SERVER,true)."<hr />".
+		"</pre>";
 	}
 }
 ?>

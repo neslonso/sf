@@ -124,10 +124,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml"
 <!--Favicon -->
 <?=$Page->favIcon()?>
 <!-- /Favicon -->
-<!--<link rel="stylesheet" href="<?=BASE_URL?><?=FILE_APP?>?MODULE=CSS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>" />-->
-<link rel="stylesheet" href="<?=BASE_URL?>css.php?APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>" />
-<!--<script type="text/javascript" src="<?=BASE_URL?><?=FILE_APP?>?MODULE=JS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>"></script>-->
-<script type="text/javascript" src="<?=BASE_URL?>js.php?APP=<?=FILE_APP?>&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>"></script>
+<link rel="stylesheet" href="<?=BASE_URL?><?=FILE_APP?>?MODULE=CSS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>" />
+<script type="text/javascript" src="<?=BASE_URL?><?=FILE_APP?>?MODULE=JS&amp;APP=<?=FILE_APP?>&amp;page=<?=get_class($Page)?>"></script>
 <!-- Page Head (Class <?=get_class($Page);?>)-->
 <?=$Page->head()."\n";?>
 <!-- /Page Head (Class <?=get_class($Page);?>)-->

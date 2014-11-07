@@ -12,11 +12,6 @@ class Error extends Page implements IPage {
 	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
 		$this->msg="Descripcion no especificada.";
-		$objUsr=new \RestrictedByIpUser();
-		if (!isset($_SESSION['usuario']) || get_class($_SESSION['usuario'])!='RestrictedByIpUser') {
-			$GLOBALS['firephp']->info('Regenerando usuario: '.__FILE__.'::'.__LINE__);
-			$this->objUsr=$_SESSION['usuario']=$objUsr;
-		}
 	}
 
 	public function setMsg($msg) {
@@ -24,7 +19,7 @@ class Error extends Page implements IPage {
 	}
 
 	//En head y markup no usamos require_once, pq si salta un error durante la ejecución de una Page
-	//no se volverá a requerir el fichero, ya que todas las Pages descienden de Error (via extends Home).
+	//no se volverá a requerir el fichero, ya que todas las Pagesdeben descender de Error.
 	//Esto tambien significa que ninguna de las funciones pueden contener nada que no pueda ser
 	//redeclarado (funciones, clases...)
 	public function head() {

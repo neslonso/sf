@@ -1,40 +1,41 @@
-#
-#SSL
-SSLVerifyClient require
-SSLVerifyDepth 10
-SSLOptions +StdEnvVars
-
-
 <IfModule mod_rewrite.c>
-
 	<IfModule mod_negotiation.c>
 		Options -MultiViews
 	</IfModule>
 
 	RewriteEngine on
-	RewriteBase /proys/00.skel/zzzEntryPointMoveTest
+	RewriteBase /proys/00.skel/zzzEntryPointMoveTest/
 
-	# Force HTTPS ##################################################################
-	RewriteCond %{HTTPS} off
-	RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
-
-	#Compatibilidad
+	# Compatibilidad ###############################################################
+	#	RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)
+	#		RewriteRule ^(actions|api|auto|css|images|js|render)\.php$ %1?MODULE=$1 [QSA,L]
 	################################################################################
-		RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)
-			RewriteRule ^(actions|api|auto|css|images|js|render)\.php$ %1?MODULE=$1 [QSA,L]
+
+	# Debug via variable a cabeceras de la request #################################
+	#	RewriteRule .* - [E=INFO_REQUEST_URI:%{REQUEST_URI},NE]
+	#	RequestHeader set INFO_REQUEST_URI "%{INFO_REQUEST_URI}e"
+	#	RewriteRule .* - [E=INFO_REQUEST_FILENAME:%{REQUEST_FILENAME},NE]
+	#	RequestHeader set INFO_REQUEST_FILENAME "%{INFO_REQUEST_FILENAME}e"
+	################################################################################
+
+	# Comprobación recursos existentes #############################################
+		RewriteCond %{REQUEST_FILENAME} -d [OR]
+		RewriteCond %{REQUEST_FILENAME} -f
+			RewriteRule  .+  -  [L]
 	################################################################################
 
 	# Pages URL rewriting ##########################################################
 	# Barra (/) al final
-		RewriteCond %{REQUEST_FILENAME} !-d
-		RewriteCond %{REQUEST_FILENAME} !-f
-			RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
-			#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
-	#Reescritura: URLs de paginas (con [page]/[keys]/[id] (keys e id optativas, id necesita keys) (OJO! Necesita la regla anterior de poner / al final)
-		#http://.../[page]/[tantos/directorios/como/queramos/para/keywords/pero/al/menos/uno/si/usamos/id]/[idNumerica]/[el/resto/se/transporta/a/"./"/]
-			RewriteRule ^([^/]*)/((.*)/([0-9]+))?$ ?page=$1&id=$3 [QSA,L]
+		RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
+		#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
+	#Reescritura: URLs de paginas ([page]/[keys]/[id] (keys e id optativas, ambas o ninguna) (OJO! Necesita la regla de poner / al final)
+	#http://.../[page]/[cualquier/numero/de/directorios/pero/al/menos/uno/si/usamos/id]/[idNumerica]/[el/resto/se/transporta/a/"./"/]
+		RewriteRule ^([^/]*)/((.*)/([0-9]+))?$ ?page=$1&id=$3 [QSA,L]
 	#Para que los enlaces basados en "./" sigan funcionando
-		RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*) $4
+		#Si la url tenía idNumerica
+		RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ ../$4 [L]
+		#Si no tenía id númerica
+		RewriteRule ^([^/]*)/(.*)/$ ../$2 [L]
 
 	<IfModule mod_headers.c>
 		## Set the response header if the "nocache" environment variable is set in the RewriteRule above.
