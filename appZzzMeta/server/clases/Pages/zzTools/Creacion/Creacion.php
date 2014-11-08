@@ -66,6 +66,7 @@ class Creacion extends Error implements IPage {
 	public function acCrearAppSkel($args) {
 		$file=SKEL_ROOT_DIR.$args['fileApp'];
 		$path=SKEL_ROOT_DIR.$args['rutaApp'];
+		$relPathFileDirToSkel=\Filesystem::find_relative_path(dirname($file),SKEL_ROOT_DIR).'/';
 		if (file_exists($file)) {
 			throw new ActionException('El punto de entrada "'.realpath($file).'" ya existe.', 1);
 		}
@@ -100,6 +101,7 @@ class Creacion extends Error implements IPage {
 		}
 		ReturnInfo::add("
 		<ul>
+			<li>SKEL_ROOT_DIR: ".SKEL_ROOT_DIR."</li>
 			<li>File: ".$file."</li>
 			<li>Ruta: ".$path."</li>
 			<li>.htaccess: ".$htaccessDest."</li>
@@ -112,18 +114,18 @@ class Creacion extends Error implements IPage {
 ),
 </pre>
 			</li>
-			<li>Definición SKEL_ROOT_DIR (".str_replace($_SERVER['DOCUMENT_ROOT'],'',$file)."):
+			<li>Definición SKEL_ROOT_DIR (debe ir en ".str_replace($_SERVER['DOCUMENT_ROOT'],'',$file)."):
 <pre>
-define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'<em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>').'/');
+define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'<em style='color:red;'>".$relPathFileDirToSkel."</em>').'/');
 </pre>
 			</li>
 			<li>Definición RewriteBase (.htacces): RewriteBase ".str_replace($_SERVER['DOCUMENT_ROOT'],'',dirname($file))."</li>
 			<li>Cambios en RewriteRule (.htacces):
 <pre>
 #Si la url tenía idNumerica
-RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ $4 [L] -> RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ <em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>$4 [L]
+RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ $4 [L] -> RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ <em style='color:red;'>".$relPathFileDirToSkel."</em>$4 [L]
 #Si no tenía id númerica
-RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em>[Ruta relativa hasta SKEL_ROOT_DIR]</em>$2 [L]
+RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='color:red;'>".$relPathFileDirToSkel."</em>$2 [L]
 </pre>
 			</li>
 		</ul>",
