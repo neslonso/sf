@@ -1128,10 +1128,10 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 								foreach ($stdObjTableInfo->arrFksFrom as $stdObjFkInfo) {
 									if ($stdObjFkInfo->COLUMN_NAME==$stdObjColumnInfo->field) {
 										$campoSelect='';
-										$rslFk=$mysqli->query('SELECT * FROM '.$stdObjFkInfo->REFERENCED_TABLE_NAME.' limit 1');
-										$arrRow=$rslFk->fetch_array(MYSQLI_ASSOC);
-										foreach ($arrRow as $fieldName => $fieldValue) {
-											switch (strtolower($fieldName)) {
+										$rslFk=$mysqli->query('SHOW COLUMNS FROM '.$stdObjFkInfo->REFERENCED_TABLE_NAME);
+										while ($rtColumnInfo = $rslFk->fetch_array(MYSQLI_ASSOC)) {
+											$fieldName=strtolower($rtColumnInfo['Field']);
+											switch ($fieldName) {
 												case 'nombre':
 												case 'descripcion':
 													$campoSelect=$fieldName;
