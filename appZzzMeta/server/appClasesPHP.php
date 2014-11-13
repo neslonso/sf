@@ -11,6 +11,7 @@ spl_autoload_register(function ($clase) {
 		//error_log('require: '.$filePath);
 		if (file_exists($filePath)) {
 			require_once($filePath);
+			return;
 		}
 	}
 
@@ -19,6 +20,7 @@ spl_autoload_register(function ($clase) {
 		//error_log('require: '.$filePath);
 		if (file_exists($filePath)) {
 			require_once($filePath);
+			return;
 		}
 	}
 });

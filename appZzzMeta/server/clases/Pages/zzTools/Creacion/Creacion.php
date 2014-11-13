@@ -7,6 +7,7 @@ use Sintax\Core\ReturnInfo;
 class Creacion extends Error implements IPage {
 	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
+		\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
 	}
 	public function pageValida () {
 		return $this->objUsr->pagePermitida($this);
@@ -48,7 +49,6 @@ class Creacion extends Error implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
-		\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
 		$mysqli=\cDb::getInstance();
 		$arrStdObjTableInfo=array();
 		if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
@@ -68,16 +68,16 @@ class Creacion extends Error implements IPage {
 		$path=SKEL_ROOT_DIR.$args['rutaApp'];
 		$relPathFileDirToSkel=\Filesystem::find_relative_path(dirname($file),SKEL_ROOT_DIR).'/';
 		if (file_exists($file)) {
-			throw new ActionException('El punto de entrada "'.realpath($file).'" ya existe.', 1);
+			throw new \ActionException('El punto de entrada "'.realpath($file).'" ya existe.', 1);
 		}
 		if (file_exists($path)) {
-			throw new ActionException('La carpeta de la app "'.realpath($path).'" ya existe.', 1);
+			throw new \ActionException('La carpeta de la app "'.realpath($path).'" ya existe.', 1);
 		}
 
 		$mode=0755;
 		mkdir($path,$mode,true);
 		if (!is_dir($path)) {
-			throw new ActionException('No se pudo crear "'.$path.'"', 1);
+			throw new \ActionException('No se pudo crear "'.$path.'"', 1);
 		}
 		$htaccessDest=dirname($file)."/.htaccess";
 		if (!file_exists($file)) {
@@ -86,7 +86,7 @@ class Creacion extends Error implements IPage {
 			}
 			copy(APP_IMGS_DIR.'../creacionApp/fileApp.php', $file);
 		} else {
-			throw new Exception("El punto de entrada '".$file."' ya existe", 1);
+			throw new \Exception("El punto de entrada '".$file."' ya existe", 1);
 		}
 		if (!file_exists($htaccessDest)) {
 			copy(APP_IMGS_DIR.'../creacionApp/.htaccess', $htaccessDest);
@@ -97,7 +97,7 @@ class Creacion extends Error implements IPage {
 		try {
 			\Filesystem::copyDir(APP_IMGS_DIR.'../creacionApp/appSkel/',$path);
 		} catch (Exception $e) {
-			throw new Exception('Error durante copia de appSkel a "'.$path.'"', 1,$e);
+			throw new \Exception('Error durante copia de appSkel a "'.$path.'"', 1,$e);
 		}
 		ReturnInfo::add("
 		<ul>
@@ -134,6 +134,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 
 	public function acCrearPagina() {
 		$ruta=SKEL_ROOT_DIR.$_POST['ruta'];
+		$rutaLogic=SKEL_ROOT_DIR.$_POST['rutaLogic'];
 		$page=$_POST['page'];
 		$extends=$_POST['extends'];
 		$markupFunc=$_POST['markupFunc'];
@@ -153,7 +154,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		}
 
 		if ($class!="") {
-			$this->CrearClase($class);
+			$this->CrearClase($class,$rutaLogic);
 		}
 
 		//Inicio carpetas de la page
@@ -662,7 +663,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		$sl="\n";
 		$sg="\t";
 		fwrite ($fp,$sg.$sg.'$id=(isset($_GET["id"]) && '.ucfirst($class).'::existeId($_GET["id"]))?$_GET["id"]:0;'.$sl);
-		fwrite ($fp,$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
+		fwrite ($fp,$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.'foreach ($obj'.ucfirst($class).'->toArray() as $key => $value) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$func="GET".$key;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$$key=$obj'.ucfirst($class).'->$func();'.$sl);
@@ -683,7 +684,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 							fwrite ($fp,$sg.$sg.'$'.$field.'Mes=array((int)$'.$field.'->GETmes() => \'selected="selected"\');'.$sl);
 							fwrite ($fp,$sg.$sg.'$'.$field.'Ano=array((int)$'.$field.'->GETano() => \'selected="selected"\');'.$sl);
 							*/
-							fwrite ($fp,$sg.$sg.'$'.$field.'=fecha::toFechaES(fecha::fromMysql($'.$field.'),'.$conHora.');'.$sl);
+							fwrite ($fp,$sg.$sg.'$'.$field.'=\\fecha::fromMysql($'.$field.')->toFechaES('.$conHora.');'.$sl);
 						break;
 					}
 				break;
@@ -741,7 +742,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.$sg.'	ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$id=(isset($arrInputData["id"]) && '.ucfirst($class).'::existeId($arrInputData["id"]))?$arrInputData["id"]:NULL;'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'->cargarArray($arrInputData);'.$sl);
 		foreach ($stdObjTableInfo->arrStdObjColumnInfo as $field => $stdObjFieldInfo) {
 			switch ($stdObjFieldInfo->tag) {
@@ -754,7 +755,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 							/* Compatibilidad con fecha de 3 selects'.$sl);
 							fwrite ($fp,$sg.$sg.$sg.'$arrInputData["'.$field.'"]=new Fecha($arrInputData["'.$field.'Ano"]."/".$arrInputData["'.$field.'Mes"]."/".$arrInputData["'.$field.'Dia"],"FechaES");'.$sl);
 							*/
-							fwrite ($fp,$sg.$sg.$sg.$sg.'$arrInputData["'.$field.'"]=new Fecha($arrInputData["'.$field.'"],"FechaES");'.$sl);
+							fwrite ($fp,$sg.$sg.$sg.$sg.'$arrInputData["'.$field.'"]=new \\Fecha($arrInputData["'.$field.'"],"FechaES");'.$sl);
 							fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'->SET'.$field.'($arrInputData["'.$field.'"]->toMysql());'.$sl);
 						break;
 					}
@@ -772,12 +773,12 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="Datos actualizados correctamente.";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'} else {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'	throw new ActionException("Error durante la grabación en BD. '.ucfirst($class).' no grabado.");'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'	throw new \\ActionException("Error durante la grabación en BD. '.ucfirst($class).' no grabado.");'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
 		//fwrite ($fp,$sg.$sg.$sg.'return $result;'.$sl);
 		fwrite ($fp,$sg.$sg.'} catch (Exception $e) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("Error durante la actualización de datos. '.ucfirst($class).' no grabado.",0,$e);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'throw new \\ActionException("Error durante la actualización de datos. '.ucfirst($class).' no grabado.",0,$e);'.$sl);
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin acGrabar
@@ -786,7 +787,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.'if (isset($_REQUEST["id"])) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$id=$_REQUEST["id"];'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'if ('.ucfirst($class).'::existeId($id)) {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new '.ucfirst($class).'($id);'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'if ($obj'.ucfirst($class).'->borrar()) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operacion completada";'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriMsg="'.ucfirst($class).' borrado con exito";'.$sl);
@@ -796,10 +797,10 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("'.ucfirst($class).' ".$id." no encontrado");'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'throw new \\ActionException("'.ucfirst($class).' ".$id." no encontrado");'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.$sg.'} else {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'throw new ActionException("Parametros no validos");'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'throw new \\ActionException("Parametros no validos");'.$sl);
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.'}'.$sl);
 			//Fin acBorrar
@@ -917,8 +918,8 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 	}
 /* FIN DBdataTable creation functions *****************************************/
 
-	private function CrearClase($class) {
-		$ruta=RUTA_APP."server/clases/Logic/";
+	private function CrearClase($class,$ruta) {
+		//$ruta=RUTA_APP."server/clases/Logic/";
 		$stdObjTableInfo=$this->getTableInfo($class);
 		if (!file_exists($ruta.ucfirst($stdObjTableInfo->tableName).".php")) {
 			$objCreadora=new \Creadora (

@@ -30,13 +30,17 @@
 							<td class="option">Column Name:</td><td class="value">%table%col</td>
 							<td class="option">Column Type:</td><td class="value">VARCHAR(255)</td>
 						</tr><tr>
-							<td class="option">FK Name:</td><td class="value">%dcolumn</td>
+							<td class="option">FK Name:</td><td class="value">fk%stable|capitalize%%dtable|capitalize%</td>
 							<td class="option">Column Name:</td><td class="value">%column%%table|capitalize%</td>
 						</tr><tr>
 							<td class="option">ON UPDATE:</td><td class="value">NO ACTION</td>
 							<td class="option">ON DELETE:</td><td class="value">NO ACTION</td>
 						</tr><tr>
 							<td class="option">Associative Table Name:</td><td class="value" colspan="99">%stable%VARIOS%dtable%</td>
+						</tr></table>
+						<h4>Valores pestaña <em>Model: Mysql</em></h4>
+						<table class="MWconfig"><tr>
+							<td class="option">Mysql storage engine:</td><td class="value">InnoDB</td>
 						</tr></table>
 					</div>
 					<p>

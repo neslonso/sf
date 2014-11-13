@@ -28,12 +28,13 @@
 		<legend>Creación de Page Class</legend>
 		<label for="app">App:</label>
 		<select name="app" id="app" onchange="
-			document.getElementById('ruta').value=this.value;
+			document.getElementById('ruta').value=this.value+'Pages/';
+			document.getElementById('rutaLogic').value=this.value+'Logic/';
 		">
 <?
 foreach (unserialize(APPS) as $entryPoint => $arrAppConstants) {
 	$selected=($entryPoint==FILE_APP)?'selected="selected"':'';
-	$value=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/Pages/';
+	$value=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/';
 	$name=$entryPoint.' ('.$arrAppConstants['NOMBRE_APP'].')';
 ?>
 			<option <?=$selected?> value="<?=$value?>"><?=$name?></option>
@@ -41,7 +42,8 @@ foreach (unserialize(APPS) as $entryPoint => $arrAppConstants) {
 }
 ?>
 		</select> (app donde crear la page, apoyo para rellenar el campo "Ruta", no tiene otros efectos)<br />
-		<label for="ruta">Ruta:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="ruta" id="ruta" value="<?=str_replace(SKEL_ROOT_DIR, '', RUTA_APP)?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
+		<label for="ruta">Ruta Page:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="ruta" id="ruta" value="<?=str_replace(SKEL_ROOT_DIR, '', RUTA_APP)?>server/clases/Pages/" /> (Ruta donde crear la carpeta de la clase de Pagina (en adelante la Page), <strong>¡¡Atención!!</strong> se sobreescribirá si existe)<br />
+		<label for="rutaLogic">Ruta Logic:</label> <strong><?=SKEL_ROOT_DIR?></strong><input type="text" name="rutaLogic" id="rutaLogic" value="<?=str_replace(SKEL_ROOT_DIR, '', RUTA_APP)?>server/clases/Logic/" /> (Ruta donde crear la clase de lógica<br />
 		<label for="page">Nombre:</label> <input type="text" name="page" id="page" value="" /> (Nombre para la Page,  corresponde al valor del parametro GET 'page' para acceder a ella)<br />
 		<label for="extends">Extends:</label> <input type="text" name="extends" id="extends" value="Home" /> (Page a la que extiende, se usará para herencias de css, js y marcado)<br />
 		<label for="markupFunc">MarkupFunc:</label> <input type="text" name="markupFunc" id="markupFunc" value="cuerpo" /> (Función de marcado, puede usarse para sobreescribir parte del marcado de la Page base y reutilizar el resto)<br />

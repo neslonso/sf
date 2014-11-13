@@ -222,6 +222,7 @@ try {
 			break;
 		case "ajax":
 		case "ajaxAssoc":
+			$actionData=new \stdClass();
 			$actionData->exito=true;
 			$actionData->data=$result;
 			$actionData->msg='';
@@ -275,6 +276,7 @@ try {
 		case "ajax":
 		case "ajaxAssoc":
 			ReturnInfo::clear();
+			$actionData=new \stdClass();
 			if (get_class($e)=="ActionException") {//Excepción lanzada voluntariamente
 				$actionData->exito=true;
 				$actionData->data='';

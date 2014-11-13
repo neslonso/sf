@@ -365,6 +365,7 @@ class Creadora {
 		$resultCode.=$sg.'	$rsl=self::db()->query($sql);'.$sl;
 		$resultCode.=$sg.'	while ($data=$rsl->fetch_object()) {'.$sl;
 		$resultCode.=$sg.'		$objSeg=new self($data->id);'.$sl;
+		$resultCode.=$sg.'		$obj=new \stdClass();'.$sl;
 		$resultCode.=$sg.'		foreach ($data as $field => $value) {'.$sl;
 		$resultCode.=$sg.'			$obj->$field=$value;'.$sl;
 		$resultCode.=$sg.'		}'.$sl;
@@ -380,21 +381,26 @@ class Creadora {
 		$sg=$this->sg;
 		$resultCode='';
 		$resultCode.=$sg.'public function noReferenciado() {'.$sl;
-		foreach ($arrFksTo as $objFkInfo) {
-			$fTable=$objFkInfo->TABLE_NAME;
-			$fField=$objFkInfo->COLUMN_NAME;
-			$resultCode.=$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
-			$resultCode.=$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=(self::db()->get_num_rows($sql)==0)?true:false;'.$sl;
+		if (count($arrFksTo)>0) {
+			foreach ($arrFksTo as $objFkInfo) {
+				$fTable=$objFkInfo->TABLE_NAME;
+				$fField=$objFkInfo->COLUMN_NAME;
+				$resultCode.=$sg.$sg.'$sql="SELECT '.$fField.' FROM '.$fTable.' WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+				$resultCode.=$sg.$sg.'$noReferenciadoEn'.ucfirst($fTable).'=(self::db()->get_num_rows($sql)==0)?true:false;'.$sl;
+			}
+			$strConds='';
+			foreach ($arrFksTo as $objFkInfo) {
+				$fTable=$objFkInfo->TABLE_NAME;
+				$fField=$objFkInfo->COLUMN_NAME;
+				$strConds.='$noReferenciadoEn'.ucfirst($fTable).' && ';
+			}
+			$strConds=substr($strConds, 0, -4);
+			$resultCode.=$sg.$sg.'$result=('.$strConds.')?true:false;'.$sl;
+			$resultCode.=$sg.$sg.'return $result;'.$sl;
+		} else {
+			$resultCode.=$sg.$sg.'$result=true;'.$sl;
+			$resultCode.=$sg.$sg.'return $result;'.$sl;
 		}
-		$strConds='';
-		foreach ($arrFksTo as $objFkInfo) {
-			$fTable=$objFkInfo->TABLE_NAME;
-			$fField=$objFkInfo->COLUMN_NAME;
-			$strConds.='$noReferenciadoEn'.ucfirst($fTable).' && ';
-		}
-		$strConds=substr($strConds, 0, -4);
-		$resultCode.=$sg.$sg.'$result=('.$strConds.')?true:false;'.$sl;
-		$resultCode.=$sg.$sg.'return $result;'.$sl;
 		$resultCode.=$sg.'}'.$sl;
 		return $resultCode;
 	}

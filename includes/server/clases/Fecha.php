@@ -185,19 +185,12 @@ class Fecha {
 	 * @param  boolean $conHora Indica si se desea incorporar la hora en la fecha devuelta
 	 * @return string fecha en formato español (DD/MM/AAA HH:MM:SS)
 	 */
-	public function toFechaES($date=NULL, $conHora=true) {
-		if (is_null($date)) {
-			$static = !(isset($this) && get_class($this) == __CLASS__);
-			if (!$static) {
-				$date=$this->dateUnix;
-			}
-		}
-		if (!is_null($date)) {
-			if ($conHora) {
-				$date=date("d/m/Y H:i:s",$date);
-			} else {
-				$date=date("d/m/Y",$date);
-			}
+	public function toFechaES($conHora=true) {
+		$date=$this->dateUnix;
+		if ($conHora) {
+			$date=date("d/m/Y H:i:s",$date);
+		} else {
+			$date=date("d/m/Y",$date);
 		}
 		return ($date);
 	}

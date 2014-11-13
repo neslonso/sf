@@ -159,6 +159,7 @@ function dataTablesGenericServerSide($objCliente=NULL) {
 		$arrDataTables[$i]->DT_RowId=$arrDataTables[$i]->id;
 	}
 
+	$objDT=new \stdClass();
 	$objDT->sEcho=$_REQUEST['sEcho'];
 	$objDT->iTotalRecords=$total;
 	$objDT->iTotalDisplayRecords=$totalDisplay;
