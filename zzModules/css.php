@@ -80,6 +80,9 @@ try {
 			if (substr($href, 0,2)=='./') {
 				$href=realpath(SKEL_ROOT_DIR.$href);
 			}
+			if (substr($href, 0,2)=='//') {
+				$href=PROTOCOL.":".$href;
+			}
 			$firephp->info($href,'Cargando HREF y reescribiendo URLs css:');
 			try {
 				$fileContent=file_get_contents($href)."\n\n";

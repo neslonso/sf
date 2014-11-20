@@ -126,7 +126,7 @@ class Filesystem {
 		return $fileList;
 	}
 
-	public function copyDir ($source,$dest) {
+	public static function copyDir ($source,$dest) {
 		if (!file_exists($dest)) {
 			mkdir($dest, 0755);
 		}

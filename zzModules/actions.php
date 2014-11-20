@@ -200,11 +200,10 @@ try {
 			throw new Exception($result);
 		}
 	} else {
-		$result="clase no encontrada (ERROR_NO_CLASE)";
 		$msg='No se encontró la clase "'.$acClase.'".';
 		$title='No es posbile realizar la operación.';
 		ReturnInfo::add($msg,$title);
-		throw new Exception($result);
+		throw new Exception($msg);
 	}
 
 	$firephp->group('Finalización de accion', array('Collapsed' => true, 'Color' => '#FF3399'));

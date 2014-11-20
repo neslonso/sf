@@ -87,7 +87,7 @@ class Creadora {
 			$classCode.="/* Funciones FkTo *************************************************************/".$sl;
 			$classCode.=$sl;
 			//Inicio funciones FkTo
-			$classCode.=$this->FkTo($arrFksTo);
+			$classCode.=$this->FkTo($arrFksTo,$nombreTabla);
 			//Fin funciones FkTo
 
 		//Llave de cierre de la clase
@@ -437,25 +437,60 @@ class Creadora {
 		}
 		return $resultCode;
 	}
-	private function FkTo($arrFksTo) {
+	private function FkTo($arrFksTo,$nombreTabla) {
 		$sl=$this->sl;
 		$sg=$this->sg;
 		$resultCode='';
-		define ('FUNCION_FKTO_UNICA',false);
-		if (FUNCION_FKTO_UNICA) {
-			//Alternativa sin probar
-			$resultCode.=$sg.'public function arrFkTo($table,$field,$where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
-			$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE ".$field."=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE ".$field."=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
+
+		$arrTables=array();
+		foreach ($arrFksTo as $objFkInfo) {
+			$fTable=$objFkInfo->TABLE_NAME;
+			$fField=$objFkInfo->COLUMN_NAME;
+			if (!array_key_exists($fTable, $arrTables)) {
+				$arrTables[$fTable]=$fTable;
+			} else {
+				if (!is_array($arrTables[$fTable])) {
+					$tmp=$arrTables[$fTable];
+					$arrTables[$fTable]=array();
+					$arrTables[$fTable][]=$tmp;
+				}
+				$arrTables[$fTable][]=$fField;
+			}
+		}
+		foreach ($arrFksTo as $objFkInfo) {
+			$fTable=$objFkInfo->TABLE_NAME;
+			$fField=$objFkInfo->COLUMN_NAME;
+
+			$functionName=$fTable;
+			if ($objFkInfo->manyToMany) {
+				$ffTable=$objFkInfo->ffTable;
+				$ffField=$objFkInfo->ffField;
+				$functionName=$ffTable;
+			}
+
+			if (is_array($arrTables[$fTable])) {
+				$functionName.='By'.ucfirst($fField);
+			}
+			$resultCode.=$sg.'public function arr'.ucfirst($functionName).'($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
+			$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
 			$resultCode.=$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
 			$resultCode.=$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
-			$resultCode.=$sg.$sg.'$sql="SELECT * FROM ".$table.$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+			if (!$objFkInfo->manyToMany) {
+				$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$fTable.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+			} else {
+				$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$fTable.' INNER JOIN '.$ffTable.' ON '.$fTable.'.'.$ffField.'='.$ffTable.'.id".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
+			}
 			$resultCode.=$sg.$sg.'$arr=array();'.$sl;
 			$resultCode.=$sg.$sg.'$rsl=self::db()->query($sql);'.$sl;
 			$resultCode.=$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl;
 			$resultCode.=$sg.$sg.$sg.'switch ($tipo) {'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl;
-			$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new ucfirst($table)($data->id);'.$sl;
+			if (!$objFkInfo->manyToMany) {
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new '.ucfirst($fTable).'($data->id);'.$sl;
+			} else {
+				$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new '.ucfirst($ffTable).'($data->id);'.$sl;
+			}
 			$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
@@ -469,56 +504,6 @@ class Creadora {
 			$resultCode.=$sg.$sg.'}'.$sl;
 			$resultCode.=$sg.$sg.'return $arr;'.$sl;
 			$resultCode.=$sg.'}'.$sl;
-		} else {
-			$arrTables=array();
-			foreach ($arrFksTo as $objFkInfo) {
-				$fTable=$objFkInfo->TABLE_NAME;
-				$fField=$objFkInfo->COLUMN_NAME;
-				if (!array_key_exists($fTable, $arrTables)) {
-					$arrTables[$fTable]=$fTable;
-				} else {
-					if (!is_array($arrTables[$fTable])) {
-						$tmp=$arrTables[$fTable];
-						$arrTables[$fTable]=array();
-						$arrTables[$fTable][]=$tmp;
-					}
-					$arrTables[$fTable][]=$fField;
-				}
-			}
-			foreach ($arrFksTo as $objFkInfo) {
-				$fTable=$objFkInfo->TABLE_NAME;
-				$fField=$objFkInfo->COLUMN_NAME;
-				$functionName=$fTable;
-				if (is_array($arrTables[$fTable])) {
-					$functionName=$fTable.'By'.ucfirst($fField);
-				}
-
-				$resultCode.=$sg.'public function arr'.ucfirst($functionName).'($where="",$order="",$limit="",$tipo="arrStdObjs") {'.$sl;
-				$resultCode.=$sg.$sg.'$sqlWhere=($where!="")?" WHERE '.$fField.'=\'".self::db()->real_escape_String($this->id)."\' AND ".$where:" WHERE '.$fField.'=\'".self::db()->real_escape_string($this->id)."\'";'.$sl;
-				$resultCode.=$sg.$sg.'$sqlOrder=($order!="")?" ORDER BY ".$order:"";'.$sl;
-				$resultCode.=$sg.$sg.'$sqlLimit=($limit!="")?" LIMIT ".$limit:"";'.$sl;
-				$resultCode.=$sg.$sg.'$sql="SELECT * FROM '.$fTable.'".$sqlWhere.$sqlOrder.$sqlLimit;'.$sl;
-				$resultCode.=$sg.$sg.'$arr=array();'.$sl;
-				$resultCode.=$sg.$sg.'$rsl=self::db()->query($sql);'.$sl;
-				$resultCode.=$sg.$sg.'while ($data=$rsl->fetch_object()) {'.$sl;
-				$resultCode.=$sg.$sg.$sg.'switch ($tipo) {'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.'case "arrIds": array_push($arr,$data->id);break;'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.'case "arrClassObjs":'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new '.ucfirst($fTable).'($data->id);'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
-				$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
-				$resultCode.=$sg.$sg.$sg.'}'.$sl;
-				$resultCode.=$sg.$sg.'}'.$sl;
-				$resultCode.=$sg.$sg.'return $arr;'.$sl;
-				$resultCode.=$sg.'}'.$sl;
-			}
 		}
 		return $resultCode;
 	}

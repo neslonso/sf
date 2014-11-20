@@ -157,6 +157,11 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 			$this->CrearClase($class,$rutaLogic);
 		}
 
+		if ($page=='') {
+			ReturnInfo::add('No se indico nombre de Página. Página no creada','Página no creada');
+			return;
+		}
+
 		//Inicio carpetas de la page
 		if (!file_exists($ruta.$page)) {
 			mkdir($ruta.$page, 0755, true);
@@ -662,7 +667,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 	private function markupFuncCrud($fp,$class,$stdObjTableInfo) {
 		$sl="\n";
 		$sg="\t";
-		fwrite ($fp,$sg.$sg.'$id=(isset($_GET["id"]) && '.ucfirst($class).'::existeId($_GET["id"]))?$_GET["id"]:0;'.$sl);
+		fwrite ($fp,$sg.$sg.'$id=(isset($_GET["id"]) && \\'.ucfirst($class).'::existeId($_GET["id"]))?$_GET["id"]:0;'.$sl);
 		fwrite ($fp,$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.'foreach ($obj'.ucfirst($class).'->toArray() as $key => $value) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$func="GET".$key;'.$sl);
@@ -741,7 +746,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.$sg.'	$sriMsg="Se encontraron los siguientes problemas con los datos suministrados:".$ulProblems;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'	ReturnInfo::add($sriMsg,$sriTitle);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'} else {'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.$sg.'$id=(isset($arrInputData["id"]) && '.ucfirst($class).'::existeId($arrInputData["id"]))?$arrInputData["id"]:NULL;'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.$sg.'$id=(isset($arrInputData["id"]) && \\'.ucfirst($class).'::existeId($arrInputData["id"]))?$arrInputData["id"]:NULL;'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'->cargarArray($arrInputData);'.$sl);
 		foreach ($stdObjTableInfo->arrStdObjColumnInfo as $field => $stdObjFieldInfo) {
@@ -786,7 +791,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.'public function acBorrar() {'.$sl);
 		fwrite ($fp,$sg.$sg.'if (isset($_REQUEST["id"])) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'$id=$_REQUEST["id"];'.$sl);
-		fwrite ($fp,$sg.$sg.$sg.'if ('.ucfirst($class).'::existeId($id)) {'.$sl);
+		fwrite ($fp,$sg.$sg.$sg.'if (\\'.ucfirst($class).'::existeId($id)) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'$obj'.ucfirst($class).'=new \\'.ucfirst($class).'($id);'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.'if ($obj'.ucfirst($class).'->borrar()) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.$sg.$sg.'$sriTitle="Operacion completada";'.$sl);
@@ -1078,6 +1083,47 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 					$stdObjFkInfo->COLUMN_NAME=$fkInfo['COLUMN_NAME'];
 					$stdObjFkInfo->REFERENCED_TABLE_NAME=$fkInfo['REFERENCED_TABLE_NAME'];
 					$stdObjFkInfo->REFERENCED_COLUMN_NAME=$fkInfo['REFERENCED_COLUMN_NAME'];
+
+					//Comprobación si la FkTo corresponde a una relaccion manyToMany
+					//En la tabla FkTo tiene que haber una FkFrom que forme parte de la Pk
+					//Buscamos todas las FkFrom en la tabla de la FkTo actual (Todas salvo la FkTo que actual, que nos ha llevado a la tabla)
+					//Comprobamos si la FkFrom está incluida en la Pk
+					$rslFksFromFkTo = $mysqli->query("
+						SELECT * FROM information_schema.KEY_COLUMN_USAGE
+						WHERE
+						TABLE_NAME = '".$fkInfo['TABLE_NAME']."' AND
+						(REFERENCED_TABLE_NAME IS NULL OR
+						REFERENCED_TABLE_NAME <> '".$stdObjTableInfo->tableName."') AND
+						TABLE_SCHEMA = '"._DB_NAME_."';
+					");
+					$arrPkColumns=array();
+					$arrFkColumns=array();
+					while ($fkFromFkToInfo = $rslFksFromFkTo->fetch_array(MYSQLI_ASSOC)) {
+						switch ($fkFromFkToInfo['CONSTRAINT_NAME']) {//TODO: Mejora: no usar CONSTRAINT_NAME, la Pk podría llamarse de otro modo. Buscar un modo de llegar a TABLE_CONSTRAINT.CONSTRAINT_TYPE
+							case 'PRIMARY':
+								$arrPkColumns[]=$fkFromFkToInfo['TABLE_NAME'].'.'.$fkFromFkToInfo['COLUMN_NAME'];
+							break;
+							default:
+								$arrFkColumns[]=$fkFromFkToInfo['TABLE_NAME'].'.'.$fkFromFkToInfo['COLUMN_NAME'];
+						}
+					}
+					$arrFkManyToMany=array_intersect ($arrPkColumns,$arrFkColumns);
+					$rslFksFromFkTo->data_seek(0);
+					while ($fkFromFkToInfo = $rslFksFromFkTo->fetch_array(MYSQLI_ASSOC)) {
+						if (in_array($fkFromFkToInfo['TABLE_NAME'].'.'.$fkFromFkToInfo['COLUMN_NAME'], $arrFkManyToMany)) {
+							$fkFromFkToREFERENCED_TABLE_NAME=$fkFromFkToInfo['REFERENCED_TABLE_NAME'];
+							$fkFromFkToCOLUMN_NAME=$fkFromFkToInfo['COLUMN_NAME'];
+						}
+					}
+					$stdObjFkInfo->manyToMany=false;
+					$stdObjFkInfo->ffTable=null;
+					$stdObjFkInfo->ffField=null;
+					if (count($arrFkManyToMany)>0) {
+						$stdObjFkInfo->manyToMany=true;
+						$stdObjFkInfo->ffTable=$fkFromFkToREFERENCED_TABLE_NAME;
+						$stdObjFkInfo->ffField=$fkFromFkToCOLUMN_NAME;
+					}
+
 					array_push($stdObjTableInfo->arrFksTo,$stdObjFkInfo);
 					unset($stdObjFkInfo);
 				}

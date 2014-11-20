@@ -56,6 +56,9 @@ try {
 			if (substr($src, 0,2)=='./') {
 				$src=realpath(SKEL_ROOT_DIR.$src);
 			}
+			if (substr($src, 0,2)=='//') {
+				$src=PROTOCOL.":".$src;
+			}
 			$firephp->info($src,'Intentando file_get_contents:');
 			try {
 				$fileContent=file_get_contents($src)."\n\n";

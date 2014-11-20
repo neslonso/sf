@@ -1,6 +1,4 @@
 <?="\n<!-- ".get_class()." -->\n"?>
-<a href="./prueba">enlace de prueba</a>
-<img src="./binaries/imgs/imgErr.png" />
 <form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data"
  	style="background-color: #FFF;" class="sobreAnterior">
 	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>

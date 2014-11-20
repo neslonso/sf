@@ -32,8 +32,8 @@ define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consider
 define ('IPS_DEV', serialize(array(
 	//'81.35.169.245',//León Carbajal
 	'91.117.107.217',//Coruña oficna
-	'81.32.175.148',//León Carbajal 20141017
-	'47.62.0.156',//Diego Madrid
+	'83.53.147.57',//León Carbajal 20141118
+	'47.62.0.55',//Diego Madrid
 )));
 define ('MODULES', serialize(array(
 	'actions' => SKEL_ROOT_DIR.'zzModules/actions.php',
