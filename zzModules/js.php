@@ -48,6 +48,7 @@ try {
 	//echo $jsMinFile;
 
 	if (file_exists($jsMinFile)) {
+		$firephp->info($jsMinFile,'devolviendo JS cacheado:');
 		echo file_get_contents($jsMinFile);
 	} else {
 		$jsLibs="// Js Libs \n";

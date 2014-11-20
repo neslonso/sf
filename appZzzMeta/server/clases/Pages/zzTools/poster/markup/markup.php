@@ -65,7 +65,7 @@
 		<input type="text" name="name" placeholder="name" value="acTipo" /> : <input type="text" name="value" placeholder="value" value="stdAssoc" /><br />
 		<input type="text" name="name" placeholder="name" value="acReturnURI" /> : <input type="text" name="value" placeholder="value" value="<?=$_SERVER["REQUEST_URI"]?>" /><br />
 <?
-for ($i=0; $i<10; $i++) {
+for ($i=0; $i<20; $i++) {
 ?>
 		<input type="text" name="name" placeholder="name" /> : <input type="text" name="value" placeholder="value" /><br />
 <?
@@ -73,6 +73,7 @@ for ($i=0; $i<10; $i++) {
 ?>
 		<button onclick="doPost()">Post</button>
 		<pre>
+		$_POST:
 <?
 var_dump($_POST);
 ?>

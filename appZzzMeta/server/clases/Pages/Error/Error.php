@@ -11,6 +11,7 @@ class Error extends Page implements IPage {
 
 	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
+		\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
 		$this->msg="Descripcion no especificada.";
 		$objUsr=new \RestrictedByIpUser();
 		if (!isset($_SESSION['usuario']) || get_class($_SESSION['usuario'])!='RestrictedByIpUser') {

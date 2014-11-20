@@ -87,7 +87,7 @@ class Creadora {
 			$classCode.="/* Funciones FkTo *************************************************************/".$sl;
 			$classCode.=$sl;
 			//Inicio funciones FkTo
-			$classCode.=$this->FkTo($arrFksTo,$nombreTabla);
+			$classCode.=$this->FkTo($arrFksTo);
 			//Fin funciones FkTo
 
 		//Llave de cierre de la clase
@@ -334,7 +334,7 @@ class Creadora {
 		$resultCode.=$sg.$sg.$sg.$sg.$sg.'unset ($obj);'.$sl;
 		$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
 		$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
-		$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new stdClass();'.$sl;
+		$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new \stdClass();'.$sl;
 		$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
 		$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
 		$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;
@@ -437,7 +437,7 @@ class Creadora {
 		}
 		return $resultCode;
 	}
-	private function FkTo($arrFksTo,$nombreTabla) {
+	private function FkTo($arrFksTo) {
 		$sl=$this->sl;
 		$sg=$this->sg;
 		$resultCode='';
@@ -494,6 +494,7 @@ class Creadora {
 			$resultCode.=$sg.$sg.$sg.$sg.$sg.'array_push($arr,$obj);'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'break;'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.'case "arrStdObjs":'.$sl;
+			$resultCode.=$sg.$sg.$sg.$sg.$sg.'$obj=new \stdClass();'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.$sg.'foreach ($data as $field => $value) {'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.$sg.$sg.'$obj->$field=$value;'.$sl;
 			$resultCode.=$sg.$sg.$sg.$sg.$sg.'}'.$sl;

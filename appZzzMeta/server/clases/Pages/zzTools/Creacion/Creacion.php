@@ -7,7 +7,6 @@ use Sintax\Core\ReturnInfo;
 class Creacion extends Error implements IPage {
 	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
-		\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
 	}
 	public function pageValida () {
 		return $this->objUsr->pagePermitida($this);
@@ -875,7 +874,7 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$code.$sl);
 		fwrite ($fp,$sg.$sg.'],'.$sl);
 		fwrite ($fp,$sg.$sg.'"aaSorting":[[4,"desc"]],'.$sl);
-		fwrite ($fp,$sg.$sg.'"sAjaxSource": "'.FILE_APP.'",'.$sl);
+		fwrite ($fp,$sg.$sg.'"sAjaxSource": "<?=BASE_DIR.FILE_APP?>",'.$sl);
 		fwrite ($fp,$sg.$sg.'"fnServerParams": function ( aoData ) {'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'aoData.push({"name":"MODULE", "value":"actions"});'.$sl);
 		fwrite ($fp,$sg.$sg.$sg.'aoData.push({"name":"acClase","value":"'.$page.'"});'.$sl);
@@ -891,14 +890,14 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 		fwrite ($fp,$sg.$sg.'}'.$sl);
 		fwrite ($fp,$sg.'});'.$sl);
 		fwrite ($fp,$sg.'$'.$class.'Table.bind("rowClick", function (evt, idRow) {'.$sl);
-		fwrite ($fp,$sg.$sg.'//window.location="<?=FILE_APP?>?page=crud'.ucfirst($class).'&id="+idRow;'.$sl);
+		fwrite ($fp,$sg.$sg.'//window.location="<?=BASE_DIR.FILE_APP?>?page=crud'.ucfirst($class).'&id="+idRow;'.$sl);
 		fwrite ($fp,$sg.'});'.$sl);
 		fwrite ($fp,'});'.$sl);
 	}
 	private function markupDBdataTable($fp,$page,$class,$stdObjTableInfo) {
 		$sl="\n";
 		$sg="\t";
-		fwrite ($fp,'<form action="<?=FILE_APP?>" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'">'.$sl);
+		fwrite ($fp,'<form action="<?=BASE_DIR.FILE_APP?>" method="post" enctype="multipart/form-data" id="frm'.ucfirst($class).'">'.$sl);
 		fwrite ($fp,$sg.'<input name="MODULE" id="MODULE" type="hidden" value="actions"/>'.$sl);
 		fwrite ($fp,$sg.'<input name="acClase" id="acClase" type="hidden" value="'.$page.'"/>'.$sl);
 		fwrite ($fp,$sg.'<input name="acMetodo" id="acMetodo" type="hidden" value="'.'acGrabar'.'"/>'.$sl);

@@ -24,18 +24,23 @@
 
 	<fieldset>
 		<legend>Creación de Page Class</legend>
-		<label for="app">App:</label>
-		<select name="app" id="app" onchange="
-			document.getElementById('ruta').value=this.value+'Pages/';
-			document.getElementById('rutaLogic').value=this.value+'Logic/';
+		<label for="entryPoint">EntryPoint:</label>
+		<select name="entryPoint" id="entryPoint" onchange="
+			//document.getElementById('ruta').value=this.value+'Pages/';
+			//document.getElementById('rutaLogic').value=this.value+'Logic/';
+			if (this.selectedIndex == -1) return null;
+			document.getElementById('ruta').value=this.options[this.selectedIndex].getAttribute('data-pages-dir');
+			document.getElementById('rutaLogic').value=this.options[this.selectedIndex].getAttribute('data-logic-dir');
 		">
 <?
 foreach (unserialize(APPS) as $entryPoint => $arrAppConstants) {
 	$selected=($entryPoint==FILE_APP)?'selected="selected"':'';
-	$value=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/';
+	$value=$entryPoint;
+	$dataPagesDir=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/Pages/';
+	$dataLogicDir=str_replace(SKEL_ROOT_DIR, '', $arrAppConstants['RUTA_APP']).'server/clases/Logic/';
 	$name=$entryPoint.' ('.$arrAppConstants['NOMBRE_APP'].')';
 ?>
-			<option <?=$selected?> value="<?=$value?>"><?=$name?></option>
+			<option <?=$selected?> value="<?=$value?>" data-pages-dir="<?=$dataPagesDir?>" data-logic-dir="<?=$dataLogicDir?>"><?=$name?></option>
 <?
 }
 ?>
