@@ -49,6 +49,8 @@ try {
 		$usrClass=get_class($_SESSION['usuario']);
 		if ($usrClass!="__PHP_Incomplete_Class") {
 			$objUsr=$_SESSION['usuario'];
+		} else {
+			unset ($_SESSION['usuario']);
 		}
 	}
 ?>
@@ -73,7 +75,7 @@ try {
 			if ($error== UPLOAD_ERR_OK) {
 				$tmp_name = $arrFileData["tmp_name"][$index];
 				$name = $arrFileData["name"][$index];
-				$destino=UPLOAD_DIR_TMP.basename($tmp_name);
+				$destino=TMP_UPLOAD_DIR.basename($tmp_name);
 				$firephp->info('('.$name.') => '.$destino,'Intentando copia de _FILES['.$inputName.']['.$index.']');
 				if (copy($tmp_name, $destino)) {
 				//if (move_uploaded_file($tmp_name, $destino)) {//No los movemos, por si hay que usarlos
@@ -151,7 +153,7 @@ try {
 					//Todo fué bien, no hace falta conservar lastAction
 					//Borramos los fichero temporales
 					$firephp->group('Eliminando lastAction', array('Collapsed' => true, 'Color' => '#3399FF'));
-					$firephp->group('Borrando _FILES de UPLOAD_DIR_TMP', array('Collapsed' => true, 'Color' => '#3399FF'));
+					$firephp->group('Borrando _FILES de TMP_UPLOAD_DIR', array('Collapsed' => true, 'Color' => '#3399FF'));
 					foreach ($_FILES as $inputName => $arrFileData) {
 						if (!is_array($arrFileData['error'])) {
 							foreach ($arrFileData as $key => $value) {//si el input type file no era un array (name="xxx[]") convertimos los datos para tratarlo como si lo fuera
@@ -163,7 +165,7 @@ try {
 							if ($error== UPLOAD_ERR_OK) {
 								$tmp_name = $arrFileData["tmp_name"][$index];
 								$name = $arrFileData["name"][$index];
-								$destino=UPLOAD_DIR_TMP.basename($tmp_name);
+								$destino=TMP_UPLOAD_DIR.basename($tmp_name);
 								$firephp->info('('.$name.') => '.$destino,'Intentando borrado de _FILES['.$inputName.']['.$index.']');
 								if (unlink($destino)) {
 								//if (move_uploaded_file($tmp_name, $destino)) {//No los movemos, por si hay que usarlos

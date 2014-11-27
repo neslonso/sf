@@ -19,6 +19,8 @@ if (isset($_SESSION['usuario'])) {
 	$usrClass=get_class($_SESSION['usuario']);
 	if ($usrClass!="__PHP_Incomplete_Class") {
 		$objUsr=$_SESSION['usuario'];
+	} else {
+		unset ($_SESSION['usuario']);
 	}
 }
 
