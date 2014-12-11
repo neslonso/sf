@@ -9,11 +9,11 @@ define('ANGULAR_JS',false);//false o version
 
 //define('JQUERY',false);//false o version
 define('JQUERY','2.1.0');//false o version (Obligatorio incluirlo, sin el no funciona la app de ejemplo)
-	//define('JQUERY_UI',false);//false o version
-	define('JQUERY_UI','1.10.4');//false o version
+	define('JQUERY_UI',false);//false o version
+	//define('JQUERY_UI','1.10.4');//false o version
 		define('JQUERY_UI_THEME','cupertino');//nombre del tema -> jqueryui.com/themeroller
 	//define('BOOTSTRAP',false);//false o version
-	define('BOOTSTRAP','3.1.1');//false o version
+	define('BOOTSTRAP','3.3.0');//false o version
 		define('BOOTSWATCH_THEME',false);//false para tema por defecto o nombre del tema -> bootswatch.com
 
 define('POLYMER',false);//true o false

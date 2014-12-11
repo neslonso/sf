@@ -118,7 +118,7 @@ class Creacion extends Error implements IPage {
 define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'<em style='color:red;'>".$relPathFileDirToSkel."</em>').'/');
 </pre>
 			</li>
-			<li>Definición RewriteBase (.htacces): RewriteBase ".str_replace($_SERVER['DOCUMENT_ROOT'],'',dirname($file))."</li>
+			<li>Definición RewriteBase (.htacces): RewriteBase ".str_replace($_SERVER['DOCUMENT_ROOT'],'',dirname($file).'/')."</li>
 			<li>Cambios en RewriteRule (.htacces):
 <pre>
 #Si la url tenía idNumerica
@@ -955,13 +955,13 @@ RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='col
 						"property" =>"type",
 						"tag" =>"input",
 						"tagType" =>"text",
-						"filterDefinition" =>array ("filter" => "FILTER_SANITIZE_FULL_SPECIAL_CHARS","flags" => "","options" => array())
+						"filterDefinition" =>array ("filter" => "FILTER_SANITIZE_SPECIAL_CHARS","flags" => "","options" => array())
 					),
 					"text" => array (
 						"property" =>"type",
 						"tag" =>"textarea",
 						"tagType" =>"textarea",
-						"filterDefinition" =>array ("filter" => "FILTER_SANITIZE_FULL_SPECIAL_CHARS","flags" => "","options" => array())
+						"filterDefinition" =>array ("filter" => "FILTER_SANITIZE_SPECIAL_CHARS","flags" => "","options" => array())
 					),
 					"int" => array (
 						"property" =>"type",

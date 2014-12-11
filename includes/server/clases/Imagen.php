@@ -499,7 +499,7 @@ class Imagen {
 				throw new InvalidArgumentException('Error al cargar el fichero  "'.$path.'". Tipo utilizado: '.$objImg->imgType);
 			}
 		} else {
-			throw new InvalidArgumentException('No se encontró el fichero "'.$path.'"');
+			throw new InvalidArgumentException('No se encontro el fichero "'.$path.'"');
 		}
 
 		return $objImg;

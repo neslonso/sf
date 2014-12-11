@@ -29,11 +29,22 @@ define ('DEBUG_EMAIL','nestor@parqueweb.com');
 define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consideran validos los datos de lastAction
 /**/
 
-define ('IPS_DEV', serialize(array(
-	//'81.35.169.245',//León Carbajal
-	'91.117.107.217',//Coruña oficna
-	'83.53.147.57',//León Carbajal 20141118
-	'47.62.0.55',//Diego Madrid
+define ('IPS_DEV', serialize(array_merge(
+	array(
+		//'81.35.169.245',//León Carbajal
+		//'83.53.147.57',//León Carbajal 20141118
+		'88.9.65.74',//León Carbajal 20141209
+	),
+	array(
+		'193.146.109.133',//Unileon
+	),
+	array(
+		'91.117.107.217',//Coruña oficna
+	),
+	array(
+		'47.62.0.55',//Diego Madrid
+	),
+	array()
 )));
 define ('MODULES', serialize(array(
 	'actions' => SKEL_ROOT_DIR.'zzModules/actions.php',
@@ -48,10 +59,15 @@ define ('MODULES', serialize(array(
 
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
+	'sintax.php' => array(
+		'FILE_APP' => 'sintax.php',//siempre igual que la key
+		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
+		'NOMBRE_APP' => 'Sintax tools',
+	),
 	'index.php' => array(
 		'FILE_APP' => 'index.php',//siempre igual que la key
-		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
-		'NOMBRE_APP' => 'Sitio web',
+		'RUTA_APP' => SKEL_ROOT_DIR.'appStgwood/',
+		'NOMBRE_APP' => 'stgwood',
 	),
 	'admin.php' => array(
 		'FILE_APP' => 'admin.php',//siempre igual que la key
@@ -66,7 +82,7 @@ if (isset($arrApps[basename($_SERVER['SCRIPT_NAME'])])) {
 		define ($key,$value);
 	}
 } else {
-	throw new Exception("No sde encontró APP para el punto de entrada: ".basename($_SERVER['SCRIPT_NAME']),1);
+	throw new Exception("No se encontró APP para el punto de entrada: ".$_SERVER['SCRIPT_NAME'],1);
 }
 
 require_once SKEL_ROOT_DIR."includes/server/clientLibs.php";

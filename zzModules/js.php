@@ -23,11 +23,12 @@ try {
 	}
 
 	/* Js Libs ********************************************************************/
-	$strFilesModTime=getlastmod();//Fecha de modificacion de este fichero
-	$strFilesModTime.=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
+	$arrFilesModTime=array();
+	$arrFilesModTime[__FILE__]=getlastmod();//Fecha de modificacion de este fichero
+	$arrFilesModTime[SKEL_ROOT_DIR."includes/server/start.php"]=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
 	ob_start();
 		foreach ($ARR_CLIENT_LIBS as $libPath) {
-			$strFilesModTime.=filemtime($libPath);
+			$arrFilesModTime[$libPath]=filemtime($libPath);
 			require $libPath;
 		}
 	$jsScriptTags=ob_get_clean();
@@ -41,21 +42,24 @@ try {
 		$srcs[]=$scriptElements->item($i)->getAttribute('src');
 		$src=$scriptElements->item($i)->getAttribute('src');
 		try {
-			//echo "$src was last modified: " . gmdate('D, d M Y H:i:s \G\M\T', filemtime($src))."\n";
-			$strFilesModTime.=filemtime($src);
+			$arrFilesModTime[$src]=filemtime($src);
 		} catch (Exception $e) {}
 	}
 
-	$jsMinFile=CACHE_DIR."jsMin.".md5($strFilesModTime).".js";
+	$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
 	//echo $jsMinFile;
 
 	if (file_exists($jsMinFile)) {
 		$firephp->info($jsMinFile,'devolviendo JS cacheado:');
+		$firephp->info(array_map(function ($elto) {
+			return gmdate('D, d M Y H:i:s \G\M\T',$elto);
+		},$arrFilesModTime),'Fechas de modificacion:');
 		echo file_get_contents($jsMinFile);
 	} else {
 		$jsLibs="// Js Libs \n";
 		$firephp->group('Carga de SRCs JS', array('Collapsed' => true, 'Color' => '#FF9933'));
 		foreach ($srcs as $src) {
+			$origSrc=$src;
 			if (substr($src, 0,2)=='./') {
 				$src=realpath(SKEL_ROOT_DIR.$src);
 			}
@@ -69,7 +73,7 @@ try {
 				//$jsLibs.=JSMin::minify($fileContent);
 			} catch (Exception $e) {
 				error_log ("js.php:: Imposible cargar '".$src."'");
-				$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
+				$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine().". origSrc: ".$origSrc;
 				error_log ($infoExc);
 				$firephp->error($infoExc,'Error cargando '.$src);
 			}

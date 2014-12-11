@@ -57,7 +57,7 @@ function logPageData($titulo="Grupo logPageData") {
 			$GLOBALS['firephp']->info($GLOBALS['page'],'clase de página ($page)');
 			$GLOBALS['firephp']->info($GLOBALS['objUsr'],'$objUsr');
 		$GLOBALS['firephp']->groupend();
-			$GLOBALS['firephp']->group('_GET, POST, FILES', array('Collapsed' => true, 'Color' => '#3399FF'));
+		$GLOBALS['firephp']->group('_GET, POST, FILES', array('Collapsed' => true, 'Color' => '#3399FF'));
 			$GLOBALS['firephp']->info($_GET,"GET");
 			$GLOBALS['firephp']->info($_POST,"POST");
 			$GLOBALS['firephp']->info($_FILES,"FILES");

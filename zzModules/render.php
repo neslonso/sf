@@ -48,7 +48,6 @@ try {
 	} else {
 		throw new Exception('La clase de página solicitada "'.$page.'" no existe.');
 	}
-	$firephp->groupend();
 
 	markup ($Page);
 

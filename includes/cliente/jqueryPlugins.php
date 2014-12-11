@@ -28,11 +28,21 @@
 ?>
 	<!--<script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.9.3/media/js/jquery.dataTables.js"></script>
 	<!-- <script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.9.3/extras/FixedHeader/js/FixedHeader.js"></script> -->
-	<script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.10.0/media/js/jquery.dataTables.min.js"></script>
+	<!--<script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.10.0/media/js/jquery.dataTables.min.js"></script>-->
+<?
+//	<!--datatables bootstrap-->
+?>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css" />
+	<script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<?
+//	<!--este CSS solo se añade si no vamos a usar el anterior de bootstrap ni ninguno personalizado, es el generico: -->
+//	<!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css">-->
+?>
 <?
 	//<!--DataTables Row Grouping Add-on: http://jquery-datatables-row-grouping.googlecode.com/svn/trunk/index.html-->
 ?>
-		<script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.10.0/extensions/jquery.dataTables.rowGrouping.js"></script>
+		<!--<script type="text/javascript" src="./includes/cliente/vendor/DataTables-1.10.0/extensions/jquery.dataTables.rowGrouping.js"></script>-->
 <?
 /**/
 ?>

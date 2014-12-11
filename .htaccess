@@ -24,18 +24,15 @@
 			RewriteRule  .+  -  [L]
 	################################################################################
 
-	# Pages URL rewriting ##########################################################
+	# Pages URL rewriting V2 #######################################################
 	# Barra (/) al final
 		RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
 		#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
-	#Reescritura: URLs de paginas ([page]/[keys]/[id] (keys e id optativas, ambas o ninguna) (OJO! Necesita la regla de poner / al final)
-	#http://.../[page]/[cualquier/numero/de/directorios/pero/al/menos/uno/si/usamos/id]/[idNumerica]/[el/resto/se/transporta/a/"./"/]
-		RewriteRule ^([^/]*)/((.*)/([0-9]+))?$ ?page=$1&id=$3 [QSA,L]
-	#Para que los enlaces basados en "./" sigan funcionando
-		#Si la url tenía idNumerica
-		RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ $4 [L]
-		#Si no tenía id númerica
-		RewriteRule ^([^/]*)/(.*)/$ $2 [L]
+	# Trataremos la URL como bloques separados por /
+		# Todos los bloques hasta el último que no empiece por numero -> keywords (puede estar o no estar)
+		# El último bloque que no empiece por numero -> parametro page
+		# El bloque que empieze por numero tras page -> id (puede estar o no estar)
+		RewriteRule ^(?:(.*)\/)?([^0-9][^\/]*)\/(?:([0-9][^\/]*)\/)?$ ?page=$2&id=$3
 
 	<IfModule mod_headers.c>
 		## Set the response header if the "nocache" environment variable is set in the RewriteRule above.
