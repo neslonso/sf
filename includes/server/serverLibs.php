@@ -11,7 +11,6 @@ require_once SKEL_ROOT_DIR."includes/server/clases/Filesystem.php";
 require_once SKEL_ROOT_DIR."includes/server/clases/User.php";
 require_once SKEL_ROOT_DIR."includes/server/clases/Page.php";
 
-require_once SKEL_ROOT_DIR."includes/server/vendor/blueimp-jQuery-File-Upload/UploadHandler.php";
 require_once SKEL_ROOT_DIR."includes/server/vendor/jsmin-1.1.1.php";
 
 //PHP Token Reflection: https://github.com/Andrewsville/PHP-Token-Reflection
