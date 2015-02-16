@@ -25,5 +25,8 @@ spl_autoload_register(function($className) {
 		@include_once $file;
 	}
 });
-require SKEL_ROOT_DIR."includes/server/vendor/composerVendor/autoload.php";
+
+if (file_exists(SKEL_ROOT_DIR."includes/server/vendor/composerVendor/autoload.php")) {
+	require SKEL_ROOT_DIR."includes/server/vendor/composerVendor/autoload.php";
+}
 ?>
