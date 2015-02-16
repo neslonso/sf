@@ -43,7 +43,8 @@ define ('IPS_DEV', serialize(array_merge(
 		'91.117.107.217',//Coruña oficna
 	),
 	array(
-		'47.62.0.55',//Diego Madrid
+		//'47.62.0.55',//Diego Madrid
+		'47.62.0.291',//Diego Madrid 20150216
 	),
 	array()
 )));

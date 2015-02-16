@@ -7,6 +7,11 @@ use Sintax\Core\ReturnInfo;
 class Creacion extends Error implements IPage {
 	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
+		try {
+			\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
+		} catch (Exception $e) {
+			error_log("No se pudo conectat a BD en ".__FILE__."::".__LINE__);
+		}
 	}
 	public function pageValida () {
 		return $this->objUsr->pagePermitida($this);

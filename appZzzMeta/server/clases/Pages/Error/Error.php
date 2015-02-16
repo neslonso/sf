@@ -11,11 +11,6 @@ class Error extends Page implements IPage {
 
 	public function __construct (User $objUsr=NULL) {
 		parent::__construct($objUsr);
-		try {
-			\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
-		} catch (Exception $e) {
-			error_log("No se pudo conectat a BD en ".__FILE__."::".__LINE__);
-		}
 		$this->msg="Descripcion no especificada.";
 		$objUsr=new \RestrictedByIpUser();
 		if (!isset($_SESSION['usuario']) || get_class($_SESSION['usuario'])!='RestrictedByIpUser') {
