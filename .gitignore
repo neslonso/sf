@@ -5,5 +5,5 @@ sftp-config.json
 aaReferences/
 zzWorkspace/
 *prueba*/
-sharedDefines.php
+appZzShared/server/sharedDefines.php
 appStgwood/
