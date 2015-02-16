@@ -119,6 +119,7 @@ define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'<em style='color:red;'>".$relPathF
 </pre>
 			</li>
 			<li>Definición RewriteBase (.htacces): RewriteBase ".str_replace($_SERVER['DOCUMENT_ROOT'],'',dirname($file).'/')."</li>
+<!--
 			<li>Cambios en RewriteRule (.htacces):
 <pre>
 #Si la url tenía idNumerica
@@ -127,6 +128,7 @@ RewriteRule ^([^/]*)/(.*)/([0-9]+)/(.*)/ $4 [L] -> RewriteRule ^([^/]*)/(.*)/([0
 RewriteRule ^([^/]*)/(.*)/$ $2 [L] -> RewriteRule ^([^/]*)/(.*)/$ <em style='color:red;'>".$relPathFileDirToSkel."</em>$2 [L]
 </pre>
 			</li>
+-->
 		</ul>",
 		'Skeleto creado con exito');
 	}

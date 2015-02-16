@@ -32,7 +32,8 @@
 		# Todos los bloques hasta el último que no empiece por numero -> keywords (puede estar o no estar)
 		# El último bloque que no empiece por numero -> parametro page
 		# El bloque que empieze por numero tras page -> id (puede estar o no estar)
-		RewriteRule ^(?:(.*)\/)?([^0-9][^\/]*)\/(?:([0-9][^\/]*)\/)?$ ?page=$2&id=$3
+		# OJO!: Este metodo no permite que el HTML use URLs relativas
+		RewriteRule ^(?:(.*)\/)?([^0-9][^\/]*)\/(?:([0-9][^\/]*)\/)?.*$ ?page=$2&id=$3
 
 	<IfModule mod_headers.c>
 		## Set the response header if the "nocache" environment variable is set in the RewriteRule above.

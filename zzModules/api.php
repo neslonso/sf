@@ -21,7 +21,7 @@ try {
 				$arrServiceData=$arrServices[$service];
 				if ($arrServiceData['active']) {
 					$granted=false;
-					if (count($arrServiceData['keys'])>0) {
+					if (isset ($arrServiceData['keys']) && count($arrServiceData['keys'])>0) {
 						if (in_array($key, $arrServiceData['keys'])) {
 							$granted=true;
 						}
