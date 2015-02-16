@@ -95,12 +95,14 @@ class MysqliDB extends mysqli {
 		}
 	}
 	/**
-	 * Destructor: cierra la conexión a MySQL
+	 * Destructor: cierra la conexión a MySQL si está abierta
 	 * @throws DBException si no se puede cerrar la conexion
 	 */
 	public function __destruct() {
-		if (!parent::close()) {
-			throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
+		if (parent::ping()) {
+			if (!parent::close()) {
+				throw new DBException(mysqli_connect_error(), mysqli_connect_errno());
+			}
 		}
 	}
 	/**
