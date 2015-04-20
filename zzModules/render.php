@@ -62,7 +62,7 @@ try {
 	$firephp->info($e->getTrace(),"trace");
 
 	try {
-		$Page=new Sintax\Pages\Error($objUsr);
+		$Page=new \Sintax\Pages\Error($objUsr);
 		$Page->setMsg($e->getMessage());
 		ob_clean();//limpiamos el buffer para eliminar lo que se haya podido meter antes de saltar la excepción
 		markup($Page);

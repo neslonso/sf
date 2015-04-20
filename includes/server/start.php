@@ -30,6 +30,7 @@ define('SECS_PERSIST_LASTACTION',60*5);//Segundos durante los cuales se consider
 /**/
 
 define ('IPS_DEV', serialize(array_merge(
+	array('::1'),
 	array(
 		//'81.35.169.245',//León Carbajal
 		//'83.53.147.57',//León Carbajal 20141118

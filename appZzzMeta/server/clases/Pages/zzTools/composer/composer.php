@@ -58,7 +58,7 @@ class composer extends Error implements IPage {
 		$opts='--no-interaction ';
 		switch ($cCmd) {
 			case "install":$opts.='--optimize-autoloader '.$dryRun;break;
-			case "update":$opts.='--update-with-dependencies '.$dryRun;break;
+			case "update":$opts.='--with-dependencies '.$dryRun;break;
 			break;
 			case "require":
 			case "remove":

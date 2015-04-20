@@ -2,22 +2,19 @@
 //Carga automatica de clases que no estén requeridas,
 //busca clase en el directorio clases y en appZzSahred/server/clases
 spl_autoload_register(function ($clase) {
-	//error_log('Intentando carga automatica de clase: '.$clase);
 	$clase = @end(explode('\\',$clase));//namespaces, genera: PHP Strict Standards:  Only variables should be passed by reference, pq end recibe el resultado de explode por referencia
-	//error_log('Intentando carga automatica de clase: '.$clase);
-	//
-	$fileList=Filesystem::folderSearch(dirname(__FILE__).'/'.'clases/','/.*\/'.$clase.'.php$/');
+	$fileList=Filesystem::folderSearch(dirname(__FILE__).DIRECTORY_SEPARATOR.'clases'.DIRECTORY_SEPARATOR,'/.*'.$clase.'.php$/');
 	foreach ($fileList as $filePath) {
-		//error_log('require: '.$filePath);
 		if (file_exists($filePath)) {
 			require_once($filePath);
 			return;
 		}
 	}
 
-	$fileList=Filesystem::folderSearch(dirname(__FILE__).'/'.'../../appZzShared/server/clases/','/.*\/'.$clase.'.php$/');
+	$fileList=Filesystem::folderSearch(dirname(__FILE__).DIRECTORY_SEPARATOR.
+		'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'appZzShared'.DIRECTORY_SEPARATOR.'server'.DIRECTORY_SEPARATOR.'clases'.DIRECTORY_SEPARATOR,
+		'/.*'.$clase.'.php$/');
 	foreach ($fileList as $filePath) {
-		//error_log('require: '.$filePath);
 		if (file_exists($filePath)) {
 			require_once($filePath);
 			return;

@@ -105,6 +105,9 @@ class Filesystem {
 	}
 
 	public static function folderSearch($folder, $pattern) {
+		//echo $folder."<br />";
+		//echo $pattern."<br />";
+		//$pattern='/.*/';
 		$fld = new RecursiveDirectoryIterator($folder);
 		$ite = new RecursiveIteratorIterator($fld);
 		$files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);

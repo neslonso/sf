@@ -344,13 +344,6 @@ class Cadena {
 		return self::toOneCodeLine($str);
 	}
 
-	public static function toEsNumber($str) {
-		if (is_numeric($str)) {
-			$str=number_format($str,2,',',".");
-		}
-		return $str;
-	}
-
 	public static function pwParseCorreo($var, $urlBase=".", $noBRs=false) {
 		/*Esta funcion parsea un texto sustituyendo determinados tokens
 		por codigo HTML, los enlaces se hacen con URL absoluta pq el texto
