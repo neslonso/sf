@@ -32,56 +32,59 @@ try {
 			require $libPath;
 		}
 	$jsScriptTags=ob_get_clean();
-
-	$doc = new DOMDocument();
-	$doc->loadHTML($jsScriptTags);
-	$scriptElements = $doc->getElementsByTagName('script');
-
-	$srcs = array();
-	for($i = 0; $i < $scriptElements->length; $i++) {
-		$srcs[]=$scriptElements->item($i)->getAttribute('src');
-		$src=$scriptElements->item($i)->getAttribute('src');
-		try {
-			$arrFilesModTime[$src]=filemtime($src);
-		} catch (Exception $e) {}
-	}
-
 	$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
-	//echo $jsMinFile;
 
-	if (file_exists($jsMinFile)) {
-		$firephp->info($jsMinFile,'devolviendo JS cacheado:');
-		$firephp->info(array_map(function ($elto) {
-			return gmdate('D, d M Y H:i:s \G\M\T',$elto);
-		},$arrFilesModTime),'Fechas de modificacion:');
-		echo file_get_contents($jsMinFile);
-	} else {
-		$jsLibs="// Js Libs \n";
-		$firephp->group('Carga de SRCs JS', array('Collapsed' => true, 'Color' => '#FF9933'));
-		foreach ($srcs as $src) {
-			$origSrc=$src;
-			if (substr($src, 0,2)=='./') {
-				$src=realpath(SKEL_ROOT_DIR.$src);
-			}
-			if (substr($src, 0,2)=='//') {
-				$src=PROTOCOL.":".$src;
-			}
-			$firephp->info($src,'Intentando file_get_contents:');
+	if ($jsScriptTags!="") {
+		$doc = new DOMDocument();
+		$doc->loadHTML($jsScriptTags);
+		$scriptElements = $doc->getElementsByTagName('script');
+
+		$srcs = array();
+		for($i = 0; $i < $scriptElements->length; $i++) {
+			$srcs[]=$scriptElements->item($i)->getAttribute('src');
+			$src=$scriptElements->item($i)->getAttribute('src');
 			try {
-				$fileContent=file_get_contents($src)."\n\n";
-				$jsLibs.=$fileContent."\n\n";
-				//$jsLibs.=JSMin::minify($fileContent);
-			} catch (Exception $e) {
-				error_log ("js.php:: Imposible cargar '".$src."'");
-				$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine().". origSrc: ".$origSrc;
-				error_log ($infoExc);
-				$firephp->error($infoExc,'Error cargando '.$src);
-			}
-			//var_dump($http_response_header);
+				$arrFilesModTime[$src]=filemtime($src);
+			} catch (Exception $e) {}
 		}
-		$firephp->groupend();
-		$jsLibs.="\n// Js Libs Fin";
-		echo $jsLibs;
+
+		$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
+		//echo $jsMinFile;
+
+		if (file_exists($jsMinFile)) {
+			$firephp->info($jsMinFile,'devolviendo JS cacheado:');
+			$firephp->info(array_map(function ($elto) {
+				return gmdate('D, d M Y H:i:s \G\M\T',$elto);
+			},$arrFilesModTime),'Fechas de modificacion:');
+			echo file_get_contents($jsMinFile);
+		} else {
+			$jsLibs="// Js Libs \n";
+			$firephp->group('Carga de SRCs JS', array('Collapsed' => true, 'Color' => '#FF9933'));
+			foreach ($srcs as $src) {
+				$origSrc=$src;
+				if (substr($src, 0,2)=='./') {
+					$src=realpath(SKEL_ROOT_DIR.$src);
+				}
+				if (substr($src, 0,2)=='//') {
+					$src=PROTOCOL.":".$src;
+				}
+				$firephp->info($src,'Intentando file_get_contents:');
+				try {
+					$fileContent=file_get_contents($src)."\n\n";
+					$jsLibs.=$fileContent."\n\n";
+					//$jsLibs.=JSMin::minify($fileContent);
+				} catch (Exception $e) {
+					error_log ("js.php:: Imposible cargar '".$src."'");
+					$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine().". origSrc: ".$origSrc;
+					error_log ($infoExc);
+					$firephp->error($infoExc,'Error cargando '.$src);
+				}
+				//var_dump($http_response_header);
+			}
+			$firephp->groupend();
+			$jsLibs.="\n// Js Libs Fin";
+			echo $jsLibs;
+		}
 	}
 	/******************************************************************************/
 ?>

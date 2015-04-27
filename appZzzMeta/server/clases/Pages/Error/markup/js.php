@@ -1,5 +1,5 @@
 <?if (false) {?><script><?}?>
 <?="\n/*".get_class()."*/\n"?>
-$(document).ready(function() {
-	$('#page').css('display', 'block');
+document.addEventListener("DOMContentLoaded", function(event) {
+	document.getElementById('page').style.display='block';
 });
