@@ -19,8 +19,6 @@ em {
 	font-weight: bold;
 }
 
-#page {}
-
 /*Links*/
 a:link {
 	color: rgb(142,11,0);

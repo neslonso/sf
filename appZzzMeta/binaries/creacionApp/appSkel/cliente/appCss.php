@@ -1,7 +1,6 @@
 <?if (false) {?><style><?}?>
 html, body {}
 body {}
-#page {}
 /*Links*/
 	a:link {color: rgb(142,11,0);text-decoration: none;}
 	a:visited {color: rgb(142,11,0);}

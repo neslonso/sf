@@ -132,11 +132,9 @@ xmlns:fb="http://www.facebook.com/2008/fbml"
 <!-- /Page Head (Class <?=get_class($Page);?>)-->
 </head>
 <body>
-	<div id="page" style="display:none;">
 <!-- Page Markup (Class <?=get_class($Page);?>)-->
 <?=$Page->markup()."\n";?>
 <!-- /Page Markup (Class <?=get_class($Page);?>)-->
-	</div>
 	<noscript>
 		Para utilizar las funcionalidades completas de este sitio es necesario tener
 		JavaScript habilitado. Aquí están las <a href="http://www.enable-javascript.com/es/"
