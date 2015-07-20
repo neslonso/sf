@@ -23,28 +23,6 @@ try {
 
 ?>
 <?
-	/* css reset & 960 ********************/
-	ob_start();
-		if (GRID_960) {
-			echo "/*<CSS 960>*/\n";
-			$reset=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/reset.css';
-			//echo "@import url('".$reset."');"."\n";
-			echo file_get_contents($reset);
-			$text=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/text.css';
-			//echo "@import url('".$text."');"."\n";
-			echo file_get_contents($text);
-			if (GRID_960_COLS==12 || GRID_960_COLS==16) {
-				$grid960=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/960.css';
-			} else {
-				$grid960=SKEL_ROOT_DIR.'includes/cliente/vendor/960-Grid-System-master/code/css/min/960_24_col.css';
-			}
-			//echo "@import url('".$grid960."');"."\n";
-			echo file_get_contents($grid960);
-			echo "/*</CSS 960>*/\n";
-		}
-	$css960=ob_get_clean();
-?>
-<?
 	/* css Js Libs ********************************************************************/
 	$arrFilesModTime=array();
 	$arrFilesModTime[__FILE__]=getlastmod();//Fecha de modificacion de este fichero
@@ -57,17 +35,24 @@ try {
 	$cssLinkTags=ob_get_clean();
 
 	if ($cssLinkTags!="") {
-		$doc = new DOMDocument();
-		$doc->loadHTML($cssLinkTags);
-		$linkElements = $doc->getElementsByTagName('link');
-
 		$hrefs = array();
-		for($i = 0; $i < $linkElements->length; $i++) {
-			$hrefs[]=$linkElements->item($i)->getAttribute('href');
-			$href=$linkElements->item($i)->getAttribute('href');
-			try {
-				$arrFilesModTime[$href]=filemtime($href);
-			} catch (Exception $e) {}
+		try {
+			$doc = new DOMDocument();
+			$doc->loadHTML($cssLinkTags);
+			$linkElements = $doc->getElementsByTagName('link');
+
+			for($i = 0; $i < $linkElements->length; $i++) {
+				$hrefs[]=$linkElements->item($i)->getAttribute('href');
+				$href=$linkElements->item($i)->getAttribute('href');
+				try {
+					$arrFilesModTime[$href]=filemtime($href);
+				} catch (Exception $e) {}
+			}
+		} catch (Exception $e) {
+			$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
+			error_log ($infoExc);
+			error_log ("TRACE: ".$e->getTraceAsString());
+			$firephp->info($infoExc);
 		}
 
 		$cssFile=CACHE_DIR."css.".md5(serialize($arrFilesModTime)).".css";
@@ -92,6 +77,9 @@ try {
 					}
 					if (substr($href, 0,2)=='./') {
 						$href=realpath(SKEL_ROOT_DIR.$href);
+						if (!$href) {
+							throw new Exception ('realpath ('.SKEL_ROOT_DIR.$origHref.') devolvió false, ¿existe el fichero?.');
+						}
 					}
 					if (substr($href, 0,2)=='//') {
 						$href=PROTOCOL.":".$href;
@@ -108,13 +96,13 @@ try {
 					error_log ("css.php:: Imposible cargar '".$href."'");
 					$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine().". origHref: ".$origHref;
 					error_log ($infoExc);
-					$firephp->error($infoExc,'Error cargando '.$href);
+					$firephp->error($infoExc,'Error cargando href "'.$href.'"');
 				}
 				//var_dump($http_response_header);
 			}
 			$firephp->groupend();
 			$cssLibs.="/* </css Js Libs> */";
-			echo $css960.$cssLibs;
+			echo $cssLibs;
 			$css=ob_get_clean();
 			file_put_contents($cssFile, $css);
 			echo $css;

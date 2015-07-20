@@ -35,17 +35,24 @@ try {
 	$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
 
 	if ($jsScriptTags!="") {
-		$doc = new DOMDocument();
-		$doc->loadHTML($jsScriptTags);
-		$scriptElements = $doc->getElementsByTagName('script');
-
 		$srcs = array();
-		for($i = 0; $i < $scriptElements->length; $i++) {
-			$srcs[]=$scriptElements->item($i)->getAttribute('src');
-			$src=$scriptElements->item($i)->getAttribute('src');
-			try {
-				$arrFilesModTime[$src]=filemtime($src);
-			} catch (Exception $e) {}
+		try {
+			$doc = new DOMDocument();
+			$doc->loadHTML($jsScriptTags);
+			$scriptElements = $doc->getElementsByTagName('script');
+
+			for($i = 0; $i < $scriptElements->length; $i++) {
+				$srcs[]=$scriptElements->item($i)->getAttribute('src');
+				$src=$scriptElements->item($i)->getAttribute('src');
+				try {
+					$arrFilesModTime[$src]=filemtime($src);
+				} catch (Exception $e) {}
+			}
+		} catch (Exception $e) {
+			$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine();
+			error_log ($infoExc);
+			error_log ("TRACE: ".$e->getTraceAsString());
+			$firephp->info($infoExc);
 		}
 
 		$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
@@ -64,6 +71,9 @@ try {
 				$origSrc=$src;
 				if (substr($src, 0,2)=='./') {
 					$src=realpath(SKEL_ROOT_DIR.$src);
+					if (!$src) {
+						throw new Exception ('realpath ('.SKEL_ROOT_DIR.$origSrc.') devolvió false, ¿existe el fichero?.');
+					}
 				}
 				if (substr($src, 0,2)=='//') {
 					$src=PROTOCOL.":".$src;
@@ -77,7 +87,7 @@ try {
 					error_log ("js.php:: Imposible cargar '".$src."'");
 					$infoExc="Excepcion de tipo: ".get_class($e).". Mensaje: ".$e->getMessage()." en fichero ".$e->getFile()." en linea ".$e->getLine().". origSrc: ".$origSrc;
 					error_log ($infoExc);
-					$firephp->error($infoExc,'Error cargando '.$src);
+					$firephp->error($infoExc,'Error cargando src "'.$src.'"');
 				}
 				//var_dump($http_response_header);
 			}
