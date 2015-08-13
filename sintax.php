@@ -1,5 +1,5 @@
 <?
-$tInicial=microtime(true);//Comentario de prueba
+$tInicial=microtime(true);//Comentario de prueba, ampliado para segunda prueba
 ?>
 <?
 define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'./').'/');
