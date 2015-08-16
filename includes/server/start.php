@@ -38,6 +38,7 @@ define ('IPS_DEV', serialize(array_merge(
 		//'79.145.230.48',//León Carbajal 20150216
 		//'79.146.211.176',//León Carbajal 20150420
 		'88.14.233.166',//León Carbajal 20150625
+		'83.53.147.109',//León Carbajal 20150815
 	),
 	array(
 		'193.146.109.133',//Unileon
@@ -73,11 +74,6 @@ define ('APPS', serialize(array(
 		'FILE_APP' => 'index.php',//siempre igual que la key
 		'RUTA_APP' => SKEL_ROOT_DIR.'appStgwood/',
 		'NOMBRE_APP' => 'stgwood',
-	),
-	'admin.php' => array(
-		'FILE_APP' => 'admin.php',//siempre igual que la key
-		'RUTA_APP' => SKEL_ROOT_DIR.'appAdmin/',
-		'NOMBRE_APP' => 'App de prueba',
 	),
 )));
 //Definimos todas las constantes de la aplicacion correspondiente al punto de entrada
