@@ -1,0 +1,15 @@
+{
+	"config": {
+		"vendor-dir": "includes/server/vendor/composerVendor",
+		"cache-dir": "zCache/composer",
+		"home": "."
+	},
+	"require-dev": {
+	},
+	"require": {
+		"mtdowling/cron-expression": "1.0.*",
+		"phpmailer/phpmailer": "5.2.9",
+		"firephp/firephp-core": "~0.4",
+		"phpunit/phpunit": "~4.3"
+	}
+}

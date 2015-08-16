@@ -1,0 +1,44 @@
+<IfModule mod_rewrite.c>
+	<IfModule mod_negotiation.c>
+		Options -MultiViews
+	</IfModule>
+
+	RewriteEngine on
+	RewriteBase /proys/00.skel/zzzEntryPointMoveTest/
+
+	# Compatibilidad ###############################################################
+	#	RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)
+	#		RewriteRule ^(actions|api|auto|css|images|js|render)\.php$ %1?MODULE=$1 [QSA,L]
+	################################################################################
+
+	# Debug via variable a cabeceras de la request #################################
+	#	RewriteRule .* - [E=INFO_REQUEST_URI:%{REQUEST_URI},NE]
+	#	RequestHeader set INFO_REQUEST_URI "%{INFO_REQUEST_URI}e"
+	#	RewriteRule .* - [E=INFO_REQUEST_FILENAME:%{REQUEST_FILENAME},NE]
+	#	RequestHeader set INFO_REQUEST_FILENAME "%{INFO_REQUEST_FILENAME}e"
+	################################################################################
+
+	# Comprobación recursos existentes #############################################
+		RewriteCond %{REQUEST_FILENAME} -d [OR]
+		RewriteCond %{REQUEST_FILENAME} -f
+			RewriteRule  .+  -  [L]
+	################################################################################
+
+	# Pages URL rewriting V2 #######################################################
+	# Barra (/) al final
+		RewriteRule ^(.*[^/])$ $1/ [L,R=301,E=nocache:1] //Poner
+		#RewriteRule ^(.*)/$ /$1 [L,R=301,E=nocache:1] //Quitar
+	# Trataremos la URL como bloques separados por /
+		# Todos los bloques hasta el último que no empiece por numero -> keywords (puede estar o no estar)
+		# El último bloque que no empiece por numero -> parametro page
+		# El bloque que empieze por numero tras page -> id (puede estar o no estar)
+		RewriteRule ^(?:(.*)\/)?([^0-9][^\/]*)\/(?:([0-9][^\/]*)\/)?$ ?page=$2&id=$3
+
+	<IfModule mod_headers.c>
+		## Set the response header if the "nocache" environment variable is set in the RewriteRule above.
+		Header always set Cache-Control "no-store, no-cache, must-revalidate" env=nocache
+		## Set Expires too ...
+		Header always set Expires "Thu, 01 Jan 1970 00:00:00 GMT" env=nocache
+	</IfModule>
+	################################################################################
+</IfModule>

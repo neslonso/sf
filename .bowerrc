@@ -1,0 +1,10 @@
+{
+	"directory" : "includes/cliente/vendor/bowerVendor/",
+	"storage": {
+		"packages" : "zCache/bower/packages",
+		"registry" : "zCache/bower/registry",
+		"links" : "zCache/bower/links",
+		"completion" : "zCache/bower/completion"
+	},
+	"tmp": "zCache/bower/tmp"
+}

@@ -1,0 +1,125 @@
+/* COLORES DATATABLES ********************************************************/
+<?
+$GLOBALS['colores']['datatables']['colorPares']="#E1ECF6";
+$GLOBALS['colores']['datatables']['colorImpares']="#91BBE0";
+$GLOBALS['colores']['datatables']['colorParesHover']="#FF9932";
+$GLOBALS['colores']['datatables']['colorImparesHover']="#FF9932";
+$GLOBALS['colores']['datatables']['colorOrdenPares']=  array ('#92BADE','#4388C6','#26547D');//Colores de las columnas que participan en el orden por orden de seleccion
+$GLOBALS['colores']['datatables']['colorOrdenImpares']=array ('#4189C9','#24547F','#0D2030');
+$GLOBALS['colores']['datatables']['colorOrdenParesHover']=  array ('#FFB266','#FFCC99','#FFE5CC');//Colores de las columnas que participan en el orden por orden de seleccion
+$GLOBALS['colores']['datatables']['colorOrdenImparesHover']=array ('#FFB266','#FFCC99','#FFE5CC');
+
+$colorPares=$GLOBALS['colores']['datatables']['colorPares'];
+$colorImpares=$GLOBALS['colores']['datatables']['colorImpares'];
+$colorParesHover=$GLOBALS['colores']['datatables']['colorParesHover'];
+$colorImparesHover=$GLOBALS['colores']['datatables']['colorImparesHover'];
+$colorOrdenPares=$GLOBALS['colores']['datatables']['colorOrdenPares'];
+$colorOrdenImpares=$GLOBALS['colores']['datatables']['colorOrdenImpares'];
+$colorOrdenParesHover=$GLOBALS['colores']['datatables']['colorOrdenParesHover'];
+$colorOrdenImparesHover=$GLOBALS['colores']['datatables']['colorOrdenImparesHover'];
+?>
+/*Standard datatables styles*/
+.stdDataTable {cursor:pointer;}
+
+/*
+.stdDataTable tbody tr.even:hover, .stdDataTable tbody tr.even td.highlighted {background-color: <?=$colorPares?>;}
+.stdDataTable tbody tr.odd:hover, .stdDataTable tbody tr.odd td.highlighted {background-color: <?=$colorImpares?>;}
+*/
+
+.stdDataTable tr.even {background-color:  <?=$colorPares?>;}
+.stdDataTable tr.even td.sorting_1 {background-color: <?=$colorOrdenPares[0]?>;}
+.stdDataTable tr.even td.sorting_2 {background-color: <?=$colorOrdenPares[1]?>;}
+.stdDataTable tr.even td.sorting_3 {background-color: <?=$colorOrdenPares[2]?>;}
+.stdDataTable tr.even:hover {background-color:  <?=$colorParesHover?>;}
+.stdDataTable tr.even:hover td.sorting_1 {background-color: <?=$colorOrdenParesHover[0]?>;}
+.stdDataTable tr.even:hover td.sorting_2 {background-color: <?=$colorOrdenParesHover[1]?>;}
+.stdDataTable tr.even:hover td.sorting_3 {background-color: <?=$colorOrdenParesHover[2]?>;}
+
+.stdDataTable tr.odd {background-color: <?=$colorImpares?>;}
+.stdDataTable tr.odd td.sorting_1 {background-color: <?=$colorOrdenImpares[0]?>;}
+.stdDataTable tr.odd td.sorting_2 {background-color: <?=$colorOrdenImpares[1]?>;}
+.stdDataTable tr.odd td.sorting_3 {background-color: <?=$colorOrdenImpares[2]?>;}
+
+.stdDataTable tr.odd:hover {background-color: <?=$colorImparesHover?>;}
+.stdDataTable tr.odd:hover td.sorting_1 {background-color: <?=$colorOrdenImparesHover[0]?>;}
+.stdDataTable tr.odd:hover td.sorting_2 {background-color: <?=$colorOrdenImparesHover[1]?>;}
+.stdDataTable tr.odd:hover td.sorting_3 {background-color: <?=$colorOrdenImparesHover[2]?>;}
+/* COLORES DATATABLES ********************************************************/
+
+/* CHECKBOX BASADO EN CSS ****************************************************/
+	/*Ejemplo de marcado:
+	<input id="idChk" name="" class="cssCheckbox loading" checked disabled type="checkbox" value="1" />
+	<label data-nochecked="NO" data-checked="SI" data-loading="&nbsp;" for="idChk"></label>
+	<label for="idChk1">Texto del checks</label>
+	*/
+	input[type="checkbox"].cssCheckbox {
+		display: none;
+	}
+	input[type="checkbox"].cssCheckbox + label {
+		/*display: inline;*/
+		display: inline-block;
+		position: relative;
+		background-color: #b94a48;
+
+		/*label styling*/
+		margin: 0px;
+		padding: 4px 8px;
+		/*
+		font-size: 11.844px;
+		font-weight: bold;
+		line-height: 14px;
+		*/
+		color: #ffffff;
+		vertical-align: baseline;
+		white-space: nowrap;
+		text-shadow: 2 2px 0 rgba(0, 0, 0, 0.5);
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+
+		text-align: center;
+		width:40px;
+		cursor: pointer;
+	}
+	input[type="checkbox"].cssCheckbox + label + label {
+		cursor: pointer;
+	}
+
+	input[type="checkbox"].cssCheckbox:checked + label {
+		background-color: #468847;
+	}
+
+	input[type="checkbox"].cssCheckbox:disabled + label {
+		opacity: 0.5;
+		cursor: default;
+	}
+
+	input[type="checkbox"].cssCheckbox:not(.loading) + label:after {
+		content:attr(data-nochecked);
+	}
+	input[type="checkbox"].cssCheckbox:checked + label:after {
+		content:attr(data-checked);
+	}
+
+	/* Rollito data loading */
+	input[type="checkbox"].cssCheckbox.loading + label {
+		/* Diagonal stripes, 2 techniques*/
+		/*
+		background: linear-gradient(45deg, white 25%, #8b0 25%, #8b0 50%, white 50%, white 75%, #8b0 75%, #8b0);
+		background-size:100px 100px;
+		*/
+		background: repeating-linear-gradient(45deg, #F8A025, #F8A025 5px, #FADEB6 5px, #FADEB6 10px);
+		min-height: 100%;
+
+		animation: animate-stripes 1s linear infinite;
+	}
+
+	@keyframes animate-stripes {
+		0% {background-position: 0 0;} 100% {background-position: 100% 0;}
+	}
+
+	input[type="checkbox"].cssCheckbox.loading + label:after {
+		content:attr(data-loading);
+	}
+	/**/
+/* CHECKBOX BASADO EN CSS ****************************************************/
