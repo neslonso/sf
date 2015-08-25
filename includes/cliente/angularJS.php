@@ -1,1 +1,0 @@
-<script type="text/javascript" src="<?=PROTOCOL.":"?>//ajax.googleapis.com/ajax/libs/angularjs/<?=ANGULAR_JS?>/angular.min.js"></script>

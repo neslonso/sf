@@ -37,8 +37,9 @@ define ('IPS_DEV', serialize(array_merge(
 		//'88.9.65.74',//León Carbajal 20141209
 		//'79.145.230.48',//León Carbajal 20150216
 		//'79.146.211.176',//León Carbajal 20150420
-		'88.14.233.166',//León Carbajal 20150625
-		'83.53.147.109',//León Carbajal 20150815
+		//'88.14.233.166',//León Carbajal 20150625
+		//'83.53.147.109',//León Carbajal 20150815
+		'88.14.237.3',//León Carbajal 20150818
 	),
 	array(
 		'193.146.109.133',//Unileon
