@@ -1,7 +1,22 @@
 <?="\n<!-- ".get_class()." -->\n"?>
-<h1>Composer</h1>
+<h1>
+	Composer<br />
+	<span style="font-size:small;">(<?=$composerVersion?>)</span>
+</h1>
 <a href="https://packagist.org/">https://packagist.org/</a>
 <hr />
+<form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data">
+	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
+	<input name="acClase" id="acClase" type="hidden" value="composer"/>
+	<input name="acMetodo" id="acMetodo" type="hidden" value="acUpdate"/>
+	<input name="acTipo" id="acTipo" type="hidden" value="stdAssoc"/>
+	<input name="acReturnURI" id="acReturnURI" type="hidden" value="<?=$_SERVER["REQUEST_URI"]?>"/>
+
+	<input type="submit" value="self-update composer" />
+</form>
+<hr />
+Primero Require y luego Install.
+
 <form action="<?=BASE_URL.FILE_APP?>" method="post" enctype="multipart/form-data">
 	<input name="MODULE" id="MODULE" type="hidden" value="actions"/>
 	<input name="acClase" id="acClase" type="hidden" value="composer"/>
@@ -16,12 +31,18 @@
 	<input type="radio" name="cCmd" value="search" <?=$cCmd['search']?> /> search
 	<input type="radio" name="cCmd" value="show" <?=$cCmd['show']?> /> show
 	<br />
-	Paquete: <input type="text" name="pkgs" value="<?=$pkgs?>"><br />
+	Paquete: <input type="text" name="pkgs" id="pkgs" value="<?=$pkgs?>">
+	<input type="button" value="Buscar en packagist"
+		onclick="window.open('https://packagist.org/search/?q='+document.getElementById('pkgs').value,'_blank');" /><br />
 	(vendor/package1:version vendor/package2:version ...) (phpunit/phpunit:4.3.* mysql/autobackup:dev-master)
 	<br />
 	Dry run (ejecución simulada):
 	<input type="hidden" name="dryRun" value="0" />
 	<input type="checkbox" name="dryRun" value="1" />
+	<br />
+	Verbose (--verbose):
+	<input type="hidden" name="verbose" value="0" />
+	<input type="checkbox" name="verbose" value="1" />
 	<br />
 	<input type="submit" value="Ejecutar composer" />
 </form>

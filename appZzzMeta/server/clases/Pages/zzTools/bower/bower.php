@@ -71,7 +71,6 @@ class bower extends Error implements IPage {
 
 		$pkgs=$args['pkgs'];
 		$cCmd=$args['cCmd'];
-		$arrLibsApps=$args['arrLibsApps'];
 
 		$opts='-n -d"'.SKEL_ROOT_DIR.'"';
 		switch ($cCmd) {
@@ -117,7 +116,10 @@ class bower extends Error implements IPage {
 		echo "<h3>STDERR</h3>";
 		echo "<pre>".$stderr."</pre>";
 		echo "<hr />";
+	}
 
+	public function acGenerateBowerComponentsFiles($args) {
+		$arrLibsApps=$args['arrLibsApps'];
 		$this->generateBowerComponentsFiles($arrLibsApps);
 	}
 
@@ -134,7 +136,7 @@ class bower extends Error implements IPage {
 				}
 
 				$objLibData=new \stdClass();
-				$objLibData->name=$objBowerInfo->name;
+				$objLibData->name='('.basename(dirname($dotBowerJsonFilePath)).') '.$objBowerInfo->name;
 				$objLibData->version=(isset($objBowerInfo->version))?$objBowerInfo->version:'No definida';
 				$objLibData->dependencies=(isset($objBowerInfo->dependencies))?(array)$objBowerInfo->dependencies:array();
 				$objLibData->main=(is_array($objBowerInfo->main))?$objBowerInfo->main:array(0 => $objBowerInfo->main);
@@ -144,6 +146,7 @@ class bower extends Error implements IPage {
 				$arrOtherFiles=array();
 				$objLibData->js=array();
 				$objLibData->css=array();
+				$objLibData->less=array();
 				$objLibData->otherFiles=array();
 
 				foreach ($objLibData->main as $fileRelPath) {
@@ -159,6 +162,11 @@ class bower extends Error implements IPage {
 						case 'css':
 							if (!in_array($includeFilePath,$arrCssFiles)) {
 								$objLibData->css[]=$includeFilePath;
+							}
+							break;
+						case 'less':
+							if (!in_array($includeFilePath,$arrCssFiles)) {
+								$objLibData->less[]=$includeFilePath;
 							}
 							break;
 						default:
@@ -255,6 +263,13 @@ class bower extends Error implements IPage {
 						}
 						foreach ($objComponentInfo->css as $cssFilePath) {
 							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
+						}
+						/*foreach ($objComponentInfo->less as $lessFilePath) {
+							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$lessFilePath.'" rel="stylesheet">'.PHP_EOL;
+						}*/
+						foreach ($objComponentInfo->otherFiles as $otherFilesFilePath) {
+							//$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
+							echo '<li>Fichero de tipo desconocido. NO INCLUIDO: '.$otherFilesFilePath.'</li>';
 						}
 					}
 				}
