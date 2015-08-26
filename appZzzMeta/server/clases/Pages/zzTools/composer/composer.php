@@ -47,17 +47,53 @@ class composer extends Error implements IPage {
 			$cCmd['search']='checked="checked"';
 		}
 
+		putenv('COMPOSER_HOME=' . SKEL_ROOT_DIR);
+		$descriptorspec = array(
+			//0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("pipe", "w"),  // stderr is a pipe that the child will write to
+		);
+		$cmd='php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar --version';
+		$process = proc_open($cmd, $descriptorspec, $pipes);
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+		unset($pipes);
+		$composerVersion=$stdout;
+
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
+	}
+
+	public function acUpdate ($args) {
+		putenv('COMPOSER_HOME=' . SKEL_ROOT_DIR);
+		$descriptorspec = array(
+			//0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("pipe", "w"),  // stderr is a pipe that the child will write to
+		);
+		$cmd='php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar self-update';
+		echo "<h2>Ejecutando: ".$cmd."</h2>";
+		$process = proc_open($cmd, $descriptorspec, $pipes);
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+
+		echo "<h3>STDOUT</h3>";
+		echo "<pre>".$stdout."</pre>";
+		echo "<h3>STDERR</h3>";
+		echo "<pre>".$stderr."</pre>";
 	}
 
 	public function acExec ($args) {
 		$pkgs=$args['pkgs'];
 		$cCmd=$args['cCmd'];
-		$dryRun=($args['dryRun']==1)?'--dry-run':'';
-		//$dryRun='--dry-run';
-		$opts='--no-interaction ';
+		$dryRun=($args['dryRun']==1)?' --dry-run ':'';
+		$verbose=($args['verbose']==1)?' --verbose ':'';
+		$opts=' --no-interaction ';
 		switch ($cCmd) {
-			case "install":$opts.='--optimize-autoloader '.$dryRun;break;
+			case "install":$opts.='--optimize-autoloader '.$dryRun.$verbose;break;
 			case "update":$opts.='--with-dependencies '.$dryRun;break;
 			break;
 			case "require":
