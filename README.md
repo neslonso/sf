@@ -1,4 +1,4 @@
-SF
+Sintax
 ======
 Legenda
 [+] Nueva funcionalidad
