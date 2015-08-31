@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname(dirname($vendorDir))));
 
 return array(
+    'TokenReflection' => array($vendorDir . '/andrewsville/php-token-reflection'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Less' => array($vendorDir . '/oyejorge/less.php/lib'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src'),

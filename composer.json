@@ -11,6 +11,7 @@
 		"phpmailer/phpmailer": "5.2.9",
 		"firephp/firephp-core": "~0.4",
 		"phpunit/phpunit": "~4.3",
-		"oyejorge/less.php": "v1.7.0.5"
+		"oyejorge/less.php": "v1.7.0.5",
+		"andrewsville/php-token-reflection": "^1.4"
 	}
 }
