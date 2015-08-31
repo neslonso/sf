@@ -10,6 +10,7 @@
 		"mtdowling/cron-expression": "1.0.*",
 		"phpmailer/phpmailer": "5.2.9",
 		"firephp/firephp-core": "~0.4",
-		"phpunit/phpunit": "~4.3"
+		"phpunit/phpunit": "~4.3",
+		"oyejorge/less.php": "v1.7.0.5"
 	}
 }

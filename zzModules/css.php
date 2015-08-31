@@ -1,4 +1,5 @@
 <?
+$lessParse=(class_exists('Less_Parser') && true)?true:false;
 ob_start();
 ?>
 <?
@@ -119,6 +120,12 @@ try {
 		$Page=new $page($objUsr);
 		$Page->css();
 	$cssLocal=ob_get_clean();
+	if ($lessParse) {
+		$arrLessParserOptions = array( 'compress'=>true );
+		$lessParser = new Less_Parser($arrLessParserOptions);
+		$lessParser->parse($cssLocal);
+		$cssLocal=$lessParser->getCss();
+	}
 	echo "/*CSS LOCAL*/\n".$cssLocal;
 	/******************************************************************************/
 ?>

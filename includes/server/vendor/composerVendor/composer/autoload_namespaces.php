@@ -7,6 +7,7 @@ $baseDir = dirname(dirname(dirname(dirname($vendorDir))));
 
 return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Less' => array($vendorDir . '/oyejorge/less.php/lib'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src'),
     'Cron' => array($vendorDir . '/mtdowling/cron-expression/src'),
 );
