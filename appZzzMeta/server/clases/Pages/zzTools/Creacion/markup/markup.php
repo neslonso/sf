@@ -64,8 +64,13 @@ foreach (unserialize(APPS) as $entryPoint => $arrAppConstants) {
 			}
 		">
 			<option value="Blank">Blank</option>
-			<option value="CRUD">CRUD</option>
-			<option value="DBdataTable">DBdataTable</option>
+<?
+$disabled='';
+if (!$hayDB) {
+	$disabled='disabled="disabled"';
+}?>
+			<option <?=$disabled?> value="CRUD">CRUD</option>
+			<option <?=$disabled?> value="DBdataTable">DBdataTable</option>
 		</select> (Tipo de Page a crear: Blank => Ficheros en blanco, CRUD => Formulario de campos validados, DBdataTable => Listado datatables server side)
 
 		<div style="display:none;" id="divClass">

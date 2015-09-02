@@ -66,8 +66,8 @@ class bower extends Error implements IPage {
 	}
 
 	public function acExec ($args) {
-		echo "Args: <pre>".print_r ($args,true)."</pre>";
-		echo "Request: <pre>".print_r ($_REQUEST,true)."</pre>";
+		//echo "Args: <pre>".print_r ($args,true)."</pre>";
+		//echo "Request: <pre>".print_r ($_REQUEST,true)."</pre>";
 
 		$pkgs=$args['pkgs'];
 		$cCmd=$args['cCmd'];
@@ -139,7 +139,10 @@ class bower extends Error implements IPage {
 				$objLibData->name='('.basename(dirname($dotBowerJsonFilePath)).') '.$objBowerInfo->name;
 				$objLibData->version=(isset($objBowerInfo->version))?$objBowerInfo->version:'No definida';
 				$objLibData->dependencies=(isset($objBowerInfo->dependencies))?(array)$objBowerInfo->dependencies:array();
-				$objLibData->main=(is_array($objBowerInfo->main))?$objBowerInfo->main:array(0 => $objBowerInfo->main);
+				$objLibData->main=array();
+				if (isset($objBowerInfo->main)) {
+					$objLibData->main=(is_array($objBowerInfo->main))?$objBowerInfo->main:array(0 => $objBowerInfo->main);
+				}
 
 				$arrJsFiles=array();
 				$arrCssFiles=array();
@@ -195,7 +198,7 @@ class bower extends Error implements IPage {
 				}
 			}
 		}
-		echo "arrLibsApps: <pre>".print_r ($arrLibsApps,true)."</pre>";
+		//echo "arrLibsApps: <pre>".print_r ($arrLibsApps,true)."</pre>";
 
 		echo "<h3>GLOBAL</h3>";
 		try {
@@ -258,18 +261,28 @@ class bower extends Error implements IPage {
 						}
 						echo "Incluido: ".$componentName."<br />\n";
 						$arrBowerComponentsProcessed[]=$componentName;
+						$ningunFile=true;
 						foreach ($objComponentInfo->js as $jsFilePath) {
 							$bowerComponentsContent.='<!-- '.$componentName.' --><script src="'.$jsFilePath.'"></script>'.PHP_EOL;
+							echo '<li>Incluido: '.$jsFilePath.'</li>';
+							$ningunFile=false;
 						}
 						foreach ($objComponentInfo->css as $cssFilePath) {
 							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
+							echo '<li>Incluido: '.$cssFilePath.'</li>';
+							$ningunFile=false;
 						}
 						/*foreach ($objComponentInfo->less as $lessFilePath) {
 							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$lessFilePath.'" rel="stylesheet">'.PHP_EOL;
+							$ningunFile=false;
 						}*/
 						foreach ($objComponentInfo->otherFiles as $otherFilesFilePath) {
 							//$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
 							echo '<li>Fichero de tipo desconocido. NO INCLUIDO: '.$otherFilesFilePath.'</li>';
+							$ningunFile=false;
+						}
+						if ($ningunFile) {
+							echo '<li>OJO!!: no se encuentra ningún fichero para '.$componentName.'</li>';
 						}
 					}
 				}

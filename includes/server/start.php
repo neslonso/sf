@@ -72,11 +72,6 @@ define ('APPS', serialize(array(
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools',
 	),
-	'index.php' => array(
-		'FILE_APP' => 'index.php',//siempre igual que la key
-		'RUTA_APP' => SKEL_ROOT_DIR.'appStgwood/',
-		'NOMBRE_APP' => 'stgwood',
-	),
 )));
 //Definimos todas las constantes de la aplicacion correspondiente al punto de entrada
 $arrApps=unserialize(APPS);

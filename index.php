@@ -2,7 +2,7 @@
 $tInicial=microtime(true);
 ?>
 <?
-define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'./').'/');
+define ('SKEL_ROOT_DIR',realpath(__DIR__.'/'.'/').'/');
 $module='';
 try {
 	require_once SKEL_ROOT_DIR."/includes/server/start.php";

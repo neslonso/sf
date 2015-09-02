@@ -7,11 +7,6 @@ use Sintax\Core\ReturnInfo;
 class Creacion extends Error implements IPage {
 	public function __construct(User $objUsr) {
 		parent::__construct($objUsr);
-		try {
-			\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
-		} catch (Exception $e) {
-			error_log("No se pudo conectat a BD en ".__FILE__."::".__LINE__);
-		}
 	}
 	public function pageValida () {
 		return $this->objUsr->pagePermitida($this);
@@ -53,16 +48,24 @@ class Creacion extends Error implements IPage {
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/css.php");
 	}
 	public function markup() {
-		$mysqli=\cDb::getInstance();
+		$hayDB=true;
+		try {
+			\cDb::conf(_DB_HOST_,_DB_USER_,_DB_PASSWD_,_DB_NAME_);
+		} catch (\Exception $e) {
+			$hayDB=false;
+		}
 		$arrStdObjTableInfo=array();
-		if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
-			while ($table = $result->fetch_array()) {
-				$stdObjTableInfo=$this->getTableInfo($table[0]);
-				array_push($arrStdObjTableInfo,$stdObjTableInfo);
-				unset($stdObjTableInfo);
+		if ($hayDB) {
+			$mysqli=\cDb::getInstance();
+			if ($result = $mysqli->query("show full tables where Table_Type = 'BASE TABLE'")) {
+				while ($table = $result->fetch_array()) {
+					$stdObjTableInfo=$this->getTableInfo($table[0]);
+					array_push($arrStdObjTableInfo,$stdObjTableInfo);
+					unset($stdObjTableInfo);
+				}
+			} else {
+				echo $mysqli->error;
 			}
-		} else {
-			echo $mysqli->error;
 		}
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
 	}

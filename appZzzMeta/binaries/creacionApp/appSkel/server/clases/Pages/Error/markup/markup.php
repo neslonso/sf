@@ -10,7 +10,7 @@
 					<?=$this->msg?>
 				</div>
 				<div style="text-align:center;">
-					<a href="<?=BASE_DIR.FILE_APP?>">Voler al inicio</a>
+					<a href="<?=BASE_DIR.FILE_APP?>">Volver al inicio</a>
 				</div>
 			</div>
 		</div>
