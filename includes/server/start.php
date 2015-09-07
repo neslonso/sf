@@ -67,25 +67,34 @@ define ('MODULES', serialize(array(
 
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
-	'sintax.php' => array(
-		'FILE_APP' => 'sintax.php',//siempre igual que la key
+	'index.php' => array(
+		//'KEY_APP' => 'index.php',//siempre igual que la key (futuro)
+		'FILE_APP' => 'index.php',
+		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
+		'NOMBRE_APP' => 'Sintax tools (index del raiz)',
+	),
+	'sintax/index.php' => array(
+		//'KEY_APP' => 'sintax/index.php',//siempre igual que la key (futuro)
+		'FILE_APP' => 'index.php',
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools',
 	),
 )));
 //Definimos todas las constantes de la aplicacion correspondiente al punto de entrada
+require_once SKEL_ROOT_DIR."includes/server/serverLibs.php";
+require_once SKEL_ROOT_DIR."includes/server/FirePHP.php";
+
 $arrApps=unserialize(APPS);
-if (isset($arrApps[basename($_SERVER['SCRIPT_NAME'])])) {
-	foreach ($arrApps[basename($_SERVER['SCRIPT_NAME'])] as $key => $value) {
+$appKey=\Filesystem::find_relative_path(SKEL_ROOT_DIR,$_SERVER['SCRIPT_FILENAME']);
+if (isset($arrApps[$appKey])) {
+	foreach ($arrApps[$appKey] as $key => $value) {
 		define ($key,$value);
 	}
 } else {
-	throw new Exception("No se encontró APP para el punto de entrada: ".$_SERVER['SCRIPT_NAME'],1);
+	throw new \Exception("No se encontró APP con clave: ".$appKey,1);
 }
 
 require_once SKEL_ROOT_DIR."includes/server/clientLibs.php";
-require_once SKEL_ROOT_DIR."includes/server/serverLibs.php";
-require_once SKEL_ROOT_DIR."includes/server/FirePHP.php";
 
 if (defined('RUTA_APP')) {
 	if (file_exists(RUTA_APP."server/appDefines.php")) {

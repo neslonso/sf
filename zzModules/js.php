@@ -24,7 +24,8 @@ try {
 
 	/* Js Libs ********************************************************************/
 	$arrFilesModTime=array();
-	$arrFilesModTime[__FILE__]=getlastmod();//Fecha de modificacion de este fichero
+	$arrFilesModTime[$_SERVER['SCRIPT_FILENAME']]=getlastmod();//Fecha de modificacion del punto de entrada
+	$arrFilesModTime[__FILE__]=filemtime(__FILE__);//Fecha de modificacion de este fichero
 	$arrFilesModTime[SKEL_ROOT_DIR."includes/server/start.php"]=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
 	ob_start();
 		foreach ($ARR_CLIENT_LIBS as $libPath) {
