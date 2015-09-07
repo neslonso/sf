@@ -4,7 +4,7 @@
 	</IfModule>
 
 	RewriteEngine on
-	RewriteBase /proys/00.skel/zzzEntryPointMoveTest/
+	RewriteBase /proys/00.skel/sintax/
 
 	# Compatibilidad ###############################################################
 	#	RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)

@@ -32,14 +32,15 @@ try {
 		break;
 		case "DB";
 			try {
+				\cDb::conf(_DB_HOST_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 				$db=cDb::getInstance();
-				list($tabla,$campoId,$valorId,$campoData)=explode($_GET["fichero"],'.');
+				list($tabla,$campoId,$valorId,$campoData)=explode('.',$_GET["fichero"]);
 				$sql="SELECT ".$campoId.", ".$campoData." FROM ".$tabla." WHERE id='".$db->real_Escape_String($valorId)."'";
 				//$GLOBALS['firephp']->info($sql);
 				$rslSet=$db->query($sql);
 				if ($rslSet->num_rows>0) {
 					$data=$rslSet->fetch_object();
-					$data=$data->data;
+					$data=$data->$campoData;
 				}
 				$objImg=Imagen::fromString($data);
 				//$objImg->marcaAgua("");

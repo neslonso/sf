@@ -24,7 +24,8 @@ try {
 
 	/* Js Libs ********************************************************************/
 	$arrFilesModTime=array();
-	$arrFilesModTime[__FILE__]=getlastmod();//Fecha de modificacion de este fichero
+	$arrFilesModTime[$_SERVER['SCRIPT_FILENAME']]=getlastmod();//Fecha de modificacion del punto de entrada
+	$arrFilesModTime[__FILE__]=filemtime(__FILE__);//Fecha de modificacion de este fichero
 	$arrFilesModTime[SKEL_ROOT_DIR."includes/server/start.php"]=filemtime(SKEL_ROOT_DIR."includes/server/start.php");
 	ob_start();
 		foreach ($ARR_CLIENT_LIBS as $libPath) {
@@ -55,8 +56,13 @@ try {
 			$firephp->info($infoExc);
 		}
 
-		$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
-		//echo $jsMinFile;
+		$jsMinFile=CACHE_DIR.str_replace('/', '-',dirname($_SERVER['SCRIPT_NAME']))."-jsMin.".md5(serialize($arrFilesModTime)).".css";
+		$firephp->info($jsMinFile,'cssFile:');
+		$firephp->group('Fechas de ficheros', array('Collapsed' => true, 'Color' => '#FF9933'));
+		foreach ($arrFilesModTime as $filePath => $modTimeStamp) {
+			$firephp->info(gmdate('D, d M Y H:i:s \G\M\T',$modTimeStamp),$filePath);
+		}
+		$firephp->groupend();
 
 		if (file_exists($jsMinFile)) {
 			$firephp->info($jsMinFile,'devolviendo JS cacheado:');
