@@ -8,7 +8,7 @@ try {
 	header('Content-type: text/css; charset=utf-8');
 	session_cache_limiter('public');
 	session_start();
-	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() - 60*60*24*364));
+	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 60*60*24*364));
 
 	$page=(isset($_GET['page']))?$_GET['page']:'Home';
 
