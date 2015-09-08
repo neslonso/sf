@@ -72,7 +72,7 @@ class bower extends Error implements IPage {
 		$pkgs=$args['pkgs'];
 		$cCmd=$args['cCmd'];
 
-		$opts='-n -d"'.SKEL_ROOT_DIR.'"';
+		$opts='-n -d="'.SKEL_ROOT_DIR.'"';
 		switch ($cCmd) {
 			case "install":$opts.='';break;
 			case "update":$opts.='';break;
@@ -94,7 +94,7 @@ class bower extends Error implements IPage {
 		//putenv('BOWERPHP_TOKEN=' . <github api token>);
 		$cmd='php '.SKEL_ROOT_DIR.'includes/server/vendor/bowerphp.phar '.$opts.' '.$cCmd.' '.$pkgs;
 		echo "<h2>Ejecutando: ".$cmd."</h2>";
-		echo "<h3>Working dir: ".getcwd ()." :: HOME=".getenv('HOME')."</h3>";
+		echo "<h3>HOME enviroment variable=".getenv('HOME')."</h3>";
 
 		$descriptorspec = array(
 			//0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
