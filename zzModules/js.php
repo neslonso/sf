@@ -56,8 +56,13 @@ try {
 			$firephp->info($infoExc);
 		}
 
-		$jsMinFile=CACHE_DIR."jsMin.".md5(serialize($arrFilesModTime)).".js";
-		//echo $jsMinFile;
+		$jsMinFile=CACHE_DIR.str_replace('/', '-',dirname($_SERVER['SCRIPT_NAME']))."-jsMin.".md5(serialize($arrFilesModTime)).".css";
+		$firephp->info($jsMinFile,'cssFile:');
+		$firephp->group('Fechas de ficheros', array('Collapsed' => true, 'Color' => '#FF9933'));
+		foreach ($arrFilesModTime as $filePath => $modTimeStamp) {
+			$firephp->info(gmdate('D, d M Y H:i:s \G\M\T',$modTimeStamp),$filePath);
+		}
+		$firephp->groupend();
 
 		if (file_exists($jsMinFile)) {
 			$firephp->info($jsMinFile,'devolviendo JS cacheado:');
