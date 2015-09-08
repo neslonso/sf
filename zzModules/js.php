@@ -57,7 +57,7 @@ try {
 		}
 
 		$jsMinFile=CACHE_DIR.str_replace('/', '-',dirname($_SERVER['SCRIPT_NAME']))."-jsMin.".md5(serialize($arrFilesModTime)).".css";
-		$firephp->info($jsMinFile,'cssFile:');
+		$firephp->info($jsMinFile,'jsFile:');
 		$firephp->group('Fechas de ficheros', array('Collapsed' => true, 'Color' => '#FF9933'));
 		foreach ($arrFilesModTime as $filePath => $modTimeStamp) {
 			$firephp->info(gmdate('D, d M Y H:i:s \G\M\T',$modTimeStamp),$filePath);
