@@ -304,7 +304,7 @@ class bower extends Error implements IPage {
 					$scopeName="GLOBAL";
 					$bowerComponentsFilePath=$arrAppData['RUTA_APP'].'includes/cliente/bowerComponents.php';
 				} else {
-					$scopeName=$arrAppData['FILE_APP'];
+					$scopeName=$entryPoint;
 					$bowerComponentsFilePath=$arrAppData['RUTA_APP'].'cliente/appBowerComponents.php';
 				}
 				$bowerComponentsContent='';
