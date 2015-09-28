@@ -62,6 +62,8 @@ class composer extends Error implements IPage {
 		unset($pipes);
 		$composerVersion=$stdout;
 
+		$arrInstalledLibs=\Sintax\Pages\bower::getInstalledLibs(COMPOSER_ASSET_PLUGIN_PATH);
+
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
 	}
 
@@ -91,7 +93,7 @@ class composer extends Error implements IPage {
 		$cCmd=$args['cCmd'];
 		$dryRun=($args['dryRun']==1)?' --dry-run ':'';
 		$verbose=($args['verbose']==1)?' --verbose ':'';
-		$opts=' --no-interaction ';
+		$opts=' --no-interaction -d "'.SKEL_ROOT_DIR.'" ';
 		switch ($cCmd) {
 			case "install":$opts.='--optimize-autoloader '.$dryRun.$verbose;break;
 			case "update":$opts.='--with-dependencies '.$dryRun;break;
@@ -147,6 +149,11 @@ class composer extends Error implements IPage {
 
 			echo "command returned $return_value\n";
 		}*/
+	}
+
+	public function acGenerateComposerAssetPluginComponentsFiles($args) {
+		$arrLibsApps=$args['arrLibsApps'];
+		\Sintax\Pages\bower::generateAssetsFiles($arrLibsApps,COMPOSER_ASSET_PLUGIN_PATH,'composerAssetPluginComponents.php','appComposerAssetPluginComponents.php');
 	}
 }
 ?>

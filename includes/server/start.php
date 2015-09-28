@@ -39,7 +39,8 @@ define ('IPS_DEV', serialize(array_merge(
 		//'79.146.211.176',//León Carbajal 20150420
 		//'88.14.233.166',//León Carbajal 20150625
 		//'83.53.147.109',//León Carbajal 20150815
-		'88.14.237.3',//León Carbajal 20150818
+		//'88.14.237.3',//León Carbajal 20150818
+		'88.21.228.165',//León Carbajal 20150915
 	),
 	array(
 		'193.146.109.133',//Unileon
@@ -68,13 +69,13 @@ define ('MODULES', serialize(array(
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
 	'index.php' => array(
-		//'KEY_APP' => 'index.php',//siempre igual que la key (futuro)
+		'KEY_APP' => 'index.php',//siempre igual que la key correspondiente del array APPS
 		'FILE_APP' => 'index.php',
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools (index del raiz)',
 	),
 	'sintax/index.php' => array(
-		//'KEY_APP' => 'sintax/index.php',//siempre igual que la key (futuro)
+		'KEY_APP' => 'sintax/index.php',//siempre igual que la key correspondiente del array APPS
 		'FILE_APP' => 'index.php',
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools',

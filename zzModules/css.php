@@ -117,6 +117,11 @@ try {
 
 					$firephp->info($href,'Cargando HREF y reescribiendo URLs css:');
 					$fileContent=file_get_contents($href)."\n\n";
+					if ($lessParse) {//TODO: Mejora: solo parsear ficheros .less, no todos.
+						$lessParser = new Less_Parser($arrLessParserOptions);
+						$lessParser->parseFile( $href, '');
+						$fileContent = $lessParser->getCss();
+					}
 					$patron="/(url ?\( ?['\"]?)(?!['\"]?data:)(?!['\"]?https?:)([^'\")]+)/";
 					$fileContent=preg_replace($patron,'$1'.$baseURI.'$2', $fileContent);
 					$cssLibs.="/* <Lib: ".$href."> */\n";
