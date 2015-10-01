@@ -1,0 +1,13 @@
+{
+    "name": "Sintax",
+    "authors": [
+        "Neslonso <neslonso@gmail.com>",
+        " <>"
+    ],
+    "private": true,
+    "dependencies": {
+        "jquery": "2",
+        "bootstrap": "3",
+        "fontawesome": "*"
+    }
+}
