@@ -4,7 +4,7 @@
 	</IfModule>
 
 	RewriteEngine on
-	RewriteBase /proys/00.skel/
+	RewriteBase /proys/sf/
 
 	# Compatibilidad ###############################################################
 	#	RewriteCond %{QUERY_STRING} APP=(.*?)(\&|$)
