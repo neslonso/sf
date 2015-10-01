@@ -125,11 +125,17 @@ class composer extends Error implements IPage {
 		$stderr = stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
 
+
 		echo "<h3>STDOUT</h3>";
 		echo "<pre>".$stdout."</pre>";
 		echo "<h3>STDERR</h3>";
 		echo "<pre>".$stderr."</pre>";
 		/**/
+
+		if (file_exists(SKEL_ROOT_DIR.'cache')) {
+			echo '<h4>Composer ha creado el directorio "'.SKEL_ROOT_DIR.'cache", eliminado directorio</h4>';
+			\Filesystem::delTree(SKEL_ROOT_DIR.'cache');
+		}
 
 		/*if (is_resource($process)) {
 			// $pipes now looks like this:
