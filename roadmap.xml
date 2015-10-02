@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<versions>
+	<version>
+		<name>Alpha 2</name>
+		<feature done="false" revised="false">
+			<name>Roadmap Tool</name>
+			<description>
+				Herramienta para mostrar y actualizar información sacada de un fichero de versiones XML y características
+			</description>
+		</feature>
+		<feature done="false" revised="false">
+			<name>Install Tool</name>
+			<description>
+				Herramienta para instalar el framework y dejarlo funcionando
+			</description>
+		</feature>
+	</version>
+	<version>
+		<name>Alpha 3</name>
+		<feature done="false" revised="false">
+			<name>Otra Tool de nombre muy largo</name>
+			<description>
+				Herramienta para hacer mas cosas chulas
+			</description>
+		</feature>
+		<feature done="false" revised="false">
+			<name>...</name>
+			<description>
+				.........
+			</description>
+		</feature>
+	</version>
+	<version>
+		<name>...</name>
+	</version>
+	<version>
+		<name>Beta 1</name>
+		<feature done="false" revised="false">
+			<name>Compatibilidad con windows</name>
+			<description>
+				Revisar que el codigo sea compatible con windows, p.e. todo el temas de separadores de rutas (DIRECTORY_SEPARATOR)
+			</description>
+		</feature>
+	</version>
+</versions>

@@ -2,7 +2,11 @@
 	"config": {
 		"vendor-dir": "includes/server/vendor/composerVendor",
 		"cache-dir": "zCache/composer",
-		"home": "."
+		"home": ".",
+		"github-oauth": {
+			"github.com": "7568a21be48617b1658afe18a5005e811440ebf2"
+		}
+
 	},
 	"require-dev": {
 	},
@@ -12,6 +16,15 @@
 		"firephp/firephp-core": "~0.4",
 		"phpunit/phpunit": "~4.3",
 		"oyejorge/less.php": "v1.7.0.5",
-		"andrewsville/php-token-reflection": "^1.4"
+		"andrewsville/php-token-reflection": "^1.4",
+		"fxp/composer-asset-plugin": "1.0.0@dev",
+		"bower-asset/bootstrap": "^3.3",
+		"bower-asset/fontawesome": "^4.4"
+	},
+	"extra": {
+		"asset-installer-paths": {
+			"npm-asset-library": "includes/cliente/vendor/composer-asset-plugin",
+			"bower-asset-library": "includes/cliente/vendor/composer-asset-plugin"
+		}
 	}
 }

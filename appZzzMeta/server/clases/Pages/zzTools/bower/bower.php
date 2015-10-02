@@ -60,7 +60,7 @@ class bower extends Error implements IPage {
 		unset($pipes);
 		$bowerphpVersion=$stdout;
 
-		$arrInstalledLibs=$this->getInstalledLibs();
+		$arrInstalledLibs=$this->getInstalledLibs(BOWER_PATH);
 
 		require_once( str_replace("//","/",dirname(__FILE__)."/")."markup/markup.php");
 	}
@@ -74,7 +74,7 @@ class bower extends Error implements IPage {
 
 		$opts='-n -d="'.SKEL_ROOT_DIR.'"';
 		switch ($cCmd) {
-			case "install":$opts.='';break;
+			case "install":$opts.=' --save ';break;
 			case "update":$opts.='';break;
 			case "uninstall":$opts.='';break;
 			case "list":$opts.='';break;
@@ -120,12 +120,12 @@ class bower extends Error implements IPage {
 
 	public function acGenerateBowerComponentsFiles($args) {
 		$arrLibsApps=$args['arrLibsApps'];
-		$this->generateBowerComponentsFiles($arrLibsApps);
+		$this->generateAssetsFiles($arrLibsApps,BOWER_PATH,'bowerComponents.php','appBowerComponents.php');
 	}
 
-	private function getInstalledLibs() {
+	public function getInstalledLibs($libDirectoryPath) {
 		$arrInstalledLibs=array();
-		$arrBowerJsonFiles=\Filesystem::folderSearch(BOWER_PATH, '/.*bower.json/');
+		$arrBowerJsonFiles=\Filesystem::folderSearch($libDirectoryPath, '/.*bower.json/');
 		foreach ($arrBowerJsonFiles as $bowerJsonFilePath) {
 			if (!isset($arrInstalledLibs[basename(dirname($bowerJsonFilePath))])) {
 				$dotBowerJsonFilePath=dirname($bowerJsonFilePath).'/.bower.json';
@@ -153,7 +153,7 @@ class bower extends Error implements IPage {
 				$objLibData->otherFiles=array();
 
 				foreach ($objLibData->main as $fileRelPath) {
-					$baseURI="./".\Filesystem::find_relative_path(SKEL_ROOT_DIR,BOWER_PATH)."/";
+					$baseURI="./".\Filesystem::find_relative_path(SKEL_ROOT_DIR,$libDirectoryPath)."/";
 					$includeFilePath=$baseURI.basename(dirname($bowerJsonFilePath)).DIRECTORY_SEPARATOR.$fileRelPath;
 					$fileExt=pathinfo($includeFilePath, PATHINFO_EXTENSION);
 					switch ($fileExt) {
@@ -186,8 +186,8 @@ class bower extends Error implements IPage {
 		return $arrInstalledLibs;
 	}
 
-	private function generateBowerComponentsFiles ($arrLibsApps) {
-		echo "<h2>Generando bowerComponents.php / appBowerComponents.php</h2>";
+	public function generateAssetsFiles ($arrLibsApps,$libDirectoryPath,$globalIncludeFilename,$localIncludeFilename) {
+		echo "<h2>Generando ".$globalIncludeFilename." / ".$localIncludeFilename."</h2>";
 		//Quitamos todo lo que esté en global de las apps
 		foreach ($arrLibsApps as $libName => $arrLibData) {
 			if ($arrLibData['GLOBAL']==1) {
@@ -202,7 +202,7 @@ class bower extends Error implements IPage {
 
 		echo "<h3>GLOBAL</h3>";
 		try {
-			$this->includeAppLibs(NULL,$this->getInstalledLibs(),$arrLibsApps);
+			self::includeAppLibs(NULL,self::getInstalledLibs($libDirectoryPath),$arrLibsApps,$globalIncludeFilename,$localIncludeFilename);
 		} catch (\Exception $e) {
 			echo 'Excepcion incluyendo libs. Msg: '.$e->getMessage();
 		}
@@ -211,7 +211,7 @@ class bower extends Error implements IPage {
 		foreach ($arrApps as $entryPoint => $arrAppData) {
 			echo '<h3>'.$entryPoint.' ('.$arrAppData['NOMBRE_APP'].')</h3>';
 			try {
-				$this->includeAppLibs($arrAppData,$this->getInstalledLibs(),$arrLibsApps);
+				self::includeAppLibs($arrAppData,self::getInstalledLibs($libDirectoryPath),$arrLibsApps,$globalIncludeFilename,$localIncludeFilename);
 			} catch (\Exception $e) {
 				echo 'Excepcion incluyendo libs. Msg: '.$e->getMessage();
 			}
@@ -219,65 +219,67 @@ class bower extends Error implements IPage {
 		}
 	}
 
-	private function includeAppLibs($arrAppData,$arrInstalledLibs,$arrLibsApps) {
+	private function includeAppLibs($arrAppData,$arrInstalledLibs,$arrLibsApps,$globalIncludeFilename,$localIncludeFilename) {
 		if (is_null($arrAppData)) {
 			$scopeName="GLOBAL";
-			$bowerComponentsFilePath=SKEL_ROOT_DIR.'includes/cliente/bowerComponents.php';
+			$componentsFilePath=SKEL_ROOT_DIR.'includes/cliente/'.$globalIncludeFilename;
 		} else {
-			$scopeName=$arrAppData['FILE_APP'];
-			$bowerComponentsFilePath=$arrAppData['RUTA_APP'].'cliente/appBowerComponents.php';
+			$scopeName=$arrAppData['KEY_APP'];
+			$componentsFilePath=$arrAppData['RUTA_APP'].'cliente/'.$localIncludeFilename;
 		}
 
-		if (!file_exists($bowerComponentsFilePath)) {throw new \ActionException('Fichero bowerComponents no existe ('.$bowerComponentsFilePath.')', 1);return;}
+		if (!file_exists($componentsFilePath)) {throw new \ActionException('Fichero components no existe ('.$componentsFilePath.')', 1);return;}
 
-		//file_put_contents($bowerComponentsFilePath,'');
-		$arrBowerComponents=$arrInstalledLibs;
-		$arrBowerComponentsProcessed=array();
-		$bowerComponentsContent='<!-- Fichero generado automaticamente. No editar. -->'.PHP_EOL;
+		//file_put_contents($componentsFilePath,'');
+		$arrComponents=$arrInstalledLibs;
+		$arrComponentsProcessed=array();
+		$componentsContent='<!-- Fichero generado automaticamente. No editar. -->'.PHP_EOL;
 		$i=0;
-		while (count($arrBowerComponents)>count($arrBowerComponentsProcessed)) {
+		while (count($arrComponents)>count($arrComponentsProcessed)) {
 			$i++;
 			if ($i>1000) {
-				file_put_contents($bowerComponentsFilePath,$bowerComponentsContent);
+				file_put_contents($componentsFilePath,$componentsContent);
 				throw new \ActionException('No se pudieron satisfacer las dependencias ['.$scopeName.']', 1);
 			}
-			foreach ($arrBowerComponents as $componentName => $objComponentInfo) {
+			foreach ($arrComponents as $componentName => $objComponentInfo) {
 				$dependenciesSatisfied=true;
 				foreach ($objComponentInfo->dependencies as $dependencyName => $dependencyVersion) {
-					if (!in_array($dependencyName, $arrBowerComponentsProcessed)) {
+					if (!in_array($dependencyName, $arrComponentsProcessed)) {
 						$dependenciesSatisfied=false;
 					}
 				}
 				if ($dependenciesSatisfied) {
-					if (!in_array($componentName, $arrBowerComponentsProcessed)) {
+					if (!in_array($componentName, $arrComponentsProcessed)) {
 						if (isset($arrLibsApps[$componentName])) {
 							if (isset($arrLibsApps[$componentName][$scopeName])) {
 								if ($arrLibsApps[$componentName][$scopeName]!=1) {
-									echo "Excluido: ".$componentName."<br />\n";
-									$arrBowerComponentsProcessed[]=$componentName;
+									echo "Excluido: ".$componentName."<br />".PHP_EOL;
+									//echo 'C: '.$componentName.' :: S: '.$scopeName.' :: a[c][s]:'.$arrLibsApps[$componentName][$scopeName]."<br />".PHP_EOL;
+									$arrComponentsProcessed[]=$componentName;
 									continue;
 								}
 							}
 						}
 						echo "Incluido: ".$componentName."<br />\n";
-						$arrBowerComponentsProcessed[]=$componentName;
+						$arrComponentsProcessed[]=$componentName;
 						$ningunFile=true;
 						foreach ($objComponentInfo->js as $jsFilePath) {
-							$bowerComponentsContent.='<!-- '.$componentName.' --><script src="'.$jsFilePath.'"></script>'.PHP_EOL;
+							$componentsContent.='<!-- '.$componentName.' --><script src="'.$jsFilePath.'"></script>'.PHP_EOL;
 							echo '<li>Incluido: '.$jsFilePath.'</li>';
 							$ningunFile=false;
 						}
 						foreach ($objComponentInfo->css as $cssFilePath) {
-							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
+							$componentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
 							echo '<li>Incluido: '.$cssFilePath.'</li>';
 							$ningunFile=false;
 						}
-						/*foreach ($objComponentInfo->less as $lessFilePath) {
-							$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$lessFilePath.'" rel="stylesheet">'.PHP_EOL;
+						foreach ($objComponentInfo->less as $lessFilePath) {
+							$componentsContent.='<!-- '.$componentName.' --><link href="'.$lessFilePath.'" rel="stylesheet">'.PHP_EOL;
+							echo '<li>Incluido: '.$lessFilePath.'</li>';
 							$ningunFile=false;
-						}*/
+						}
 						foreach ($objComponentInfo->otherFiles as $otherFilesFilePath) {
-							//$bowerComponentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
+							//$componentsContent.='<!-- '.$componentName.' --><link href="'.$cssFilePath.'" rel="stylesheet">'.PHP_EOL;
 							echo '<li>Fichero de tipo desconocido. NO INCLUIDO: '.$otherFilesFilePath.'</li>';
 							$ningunFile=false;
 						}
@@ -288,35 +290,35 @@ class bower extends Error implements IPage {
 				}
 			}
 		}
-		file_put_contents($bowerComponentsFilePath,$bowerComponentsContent);
+		file_put_contents($componentsFilePath,$componentsContent);
 	}
 
-	private function getArrLibsApps() {
+	public function getArrLibsApps($libDirectoryPath,$globalIncludeFilename,$localIncludeFilename) {
 		$arrLibsApps=array();
 		$arrApps=unserialize(APPS);
 		$arrApps['GLOBAL']=array('RUTA_APP' => SKEL_ROOT_DIR);
 
 
-		$arrInstalledLibs=$this->getInstalledLibs();
+		$arrInstalledLibs=self::getInstalledLibs($libDirectoryPath);
 		foreach ($arrInstalledLibs as $libName => $objLibData) {
 			foreach ($arrApps as $entryPoint => $arrAppData) {
 				if ($entryPoint=='GLOBAL') {
 					$scopeName="GLOBAL";
-					$bowerComponentsFilePath=$arrAppData['RUTA_APP'].'includes/cliente/bowerComponents.php';
+					$componentsFilePath=$arrAppData['RUTA_APP'].'includes/cliente/'.$globalIncludeFilename;
 				} else {
 					$scopeName=$entryPoint;
-					$bowerComponentsFilePath=$arrAppData['RUTA_APP'].'cliente/appBowerComponents.php';
+					$componentsFilePath=$arrAppData['RUTA_APP'].'cliente/'.$localIncludeFilename;
 				}
-				$bowerComponentsContent='';
+				$componentsContent='';
 				try {
-					$bowerComponentsContent=file_get_contents($bowerComponentsFilePath);
+					$componentsContent=file_get_contents($componentsFilePath);
 				} catch (\Exception $e) {
 					$fp=\FirePHP::getInstance(true);
 					$fp->error('Excepcion en getArrLibsApps. Msg: '.$e->getMessage());
 				}
 				if (
-					strstr($bowerComponentsContent, "<!-- ".$libName." -->") ||
-					strstr($bowerComponentsContent, "bowerVendor/".$libName."") ) {
+					strstr($componentsContent, "<!-- ".$libName." -->") ||
+					strstr($componentsContent, "bowerVendor/".$libName."") ) {
 					$arrLibsApps[$libName][$scopeName]=1;
 				} else {
 					$arrLibsApps[$libName][$scopeName]=0;

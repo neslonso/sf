@@ -56,7 +56,7 @@ try {
 			$firephp->info($infoExc);
 		}
 
-		$jsMinFile=CACHE_DIR.str_replace('/', '-',dirname($_SERVER['SCRIPT_NAME']))."-jsMin.".md5(serialize($arrFilesModTime)).".css";
+		$jsMinFile=CACHE_DIR.str_replace('/', '-',dirname($_SERVER['SCRIPT_NAME']))."-jsMin.".md5(serialize($arrFilesModTime)).".js";
 		$firephp->info($jsMinFile,'jsFile:');
 		$firephp->group('Fechas de ficheros', array('Collapsed' => true, 'Color' => '#FF9933'));
 		foreach ($arrFilesModTime as $filePath => $modTimeStamp) {
@@ -65,10 +65,12 @@ try {
 		$firephp->groupend();
 
 		if (file_exists($jsMinFile)) {
-			$firephp->info($jsMinFile,'devolviendo JS cacheado:');
+			$firephp->info($jsMinFile,'jsMinFile existe: Devolviendo JS cacheado:');
+			/*
 			$firephp->info(array_map(function ($elto) {
 				return gmdate('D, d M Y H:i:s \G\M\T',$elto);
 			},$arrFilesModTime),'Fechas de modificacion:');
+			*/
 			echo file_get_contents($jsMinFile);
 		} else {
 			$jsLibs="// Js Libs \n";

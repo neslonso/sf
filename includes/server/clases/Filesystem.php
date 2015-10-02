@@ -178,5 +178,13 @@ class Filesystem {
 		// Strip last separator
 		return substr($relpath, 0, -1);
 	}
+
+	public static function delTree($dir) {
+		$files = array_diff(scandir($dir), array('.','..'));
+		foreach ($files as $file) {
+			(is_dir("$dir/$file")) ? Filesystem::delTree("$dir/$file") : unlink("$dir/$file");
+		}
+		return rmdir($dir);
+	}
 }
 ?>

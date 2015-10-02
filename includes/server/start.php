@@ -40,7 +40,10 @@ define ('IPS_DEV', serialize(array_merge(
 		//'88.14.233.166',//León Carbajal 20150625
 		//'83.53.147.109',//León Carbajal 20150815
 		//'88.14.237.3',//León Carbajal 20150818
+<<<<<<< HEAD
 		//'88.10.191.54',//León Carbajal 20150910
+=======
+>>>>>>> 4ba5ae347040f6b9a0f3a39eec4e622179e8c593
 		'88.21.228.165',//León Carbajal 20150915
 	),
 	array(
@@ -70,22 +73,69 @@ define ('MODULES', serialize(array(
 //Listamos todas las aplicaciones del proyecto asociando cada punto de entrada a la ruta y nombre de la APP
 define ('APPS', serialize(array(
 	'index.php' => array(
-		//'KEY_APP' => 'index.php',//siempre igual que la key (futuro)
+		'KEY_APP' => 'index.php',//siempre igual que la key correspondiente del array APPS
 		'FILE_APP' => 'index.php',
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools (index del raiz)',
 	),
 	'sintax/index.php' => array(
-		//'KEY_APP' => 'sintax/index.php',//siempre igual que la key (futuro)
+		'KEY_APP' => 'sintax/index.php',//siempre igual que la key correspondiente del array APPS
 		'FILE_APP' => 'index.php',
 		'RUTA_APP' => SKEL_ROOT_DIR.'appZzzMeta/',
 		'NOMBRE_APP' => 'Sintax tools',
 	),
 )));
-//Definimos todas las constantes de la aplicacion correspondiente al punto de entrada
+
+//requerimos las bibliotecas de servidor "estaticas" y el autoloader de composer
 require_once SKEL_ROOT_DIR."includes/server/serverLibs.php";
+
+/* Instalamos componentes de composer *****************************************/
+	if (!class_exists('\\FirePHP')) {
+		header('Content-Type: text/html; charset=utf-8');
+		echo '<style type="text/css">pre {border:inset black 3px; background-color:#c0c0c0; font-family:monospace; max-height:300px; overflow:auto;}</style>';
+		echo "<h1>Detectada primera ejecución</h1>";
+		putenv('COMPOSER_HOME=' . SKEL_ROOT_DIR);
+		$descriptorspec = array(
+			//0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("pipe", "w"),  // stderr is a pipe that the child will write to
+		);
+		$cmd='php '.SKEL_ROOT_DIR.'includes/server/vendor/composer.phar install --optimize-autoloader --no-interaction -d "'.SKEL_ROOT_DIR.'" --profile';
+		echo "<h2>Ejecutando: ".$cmd."</h2>";
+		ob_flush();
+		$process = proc_open($cmd, $descriptorspec, $pipes);
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+
+		echo '<h3>STDOUT</h3>';
+		echo '<pre>'.$stdout.'</pre>';
+		echo '<h3>STDERR</h3>';
+		echo '<pre>'.$stderr.'</pre>';
+
+		if (file_exists(SKEL_ROOT_DIR.'cache')) {
+			echo '<h4>Composer ha creado el directorio "'.SKEL_ROOT_DIR.'cache", eliminado directorio</h4>';
+			\Filesystem::delTree(SKEL_ROOT_DIR.'cache');
+		}
+
+		echo '
+			<hr />
+				Continuar:
+				<ul>
+					<li><a href="'.BASE_URL.'sintax/">Página princiapl de S!nt@x</a></li>
+					<li><a href="'.BASE_URL.'sintax/creacion/">Herramienta de creación</a></li>
+					<li>Bibliotecas de cliente: <a href="'.BASE_URL.'sintax/composer/">Composer</a> o <a href="'.BASE_URL.'sintax/bower/">Bowerphp</a></li>
+				</ul>
+		';
+		die();
+	}
+/******************************************************************************/
+
+//Configuramos el FirePHP
 require_once SKEL_ROOT_DIR."includes/server/FirePHP.php";
 
+//Definimos todas las constantes de la aplicacion correspondiente al punto de entrada
 $arrApps=unserialize(APPS);
 $appKey=\Filesystem::find_relative_path(SKEL_ROOT_DIR,$_SERVER['SCRIPT_FILENAME']);
 if (isset($arrApps[$appKey])) {

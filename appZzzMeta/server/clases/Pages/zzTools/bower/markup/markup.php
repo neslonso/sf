@@ -33,7 +33,7 @@
 
 	APPs:<br />
 <?
-$arrLibsApps=$this->getArrLibsApps();
+$arrLibsApps=$this->getArrLibsApps(BOWER_PATH,'bowerComponents.php','appBowerComponents.php');
 $arrApps=unserialize(APPS);
 $arrApps['GLOBAL']=array('NOMBRE_APP' => 'bowerComponents.php');
 //echo "<pre>".print_r ($arrLibsApps,true)."</pre>";
